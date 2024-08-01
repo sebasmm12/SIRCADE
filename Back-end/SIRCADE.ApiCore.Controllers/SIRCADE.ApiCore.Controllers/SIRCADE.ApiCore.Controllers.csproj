@@ -16,4 +16,8 @@
     <Folder Include="Users\Services\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SIRCADE.ApiCore.Models\SIRCADE.ApiCore.Models.csproj" />
+  </ItemGroup>
+
 </Project>
