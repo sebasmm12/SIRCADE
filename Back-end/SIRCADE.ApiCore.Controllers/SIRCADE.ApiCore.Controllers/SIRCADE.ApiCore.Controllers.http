@@ -1,0 +1,6 @@
+@SIRCADE.ApiCore.Controllers_HostAddress = http://localhost:5227
+
+GET {{SIRCADE.ApiCore.Controllers_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
