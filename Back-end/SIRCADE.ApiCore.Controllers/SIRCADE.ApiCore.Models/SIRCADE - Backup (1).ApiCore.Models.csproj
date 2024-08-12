@@ -7,19 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="RolePermissions\" />
     <Folder Include="Permissions\DTOs\" />
     <Folder Include="Permissions\Validations\" />
     <Folder Include="Permissions\Persistence\" />
-    <Folder Include="RolePermissions\DTOs\" />
-    <Folder Include="RolePermissions\Enums\" />
-    <Folder Include="RolePermissions\Validations\" />
-    <Folder Include="RolePermissions\Persistence\" />
     <Folder Include="Roles\DTOs\" />
     <Folder Include="Roles\Enums\" />
     <Folder Include="Roles\Validations\" />
-    <Folder Include="Unities\DTOs\" />
-    <Folder Include="Unities\Validations\" />
-    <Folder Include="Unities\Persistence\" />
+    <Folder Include="Roles\Persistence\" />
     <Folder Include="Users\DTOs\" />
     <Folder Include="Users\Persistence\" />
     <Folder Include="Users\Validations\" />

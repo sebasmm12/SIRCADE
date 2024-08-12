@@ -17,9 +17,9 @@
     <Folder Include="Roles\DTOs\" />
     <Folder Include="Roles\Enums\" />
     <Folder Include="Roles\Validations\" />
+    <Folder Include="Roles\Persistence\" />
     <Folder Include="Unities\DTOs\" />
-    <Folder Include="Unities\Validations\" />
-    <Folder Include="Unities\Persistence\" />
+    <Folder Include="Unities\NewFolder\" />
     <Folder Include="Users\DTOs\" />
     <Folder Include="Users\Persistence\" />
     <Folder Include="Users\Validations\" />

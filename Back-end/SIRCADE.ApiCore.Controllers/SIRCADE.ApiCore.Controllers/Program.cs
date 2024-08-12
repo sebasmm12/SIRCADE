@@ -24,6 +24,25 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Add common services to the container.
 builder.Services.AddCommonServices();
 
+// Add persistence services to the container.
+builder.Services.AddPersistence();
+
+// Add services to the container.
+builder.Services.AddServices();
+
+
+// Enable CORS to connect with the SIRCADE angular projects
+builder.Services.AddCors(x =>
+{
+    x.AddDefaultPolicy(options =>
+    {
+        options
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -38,5 +57,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors();
 
 app.Run();

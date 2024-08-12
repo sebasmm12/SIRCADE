@@ -70,6 +70,11 @@ export const routes: Routes = [
             (m) => m.ThemePagesRoutes
           ),
       },
+      {
+        path: 'roles',
+        loadChildren: () =>
+          import('./roles/roles.routes').then((m) => m.roleRoutes),
+      },
     ],
   },
   {
