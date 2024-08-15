@@ -3,7 +3,6 @@ using SIRCADE.ApiCore.Controllers.Roles.Requests;
 using SIRCADE.ApiCore.Controllers.Roles.Responses;
 using SIRCADE.ApiCore.Models.Common.DTOs;
 using SIRCADE.ApiCore.Models.Common.Queries;
-using SIRCADE.ApiCore.Models.Roles.Entities;
 using SIRCADE.ApiCore.Models.Roles.Persistence;
 
 namespace SIRCADE.ApiCore.Controllers.Roles.Services.Imp;

@@ -10,7 +10,7 @@ namespace SIRCADE.ApiCore.Controllers.Roles.Controllers;
 public class RolesController(IRolesService rolesService) : ControllerBase
 {
 
-    [HttpGet]
+    [HttpGet("all")]
     public async Task<IActionResult> GetAsync()
     {
         var roles = await rolesService.GetAsync();
@@ -18,7 +18,7 @@ public class RolesController(IRolesService rolesService) : ControllerBase
         return Ok(roles);
     }
 
-    [HttpGet("all")]
+    [HttpGet("")]
     public async Task<IActionResult> GetAsync([FromQuery] DataTableQueriesDto dataTableQueries)
     {
         var roles = await rolesService.GetAsync(dataTableQueries);

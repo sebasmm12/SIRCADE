@@ -20,15 +20,22 @@ public class GetRolesPersistence(ApplicationDbContext context) : IGetRolesPersis
 
     public async Task<DataTableDto<Role>> ExecuteAsync(DataTableQueriesDto dataTableQueries)
     {
-        var roles = await context
+        var rolesContext = context
                             .Roles
                             .Include(role => role.Permissions)
-                            .AsNoTracking()
+                            .AsQueryable();
+
+        if(!string.IsNullOrEmpty(dataTableQueries.Search))
+            rolesContext = rolesContext.Where(role => role.Name.Contains(dataTableQueries.Search));
+
+        var roles = await rolesContext
+                            .OrderBy(role => role.Id)
                             .Skip(dataTableQueries.Page)
                             .Take(dataTableQueries.PageSize)
+                            .AsNoTracking()
                             .ToListAsync();
 
-        var totalRoles = await context.Roles.CountAsync();
+        var totalRoles = await rolesContext.CountAsync();
 
         return new(roles, totalRoles);
     }
