@@ -1,5 +1,3 @@
 ﻿namespace SIRCADE.ApiCore.Controllers.Roles.Responses;
 
-public record RoleResponse(int Id, string Name, int TotalPermissions)
-{
-}
+public record RoleResponse(int Id, string Name, int TotalPermissions);

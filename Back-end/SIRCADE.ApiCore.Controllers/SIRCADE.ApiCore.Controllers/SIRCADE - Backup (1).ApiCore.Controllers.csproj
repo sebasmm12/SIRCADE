@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -12,7 +12,14 @@
 
   <ItemGroup>
     <Folder Include="Common\Responses\" />
+    <Folder Include="SportFields\Controllers\" />
+    <Folder Include="SportFields\Mappers\" />
+    <Folder Include="SportFields\Responses\" />
+    <Folder Include="SportFields\Requests\" />
+    <Folder Include="SportFields\Services\NewFolder\" />
     <Folder Include="Users\Responses\" />
+    <Folder Include="Users\Requests\" />
+    <Folder Include="Users\Services\" />
   </ItemGroup>
 
   <ItemGroup>

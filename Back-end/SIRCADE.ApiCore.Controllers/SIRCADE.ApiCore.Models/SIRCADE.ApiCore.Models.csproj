@@ -17,11 +17,13 @@
     <Folder Include="Roles\DTOs\" />
     <Folder Include="Roles\Enums\" />
     <Folder Include="Roles\Validations\" />
+    <Folder Include="SportFields\DTOs\" />
+    <Folder Include="SportFields\Enums\" />
+    <Folder Include="SportFields\Validations\" />
     <Folder Include="Unities\DTOs\" />
     <Folder Include="Unities\Validations\" />
     <Folder Include="Unities\Persistence\" />
     <Folder Include="Users\DTOs\" />
-    <Folder Include="Users\Persistence\" />
     <Folder Include="Users\Validations\" />
   </ItemGroup>
 

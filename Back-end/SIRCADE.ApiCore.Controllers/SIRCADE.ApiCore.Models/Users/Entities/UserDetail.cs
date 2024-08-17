@@ -25,7 +25,7 @@ public class UserDetail
     public int UnityId { get; set; } = default!;
 
     [Column("FechaNacimiento")]
-    public DateTime Birthdate { get; set; }
+    public DateTime BirthDate { get; set; }
 
     [Column("Telefono")]
     public string Phone { get; set; } = default!;
@@ -40,7 +40,7 @@ public class UserDetail
     public bool Associated { get; set; }
 
     [Column("Situacion")]
-    public string Situation { get; set; } = default!;
+    public Situation Situation { get; set; } = default!;
 
     [Column("DNI")]
     public string DocumentNumber { get; set; } = default!;

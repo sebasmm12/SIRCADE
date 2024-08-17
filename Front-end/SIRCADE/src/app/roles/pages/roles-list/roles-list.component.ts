@@ -41,7 +41,7 @@ export class RolesListComponent implements OnInit, AfterViewInit {
   roles: RoleResponse[] = [];
   roleColumns: string[] = ['name', 'totalPermissions', 'actions'];
   totalRoles: number = 0;
-  pageSize: number = 10;
+  pageSize: number = 1;
   searchText: string = '';
 
   @ViewChild(MatPaginator)
