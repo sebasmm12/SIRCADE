@@ -18,6 +18,9 @@ import { RoleResponse } from '../../interfaces/responses/role.response';
 import { switchMap } from 'rxjs/operators';
 import { RolesQueries } from '../../interfaces/queries/roles.queries';
 import { SearchTextComponent } from 'src/app/shared/components/search-text/search-text.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-roles-list',
@@ -29,6 +32,9 @@ import { SearchTextComponent } from 'src/app/shared/components/search-text/searc
     MatProgressBarModule,
     CommonModule,
     MatSortModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatIconModule,
     SearchTextComponent,
   ],
   templateUrl: './roles-list.component.html',
@@ -41,7 +47,7 @@ export class RolesListComponent implements OnInit, AfterViewInit {
   roles: RoleResponse[] = [];
   roleColumns: string[] = ['name', 'totalPermissions', 'actions'];
   totalRoles: number = 0;
-  pageSize: number = 1;
+  pageSize: number = 10;
   searchText: string = '';
 
   @ViewChild(MatPaginator)
