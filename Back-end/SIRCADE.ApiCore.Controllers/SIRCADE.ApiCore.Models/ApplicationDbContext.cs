@@ -29,6 +29,9 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
             .HasOne(sportField => sportField.SportFieldType)
             .WithMany(sportFieldType => sportFieldType.SportFields)
             .HasForeignKey(sportField => sportField.Type);
+
+        modelBuilder.Entity<Role>()
+            .HasQueryFilter(x => x.Active);
     }
 
     public DbSet<User> Users { get; set; } = default!;

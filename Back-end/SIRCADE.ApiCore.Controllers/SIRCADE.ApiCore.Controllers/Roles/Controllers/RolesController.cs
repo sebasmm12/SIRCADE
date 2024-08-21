@@ -50,7 +50,7 @@ public class RolesController(IRolesService rolesService) : ControllerBase
         return Ok();
     }
 
-    [HttpPut("{roleId:int}/status")]
+    [HttpDelete("{roleId:int}/status")]
     public async Task<IActionResult> UpdateAsync([FromRoute] int roleId)
     {
         await rolesService.UpdateStatusAsync(roleId);
