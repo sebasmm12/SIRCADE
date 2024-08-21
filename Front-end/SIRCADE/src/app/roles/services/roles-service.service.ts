@@ -28,4 +28,8 @@ export class RolesService {
       `${this.baseUrl}/roles?${params}`
     );
   }
+
+  delete(id: number): Observable<void> {
+    return this.httpClient.delete<void>(`${this.baseUrl}/roles/${id}/status`);
+  }
 }

@@ -18,6 +18,12 @@ import { RoleResponse } from '../../interfaces/responses/role.response';
 import { switchMap } from 'rxjs/operators';
 import { RolesQueries } from '../../interfaces/queries/roles.queries';
 import { SearchTextComponent } from 'src/app/shared/components/search-text/search-text.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog } from '@angular/material/dialog';
+import { RoleDeletionDialogComponent } from '../../components/role-deletion-dialog/role-deletion-dialog.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-roles-list',
@@ -29,6 +35,10 @@ import { SearchTextComponent } from 'src/app/shared/components/search-text/searc
     MatProgressBarModule,
     CommonModule,
     MatSortModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
     SearchTextComponent,
   ],
   templateUrl: './roles-list.component.html',
@@ -36,6 +46,8 @@ import { SearchTextComponent } from 'src/app/shared/components/search-text/searc
 })
 export class RolesListComponent implements OnInit, AfterViewInit {
   rolesService: RolesService = inject(RolesService);
+  dialogService = inject(MatDialog);
+
   destroyRef = inject(DestroyRef);
 
   roles: RoleResponse[] = [];
@@ -43,6 +55,7 @@ export class RolesListComponent implements OnInit, AfterViewInit {
   totalRoles: number = 0;
   pageSize: number = 10;
   searchText: string = '';
+  loading: boolean = true;
 
   @ViewChild(MatPaginator)
   paginator: MatPaginator = Object.create(null);
@@ -56,6 +69,8 @@ export class RolesListComponent implements OnInit, AfterViewInit {
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         switchMap(() => {
+          this.loading = true;
+
           const rolesQueries: RolesQueries = {
             page: this.paginator.pageIndex,
             pageSize: this.paginator.pageSize,
@@ -68,6 +83,7 @@ export class RolesListComponent implements OnInit, AfterViewInit {
       .subscribe((response) => {
         this.roles = response.data;
         this.totalRoles = response.totalElements;
+        this.loading = false;
       });
   }
 
@@ -77,6 +93,8 @@ export class RolesListComponent implements OnInit, AfterViewInit {
   }
 
   get(): void {
+    this.loading = true;
+
     this.rolesService
       .get({ page: 0, pageSize: this.pageSize, search: this.searchText })
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -84,6 +102,26 @@ export class RolesListComponent implements OnInit, AfterViewInit {
         this.roles = response.data;
         this.totalRoles = response.totalElements;
         this.paginator.firstPage();
+        this.loading = false;
+      });
+  }
+
+  showRoleDeletionConfirmation(role: RoleResponse): void {
+    this.dialogService
+      .open(RoleDeletionDialogComponent, {
+        data: role,
+      })
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((roleId: number) => {
+        if (!roleId) return;
+
+        this.rolesService
+          .delete(roleId)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe(() => {
+            this.get();
+          });
       });
   }
 }
