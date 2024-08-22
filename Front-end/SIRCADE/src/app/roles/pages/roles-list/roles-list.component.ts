@@ -24,6 +24,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { RoleDeletionDialogComponent } from '../../components/role-deletion-dialog/role-deletion-dialog.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { RoleUpdateDialogComponent } from '../../components/role-update-dialog/role-update-dialog.component';
 
 @Component({
   selector: 'app-roles-list',
@@ -123,5 +124,9 @@ export class RolesListComponent implements OnInit, AfterViewInit {
             this.get();
           });
       });
+  }
+
+  showRoleUpdateForm(role: RoleResponse): void {
+    this.dialogService.open(RoleUpdateDialogComponent, { data: role.id });
   }
 }

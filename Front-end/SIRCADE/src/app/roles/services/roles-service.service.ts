@@ -6,6 +6,7 @@ import { RoleResponse } from '../interfaces/responses/role.response';
 import { RolesQueries } from '../interfaces/queries/roles.queries';
 import { DataTableResponse } from 'src/app/shared/interfaces/responses/data-table.response';
 import queryString from 'query-string';
+import { RoleInfoResponse } from '../interfaces/responses/role-info.response';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,7 @@ export class RolesService {
 
   private httpClient: HttpClient = inject(HttpClient);
 
-  constructor() {}
+  constructor() { }
 
   getAll(): Observable<RoleResponse[]> {
     return this.httpClient.get<RoleResponse[]>(`${this.baseUrl}/roles/all`);
@@ -27,6 +28,10 @@ export class RolesService {
     return this.httpClient.get<DataTableResponse<RoleResponse>>(
       `${this.baseUrl}/roles?${params}`
     );
+  }
+
+  getById(roleId: number): Observable<RoleInfoResponse> {
+    return this.httpClient.get<RoleInfoResponse>(`${this.baseUrl}/roles/${roleId}`);
   }
 
   delete(id: number): Observable<void> {

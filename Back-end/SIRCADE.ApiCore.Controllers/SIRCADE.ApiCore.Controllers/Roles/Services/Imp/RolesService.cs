@@ -24,11 +24,11 @@ public class RolesService(
         return rolesResponse;
     }
 
-    public async Task<RoleResponse> GetAsync(int roleId)
+    public async Task<RoleInfoResponse> GetAsync(int roleId)
     {
-        var role = await getRolesPersistence.ExecuteAsync(roleId);
+        var role = await getRolesPersistence.ExecuteAsync(roleId, needsInclude: true);
 
-        var roleResponse = role.ToRoleResponse();
+        var roleResponse = role.ToRoleInfoResponse();
 
         return roleResponse;
     }

@@ -45,7 +45,9 @@ public class GetRolesPersistence(ApplicationDbContext context) : IGetRolesPersis
         var rolesContext = context.Roles.AsQueryable();
 
         if (needsInclude)
-            rolesContext = rolesContext.Include(role => role.Permissions);
+            rolesContext = rolesContext
+                            .Include(role => role.Permissions)
+                            .ThenInclude(rolePermission => rolePermission.Permission);
 
         if (isTracked)
             rolesContext = rolesContext.AsTracking();

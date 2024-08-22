@@ -10,7 +10,6 @@
     <Folder Include="Permissions\DTOs\" />
     <Folder Include="Permissions\Validations\" />
     <Folder Include="Permissions\Persistence\" />
-    <Folder Include="RolePermissions\DTOs\" />
     <Folder Include="RolePermissions\Enums\" />
     <Folder Include="RolePermissions\Validations\" />
     <Folder Include="RolePermissions\Persistence\" />

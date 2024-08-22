@@ -11,7 +11,7 @@ public interface IRolesService
 
     Task<DataTableDto<RoleResponse>> GetAsync(DataTableQueriesDto dataTableQueries);
 
-    Task<RoleResponse> GetAsync(int roleId);
+    Task<RoleInfoResponse> GetAsync(int roleId);
 
     Task<int> CreateAsync(RoleCreationRequest roleCreationRequest);
 

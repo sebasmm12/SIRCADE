@@ -1,5 +1,6 @@
 ﻿using SIRCADE.ApiCore.Controllers.Roles.Requests;
 using SIRCADE.ApiCore.Controllers.Roles.Responses;
+using SIRCADE.ApiCore.Models.RolePermissions.DTOs;
 using SIRCADE.ApiCore.Models.RolePermissions.Entities;
 using SIRCADE.ApiCore.Models.Roles.Entities;
 
@@ -11,6 +12,15 @@ public static class RolesMapper
     public static RoleResponse ToRoleResponse(this Role role)
     {
         return new(role.Id, role.Name, role.Permissions.Count);
+    }
+
+    public static RoleInfoResponse ToRoleInfoResponse(this Role role)
+    {
+        var permissionsIds = role
+                                .Permissions
+                                .Select(permission => new RolePermissionDto(permission.PermissionId, permission.Permission.Name));
+
+        return new(role.Id, role.Name, permissionsIds);
     }
 
     public static Role ToRoleFromCreation(this RoleCreationRequest createRoleRequest)
