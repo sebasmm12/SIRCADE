@@ -25,6 +25,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { RoleDeletionDialogComponent } from '../../components/role-deletion-dialog/role-deletion-dialog.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RoleUpdateDialogComponent } from '../../components/role-update-dialog/role-update-dialog.component';
+import { RoleRegisterDialogComponent } from '../../components/role-register-dialog/role-register-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-roles-list',
@@ -48,6 +50,7 @@ import { RoleUpdateDialogComponent } from '../../components/role-update-dialog/r
 export class RolesListComponent implements OnInit, AfterViewInit {
   rolesService: RolesService = inject(RolesService);
   dialogService = inject(MatDialog);
+  snackBarService = inject(MatSnackBar);
 
   destroyRef = inject(DestroyRef);
 
@@ -121,12 +124,49 @@ export class RolesListComponent implements OnInit, AfterViewInit {
           .delete(roleId)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe(() => {
+            this.snackBarService.open('Role eliminado exitosamente', 'Cerrar', {
+              panelClass: ['snackbar-error'],
+              duration: 3000,
+            });
             this.get();
           });
       });
   }
 
   showRoleUpdateForm(role: RoleResponse): void {
-    this.dialogService.open(RoleUpdateDialogComponent, { data: role.id });
+    this.dialogService
+      .open(RoleUpdateDialogComponent, {
+        data: role.id,
+        width: '600px',
+      })
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((updated: boolean) => {
+        if (!updated) return;
+
+        this.snackBarService.open('Role actualizado exitosamente', 'Cerrar', {
+          panelClass: ['snackbar-warning'],
+          duration: 3000,
+        });
+        this.get();
+      });
+  }
+
+  showRoleRegisterForm(): void {
+    this.dialogService
+      .open(RoleRegisterDialogComponent, {
+        width: '600px',
+      })
+      .afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((created: boolean) => {
+        if (!created) return;
+
+        this.snackBarService.open('Role creado exitosamente', 'Cerrar', {
+          panelClass: ['snackbar-success'],
+          duration: 3000,
+        });
+        this.get();
+      });
   }
 }

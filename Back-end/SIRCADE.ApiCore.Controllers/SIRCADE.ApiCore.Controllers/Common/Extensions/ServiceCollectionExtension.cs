@@ -1,11 +1,15 @@
 ﻿using SIRCADE.ApiCore.Controllers.Common.Services.Contracts;
 using SIRCADE.ApiCore.Controllers.Common.Services.Interfaces;
+using SIRCADE.ApiCore.Controllers.Permissions.Services;
+using SIRCADE.ApiCore.Controllers.Permissions.Services.Imp;
 using SIRCADE.ApiCore.Controllers.Roles.Services;
 using SIRCADE.ApiCore.Controllers.Roles.Services.Imp;
 using SIRCADE.ApiCore.Controllers.SportFields.Services;
 using SIRCADE.ApiCore.Controllers.SportFields.Services.Imp;
 using SIRCADE.ApiCore.Controllers.Users.Services;
 using SIRCADE.ApiCore.Controllers.Users.Services.Imp;
+using SIRCADE.ApiCore.Models.Permissions.Persistence;
+using SIRCADE.ApiCore.Models.Permissions.Persistence.Imp;
 using SIRCADE.ApiCore.Models.Roles.Persistence;
 using SIRCADE.ApiCore.Models.Roles.Persistence.Imp;
 using SIRCADE.ApiCore.Models.SportFields.Persistence;
@@ -30,6 +34,7 @@ public static class ServiceCollectionExtension
         services.AddTransient<ISportFieldTypesService, SportFieldTypesService>();
         services.AddTransient<ISportFieldsService, SportFieldsService>();
         services.AddTransient<IUsersService, UsersService>();
+        services.AddTransient<IPermissionsService, PermissionsService>();
 
         return services;
     }
@@ -48,6 +53,8 @@ public static class ServiceCollectionExtension
         services.AddScoped<IUpdateSportFieldPersistence, UpdateSportFieldPersistence>();
 
         services.AddScoped<ICreateUserPersistence, CreateUserPersistence>();
+
+        services.AddScoped<IGetPermissionsPersistence, GetPermissionsPersistence>();
 
 
         return services;

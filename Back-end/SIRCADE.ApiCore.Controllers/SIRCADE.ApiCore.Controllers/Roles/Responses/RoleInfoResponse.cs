@@ -1,5 +1,3 @@
-﻿using SIRCADE.ApiCore.Models.RolePermissions.DTOs;
+﻿namespace SIRCADE.ApiCore.Controllers.Roles.Responses;
 
-namespace SIRCADE.ApiCore.Controllers.Roles.Responses;
-
-public record RoleInfoResponse(int Id, string Name, IEnumerable<RolePermissionDto> Permissions);
+public record RoleInfoResponse(int Id, string Name, IEnumerable<int> Permissions);

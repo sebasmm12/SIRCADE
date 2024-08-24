@@ -2,3 +2,27 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.dark-theme {
+.snackbar-success {
+    .mat-mdc-snackbar-surface {
+      background-color: var(--mat-option-selected-state-label-text-color) !important;
+      color: white !important;
+    }
+  }
+
+.snackbar-error {
+    .mat-mdc-snackbar-surface {
+      background-color: var(--mdc-filled-text-field-error-hover-label-text-color) !important;
+      color: white !important;
+    }
+  }
+
+.snackbar-warning {
+    .mat-mdc-snackbar-surface {
+      background-color: #ffae1f !important;
+      color: white !important;
+    }
+  }
+}
+

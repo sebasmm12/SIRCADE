@@ -1,13 +1,5 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog';
-import { RolesService } from '../../services/roles-service.service';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CommonModule } from '@angular/common';
+import { Component, DestroyRef, inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -15,17 +7,20 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
+import { RolesService } from '../../services/roles-service.service';
 import { PermissionsService } from '../../services/permissions.service';
-import { forkJoin } from 'rxjs';
-import { RolePermissionDto } from '../../interfaces/dtos/role-permission.dto';
 import { RolesValidatorService } from '../../services/roles-validator.service';
+import { RolePermissionDto } from '../../interfaces/dtos/role-permission.dto';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-  selector: 'app-role-update-dialog',
+  selector: 'app-role-register-dialog',
   standalone: true,
   imports: [
     MatDialogModule,
@@ -38,12 +33,10 @@ import { RolesValidatorService } from '../../services/roles-validator.service';
     FormsModule,
     CommonModule,
   ],
-  templateUrl: './role-update-dialog.component.html',
-  styleUrl: './role-update-dialog.component.scss',
+  templateUrl: './role-register-dialog.component.html',
+  styleUrl: './role-register-dialog.component.scss',
 })
-export class RoleUpdateDialogComponent implements OnInit {
-  roleId: number = inject(MAT_DIALOG_DATA);
-
+export class RoleRegisterDialogComponent {
   rolesService = inject(RolesService);
   permissionsService = inject(PermissionsService);
   rolesValidatorService = inject(RolesValidatorService);
@@ -51,33 +44,29 @@ export class RoleUpdateDialogComponent implements OnInit {
   destroyRef = inject(DestroyRef);
   formBuilder = inject(FormBuilder);
 
-  roleUpdateForm!: FormGroup;
+  roleRegisterForm!: FormGroup;
   permissions: RolePermissionDto[] = [];
 
   loading: boolean = false;
 
-  constructor(public dialogRef: MatDialogRef<RoleUpdateDialogComponent>) {
+  constructor(public dialogRef: MatDialogRef<RoleRegisterDialogComponent>) {
     this.buildForm();
   }
 
   ngOnInit(): void {
     this.loading = true;
 
-    forkJoin({
-      permissions: this.permissionsService.getAll(),
-      role: this.rolesService.getById(this.roleId),
-    })
+    this.permissionsService
+      .getAll()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ permissions, role }) => {
+      .subscribe((permissions) => {
         this.permissions = permissions;
-        this.roleUpdateForm.setValue(role);
         this.loading = false;
       });
   }
 
   buildForm(): void {
-    this.roleUpdateForm = this.formBuilder.group({
-      id: [0, [Validators.required]],
+    this.roleRegisterForm = this.formBuilder.group({
       name: ['', [Validators.required]],
       permissions: [
         [],
@@ -86,16 +75,16 @@ export class RoleUpdateDialogComponent implements OnInit {
     });
   }
 
-  update(): void {
-    this.roleUpdateForm.markAllAsTouched();
-    this.roleUpdateForm.updateValueAndValidity();
+  register(): void {
+    this.roleRegisterForm.markAllAsTouched();
+    this.roleRegisterForm.updateValueAndValidity();
 
-    if (this.roleUpdateForm.invalid) {
+    if (this.roleRegisterForm.invalid) {
       return;
     }
 
     this.rolesService
-      .update(this.roleUpdateForm.value)
+      .register(this.roleRegisterForm.value)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.dialogRef.close(true);
