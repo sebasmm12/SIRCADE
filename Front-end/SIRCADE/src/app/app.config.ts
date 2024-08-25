@@ -2,6 +2,7 @@ import {
   ApplicationConfig,
   provideZoneChangeDetection,
   importProvidersFrom,
+  LOCALE_ID,
 } from '@angular/core';
 import {
   HttpClient,
@@ -31,6 +32,11 @@ import { MaterialModule } from './material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+import { MAT_TIME_LOCALE } from '@dhutaryan/ngx-mat-timepicker';
+
+registerLocaleData(localeEs);
 
 export function HttpLoaderFactory(http: HttpClient): any {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -39,6 +45,8 @@ export function HttpLoaderFactory(http: HttpClient): any {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
+    { provide: LOCALE_ID, useValue: 'es-ES' },
+    { provide: MAT_TIME_LOCALE, useValue: 'es-ES' },
     provideRouter(
       routes,
       withInMemoryScrolling({

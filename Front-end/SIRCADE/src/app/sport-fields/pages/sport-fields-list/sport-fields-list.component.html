@@ -1,0 +1,50 @@
+<mat-card>
+  <mat-card-content>
+    <div class="d-flex w-100 justify-content-between align-items-end">
+      <app-search-text (search)="search($event)"></app-search-text>
+      <button
+        mat-raised-button
+        color="primary"
+        class="m-l-8"
+        (click)="showSportFieldRegisterForm()"
+      >
+        <span class="m-l-4">Nueva cancha deportiva</span>
+      </button>
+    </div>
+    <div>
+      @if(loading) {
+      <mat-spinner></mat-spinner>
+      }
+      <table mat-table [dataSource]="sportFields">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Nombre</th>
+          <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+        </ng-container>
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Tipo</th>
+          <td mat-cell *matCellDef="let row">{{ row.type }}</td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let row">
+            <button
+              mat-icon-button
+              matTooltip="Editar cancha deportiva"
+              class="text-warning"
+              (click)="showSportFieldUpdateForm(row)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="sportFieldColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: sportFieldColumns"></tr>
+      </table>
+      <mat-paginator
+        [pageSize]="pageSize"
+        [length]="totalSportFields"
+        [pageSizeOptions]="[5, 10, 25, 100]"
+      ></mat-paginator>
+    </div>
+  </mat-card-content>
+</mat-card>

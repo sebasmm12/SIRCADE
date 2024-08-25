@@ -101,7 +101,8 @@ export class CalendarDialogComponent {
     CalendarModule,
     CommonModule,
     MatDatepickerModule,
-    MatDialogModule,MatFormFieldModule
+    MatDialogModule,
+    MatFormFieldModule,
   ],
   providers: [provideNativeDateAdapter(), CalendarDateFormatter],
 })

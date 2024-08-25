@@ -21,6 +21,15 @@ public class SportFieldsService(
         return new(sportFieldResponses, sportFields.TotalElements);
     }
 
+    public async Task<IEnumerable<SportFieldInfoResponse>> GetAsync()
+    {
+        var sportFields = await getSportFieldsPersistence.ExecuteAsync();
+
+        var sportFieldResponses = sportFields.Select(sportField => sportField.ToSportFieldInfoResponse());
+
+        return sportFieldResponses;
+    }
+
     public async Task<SportFieldInfoResponse> GetAsync(int sportFieldId)
     {
         var sportField = await getSportFieldsPersistence.ExecuteAsync(sportFieldId);

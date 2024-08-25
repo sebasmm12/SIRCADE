@@ -9,6 +9,14 @@ namespace SIRCADE.ApiCore.Controllers.SportFields.Controllers;
 [Route("api/sport-fields")]
 public class SportFieldsController(ISportFieldsService sportFieldsService) : ControllerBase
 {
+    [HttpGet("all")]
+    public async Task<IActionResult> GetAsync()
+    {
+        var sportFields = await sportFieldsService.GetAsync();
+
+        return Ok(sportFields);
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetAsync([FromQuery] DataTableQueriesDto dataTableQueries)
     {

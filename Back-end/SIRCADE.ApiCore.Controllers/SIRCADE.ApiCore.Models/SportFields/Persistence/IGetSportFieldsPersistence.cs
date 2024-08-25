@@ -9,4 +9,6 @@ public interface IGetSportFieldsPersistence
     Task<DataTableDto<SportField>> ExecuteAsync(DataTableQueriesDto dataTableQueries);
 
     Task<SportField> ExecuteAsync(int roleId, bool isTracked = false);
+
+    Task<IEnumerable<SportField>> ExecuteAsync();
 }

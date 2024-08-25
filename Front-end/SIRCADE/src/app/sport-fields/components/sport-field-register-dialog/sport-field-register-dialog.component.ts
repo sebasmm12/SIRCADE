@@ -13,14 +13,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
-import { RolesService } from '../../services/roles-service.service';
-import { PermissionsService } from '../../services/permissions.service';
-import { RolesValidatorService } from '../../services/roles-validator.service';
-import { RolePermissionDto } from '../../interfaces/dtos/role-permission.dto';
+import { SportFieldsService } from '../../services/sport-fields.service';
+import { SportFieldsValidatorService } from '../../services/sport-fields-validator.service';
+import { SportFieldTypeService } from '../../services/sport-field-type.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { SportFieldTypeResponse } from '../../interfaces/responses/sport-field-type.response';
 
 @Component({
-  selector: 'app-role-register-dialog',
+  selector: 'app-sport-field-register-dialog',
   standalone: true,
   imports: [
     MatDialogModule,
@@ -33,58 +33,57 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     FormsModule,
     CommonModule,
   ],
-  templateUrl: './role-register-dialog.component.html',
-  styleUrl: './role-register-dialog.component.scss',
+  templateUrl: './sport-field-register-dialog.component.html',
+  styleUrl: './sport-field-register-dialog.component.scss',
 })
-export class RoleRegisterDialogComponent {
-  rolesService = inject(RolesService);
-  permissionsService = inject(PermissionsService);
-  rolesValidatorService = inject(RolesValidatorService);
+export class SportFieldRegisterDialogComponent {
+  sportFieldsService = inject(SportFieldsService);
+  sportFieldTypeService = inject(SportFieldTypeService);
+  sportFieldsValidatorService = inject(SportFieldsValidatorService);
 
   destroyRef = inject(DestroyRef);
   formBuilder = inject(FormBuilder);
 
-  roleRegisterForm!: FormGroup;
-  permissions: RolePermissionDto[] = [];
+  sportFieldForm!: FormGroup;
+  sportFieldTypes: SportFieldTypeResponse[] = [];
 
   loading: boolean = false;
 
-  constructor(public dialogRef: MatDialogRef<RoleRegisterDialogComponent>) {
+  constructor(
+    public dialogRef: MatDialogRef<SportFieldRegisterDialogComponent>
+  ) {
     this.buildForm();
   }
 
   ngOnInit(): void {
     this.loading = true;
 
-    this.permissionsService
+    this.sportFieldTypeService
       .getAll()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((permissions) => {
-        this.permissions = permissions;
+      .subscribe((sportFieldTypes) => {
+        this.sportFieldTypes = sportFieldTypes;
         this.loading = false;
       });
   }
 
   buildForm(): void {
-    this.roleRegisterForm = this.formBuilder.group({
+    this.sportFieldForm = this.formBuilder.group({
       name: ['', [Validators.required]],
-      permissions: [
-        [],
-        [this.rolesValidatorService.validateMinimumElements(1, 'permiso')],
-      ],
+      type: [null, [Validators.required]],
     });
   }
 
   register(): void {
-    this.roleRegisterForm.markAllAsTouched();
-    this.roleRegisterForm.updateValueAndValidity();
+    this.sportFieldForm.markAllAsTouched();
+    this.sportFieldForm.updateValueAndValidity();
 
-    if (this.roleRegisterForm.invalid) {
+    if (this.sportFieldForm.invalid) {
       return;
     }
 
-    this.rolesService
-      .register(this.roleRegisterForm.value)
+    this.sportFieldsService
+      .register(this.sportFieldForm.value)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.dialogRef.close(true);

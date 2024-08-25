@@ -75,6 +75,20 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./roles/roles.routes').then((m) => m.roleRoutes),
       },
+      {
+        path: 'canchas-deportivas',
+        loadChildren: () =>
+          import('./sport-fields/sport-fields.routes').then(
+            (m) => m.sportFieldsRoutes
+          ),
+      },
+      {
+        path: 'programacion-horarios',
+        loadChildren: () =>
+          import('./schedules_programming/schedules_programming.routes').then(
+            (m) => m.schedulesProgrammingRoutes
+          ),
+      },
     ],
   },
   {

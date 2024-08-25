@@ -14,4 +14,6 @@ public interface ISportFieldsService
     Task UpdateAsync(SportFieldUpdateRequest sportFieldUpdateRequest);
     
     Task<SportFieldInfoResponse> GetAsync(int sportFieldId);
+
+    Task<IEnumerable<SportFieldInfoResponse>> GetAsync();
 }

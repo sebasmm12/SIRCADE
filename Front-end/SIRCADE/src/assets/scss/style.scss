@@ -1,4 +1,6 @@
 @use "@angular/material" as mat;
+@use "../../../node_modules/@dhutaryan/ngx-mat-timepicker" as mat-timepicker;
+
 @include mat.core();
 
 @import "variables";
@@ -10,9 +12,11 @@
 
 @import "themecolors/default_theme";
 @include mat.all-component-themes($bluetheme);
+@include mat-timepicker.timepicker-theme($bluetheme);
 
 .dark-theme {
   @include mat.all-component-colors($darkbluetheme);
+  @include mat-timepicker.timepicker-theme($darkbluetheme);
 }
 
 // .dark-theme .aqua_theme {
@@ -22,26 +26,31 @@
 .orange_theme {
   @import "themecolors/orange_theme";
   @include mat.all-component-colors($orangetheme);
+  @include mat-timepicker.timepicker-theme($orangetheme);
 }
 
 .aqua_theme {
   @import "themecolors/aqua_theme";
   @include mat.all-component-colors($aquatheme);
+  @include mat-timepicker.timepicker-theme($aquatheme);
 }
 
 .purple_theme {
   @import "themecolors/purple_theme";
   @include mat.all-component-colors($purpletheme);
+  @include mat-timepicker.timepicker-theme($purpletheme);
 }
 
 .green_theme {
   @import "themecolors/green_theme";
   @include mat.all-component-colors($greentheme);
+  @include mat-timepicker.timepicker-theme($greentheme);
 }
 
 .cyan_theme {
   @import "themecolors/cyan_theme";
   @include mat.all-component-colors($cyantheme);
+  @include mat-timepicker.timepicker-theme($cyantheme);
 }
 
 //container layout

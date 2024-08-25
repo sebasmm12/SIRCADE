@@ -21,7 +21,7 @@ public class GetSportFieldsPersistence(ApplicationDbContext context) : IGetSport
 
 
         var sportFields = await sportFieldsContext
-                                        .OrderBy(sportField => sportField.Id)
+                                        .OrderBy(sportField => sportField.Name)
                                         .Skip(dataTableQueries.Page)
                                         .Take(dataTableQueries.PageSize)
                                         .AsNoTracking()
@@ -30,6 +30,16 @@ public class GetSportFieldsPersistence(ApplicationDbContext context) : IGetSport
         var totalSportFields = await sportFieldsContext.CountAsync();
 
         return new(sportFields, totalSportFields);
+    }
+
+    public async Task<IEnumerable<SportField>> ExecuteAsync()
+    {
+        var sportFields = await context
+                                    .SportFields
+                                    .AsNoTracking()
+                                    .ToListAsync();
+
+        return sportFields;
     }
 
     public async Task<SportField> ExecuteAsync(int roleId, bool isTracked = false)

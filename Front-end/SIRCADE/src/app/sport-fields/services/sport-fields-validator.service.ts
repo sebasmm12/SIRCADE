@@ -1,15 +1,10 @@
 import { Injectable } from '@angular/core';
-import {
-  AbstractControl,
-  FormGroup,
-  ValidationErrors,
-  ValidatorFn,
-} from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
 })
-export class RolesValidatorService {
+export class SportFieldsValidatorService {
   constructor() {}
 
   isFieldInvalid(
@@ -51,28 +46,10 @@ export class RolesValidatorService {
       case 'validationError':
         message = errors['validationError'][0];
         break;
-      case 'minimumElements':
-        message = `Como mínimo ${errors['minimumElements'].minimumNumberOfElements} ${errors['minimumElements'].elementName} es requerido`;
-        break;
       default:
         break;
     }
 
     return message;
-  }
-
-  validateMinimumElements(
-    minimumNumberOfElements: number,
-    elementName: string
-  ): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const value = control.value as any[];
-
-      if (value.length < minimumNumberOfElements) {
-        return { minimumElements: { elementName, minimumNumberOfElements } };
-      }
-
-      return null;
-    };
   }
 }

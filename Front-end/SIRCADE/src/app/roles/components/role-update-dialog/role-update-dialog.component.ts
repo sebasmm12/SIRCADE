@@ -81,7 +81,7 @@ export class RoleUpdateDialogComponent implements OnInit {
       name: ['', [Validators.required]],
       permissions: [
         [],
-        [this.rolesValidatorService.validateMinimumElements(1, 'permission')],
+        [this.rolesValidatorService.validateMinimumElements(1, 'permiso')],
       ],
     });
   }

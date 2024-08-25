@@ -1,0 +1,116 @@
+<h2 mat-dialog-title class="m-b-12">Programar horario</h2>
+@if(loading) {
+<mat-spinner></mat-spinner>
+} @else {
+<mat-dialog-content>
+  <form [formGroup]="scheduleProgrammingForm" novalidate>
+    <div class="row m-b-8">
+      <div class="col-sm-12 d-flex align-items-center">
+        <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16"
+          >Cancha deportiva</mat-label
+        >
+      </div>
+      <div class="col-sm-12">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-select formControlName="sportFieldId">
+            @for (sportField of sportFields; track $index) {
+            <mat-option [value]="sportField.id">{{
+              sportField.name
+            }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row m-b-8">
+      <div class="col-sm-6">
+        <div class="col-sm-12 p-l-0 p-r-0 d-flex align-items-center">
+          <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16"
+            >Fecha Inicio</mat-label
+          >
+        </div>
+        <div class="col-sm-12 p-l-0 p-r-0">
+          <mat-form-field appearance="outline" class="w-100">
+            <input
+              matInput
+              name="startDate"
+              formControlName="startDate"
+              [matDatepicker]="picker"
+              [matDatepickerFilter]="todayDateFilter"
+            />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-sm-6 d-flex flex-wrap">
+        <div class="col-sm-6 p-l-0">
+          <div class="col-sm-12 p-l-0 p-r-0 d-flex align-items-center">
+            <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16"
+              >Hora inicio</mat-label
+            >
+          </div>
+          <div class="col-sm-12 p-l-0 p-r-0">
+            <mat-form-field appearance="outline" class="w-100">
+              <input type="text" matInput [matTimepicker]="startTimepicker" />
+              <mat-timepicker-toggle
+                matSuffix
+                [for]="startTimepicker"
+              ></mat-timepicker-toggle>
+              <mat-timepicker #startTimepicker mode="input"> </mat-timepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-sm-6 p-r-0">
+          <div class="col-sm-12 p-l-0 p-r-0 d-flex align-items-center">
+            <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16"
+              >Hora Fin</mat-label
+            >
+          </div>
+          <div class="col-sm-12 p-l-0 p-r-0">
+            <mat-form-field appearance="outline" class="w-100">
+              <input type="text" matInput [matTimepicker]="endTimepicker" />
+              <mat-timepicker-toggle
+                matSuffix
+                [for]="endTimepicker"
+              ></mat-timepicker-toggle>
+              <mat-timepicker #endTimepicker mode="input"> </mat-timepicker>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row m-b-8">
+      <div class="col-sm-12 d-flex align-items-center">
+        <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16"
+          >Razón de la programación</mat-label
+        >
+      </div>
+      <div class="col-sm-12">
+        <mat-form-field appearance="outline" class="w-100">
+          <textarea
+            rows="3"
+            matInput
+            formControlName="comment"
+            name="comment"
+          ></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions [align]="'end'">
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button
+    mat-raised-button
+    color="primary"
+    cdkFocusInitial
+    (click)="register()"
+  >
+    Registrar
+  </button>
+</mat-dialog-actions>
+}
