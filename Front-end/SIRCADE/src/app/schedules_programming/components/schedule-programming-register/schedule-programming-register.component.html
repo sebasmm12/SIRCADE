@@ -19,6 +19,15 @@
             }}</mat-option>
             }
           </mat-select>
+          @if(scheduleProgrammingValidator.isFieldInvalid(scheduleProgrammingForm,
+          'sportFieldId')) {
+          <mat-error>{{
+            scheduleProgrammingValidator.showErrorMessage(
+              scheduleProgrammingForm,
+              "sportFieldId"
+            )
+          }}</mat-error>
+          }
         </mat-form-field>
       </div>
     </div>
@@ -42,6 +51,15 @@
               matIconSuffix
               [for]="picker"
             ></mat-datepicker-toggle>
+            @if(scheduleProgrammingValidator.isFieldInvalid(scheduleProgrammingForm,
+            'startDate')) {
+            <mat-error>{{
+              scheduleProgrammingValidator.showErrorMessage(
+                scheduleProgrammingForm,
+                "startDate"
+              )
+            }}</mat-error>
+            }
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
         </div>
@@ -55,12 +73,32 @@
           </div>
           <div class="col-sm-12 p-l-0 p-r-0">
             <mat-form-field appearance="outline" class="w-100">
-              <input type="text" matInput [matTimepicker]="startTimepicker" />
+              <input
+                type="text"
+                matInput
+                [matTimepicker]="startTimepicker"
+                formControlName="startHour"
+                name="startHour"
+              />
               <mat-timepicker-toggle
                 matSuffix
                 [for]="startTimepicker"
               ></mat-timepicker-toggle>
-              <mat-timepicker #startTimepicker mode="input"> </mat-timepicker>
+              <mat-timepicker
+                #startTimepicker
+                mode="input"
+                orientation="horizontal"
+              >
+              </mat-timepicker>
+              @if(scheduleProgrammingValidator.isFieldInvalid(scheduleProgrammingForm,
+              'startHour')) {
+              <mat-error>{{
+                scheduleProgrammingValidator.showErrorMessage(
+                  scheduleProgrammingForm,
+                  "startHour"
+                )
+              }}</mat-error>
+              }
             </mat-form-field>
           </div>
         </div>
@@ -72,15 +110,62 @@
           </div>
           <div class="col-sm-12 p-l-0 p-r-0">
             <mat-form-field appearance="outline" class="w-100">
-              <input type="text" matInput [matTimepicker]="endTimepicker" />
+              <input
+                type="text"
+                matInput
+                [matTimepicker]="endTimepicker"
+                formControlName="endHour"
+                name="endHour"
+              />
               <mat-timepicker-toggle
                 matSuffix
                 [for]="endTimepicker"
               ></mat-timepicker-toggle>
-              <mat-timepicker #endTimepicker mode="input"> </mat-timepicker>
+              <mat-timepicker
+                #endTimepicker
+                mode="input"
+                orientation="horizontal"
+              >
+              </mat-timepicker>
+              @if(scheduleProgrammingValidator.isFieldInvalid(scheduleProgrammingForm,
+              'endHour')) {
+              <mat-error>{{
+                scheduleProgrammingValidator.showErrorMessage(
+                  scheduleProgrammingForm,
+                  "endHour"
+                )
+              }}</mat-error>
+              }
             </mat-form-field>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="row m-b-8">
+      <div class="col-sm-12 d-flex align-items-center">
+        <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16"
+          >Tipo de programación</mat-label
+        >
+      </div>
+      <div class="col-sm-12">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-select formControlName="type">
+            @for (programmingType of programmingTypes; track $index) {
+            <mat-option [value]="programmingType.id">{{
+              programmingType.name
+            }}</mat-option>
+            }
+          </mat-select>
+          @if(scheduleProgrammingValidator.isFieldInvalid(scheduleProgrammingForm,
+          'type')) {
+          <mat-error>{{
+            scheduleProgrammingValidator.showErrorMessage(
+              scheduleProgrammingForm,
+              "type"
+            )
+          }}</mat-error>
+          }
+        </mat-form-field>
       </div>
     </div>
     <div class="row m-b-8">
@@ -97,6 +182,15 @@
             formControlName="comment"
             name="comment"
           ></textarea>
+          @if(scheduleProgrammingValidator.isFieldInvalid(scheduleProgrammingForm,
+          'comment')) {
+          <mat-error>{{
+            scheduleProgrammingValidator.showErrorMessage(
+              scheduleProgrammingForm,
+              "comment"
+            )
+          }}</mat-error>
+          }
         </mat-form-field>
       </div>
     </div>

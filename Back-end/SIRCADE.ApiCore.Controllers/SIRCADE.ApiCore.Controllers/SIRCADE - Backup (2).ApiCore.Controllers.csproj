@@ -13,7 +13,11 @@
   <ItemGroup>
     <Folder Include="Common\Responses\" />
     <Folder Include="Permissions\Requests\" />
+    <Folder Include="SchedulesProgramming\Controllers\" />
+    <Folder Include="SchedulesProgramming\Mappers\" />
+    <Folder Include="SchedulesProgramming\Responses\" />
     <Folder Include="SchedulesProgramming\Requests\" />
+    <Folder Include="SchedulesProgramming\Services\NewFolder\" />
     <Folder Include="Users\Responses\" />
   </ItemGroup>
 

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using SIRCADE.ApiCore.Models.SchedulesProgramming.Entities;
 
 namespace SIRCADE.ApiCore.Models.SportFields.Entities;
 
@@ -24,5 +25,8 @@ public class SportField
     [Column("Nombre")]
     public string Name { get; set; } = default!;
 
+
     public SportFieldType SportFieldType { get; set; } = default!;
+
+    public ICollection<ScheduleProgramming> ScheduleProgramming { get; set; } = [];
 }

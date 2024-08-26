@@ -2,6 +2,7 @@
 using SIRCADE.ApiCore.Models.Permissions.Entities;
 using SIRCADE.ApiCore.Models.RolePermissions.Entities;
 using SIRCADE.ApiCore.Models.Roles.Entities;
+using SIRCADE.ApiCore.Models.SchedulesProgramming.Entities;
 using SIRCADE.ApiCore.Models.SportFields.Entities;
 using SIRCADE.ApiCore.Models.Unities.Entities;
 using SIRCADE.ApiCore.Models.Users.Entities;
@@ -30,8 +31,16 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
             .WithMany(sportFieldType => sportFieldType.SportFields)
             .HasForeignKey(sportField => sportField.Type);
 
+
+        modelBuilder
+            .Entity<ScheduleProgramming>()
+            .HasOne(scheduleProgramming => scheduleProgramming.ProgrammingType)
+            .WithMany(programmingType => programmingType.SchedulesProgramming)
+            .HasForeignKey(scheduleProgramming => scheduleProgramming.Type);
+
         modelBuilder.Entity<Role>()
             .HasQueryFilter(x => x.Active);
+
     }
 
     public DbSet<User> Users { get; set; } = default!;
@@ -49,4 +58,8 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<SportFieldType> SportFieldTypes { get; set; } = default!;
 
     public DbSet<SportField> SportFields { get; set; } = default!;
+
+    public DbSet<ScheduleProgramming> SchedulesProgramming { get; set; } = default!;
+
+    public DbSet<ProgrammingType> ProgrammingTypes { get; set; } = default!;
 }

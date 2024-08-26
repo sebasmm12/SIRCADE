@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using SIRCADE.ApiCore.Models.Roles.Entities;
+using SIRCADE.ApiCore.Models.SchedulesProgramming.Entities;
 
 namespace SIRCADE.ApiCore.Models.Users.Entities;
 
@@ -21,4 +22,6 @@ public class User
     public Role Role { get; set; } = default!;
 
     public UserDetail Detail { get; set; } = default!;
+
+    public ICollection<ScheduleProgramming>? ScheduleProgrammings { get; set; }
 }

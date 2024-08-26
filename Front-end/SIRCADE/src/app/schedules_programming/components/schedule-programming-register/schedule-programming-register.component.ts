@@ -1,12 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  AfterViewInit,
-  Component,
-  DestroyRef,
-  inject,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormBuilder,
@@ -27,13 +20,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import {
-  MAT_TIME_LOCALE,
-  MatTimepicker,
   MatTimepickerModule,
   provideNativeDateTimeAdapter,
 } from '@dhutaryan/ngx-mat-timepicker';
 import { SportFieldInfoResponse } from 'src/app/sport-fields/interfaces/responses/sport-field-info.response';
 import { SportFieldsService } from 'src/app/sport-fields/services/sport-fields.service';
+import { SchedulesProgrammingValidatorService } from '../../services/schedules-programming-validator.service';
+import { ProgrammingTypesService } from '../../services/programming-types.service';
+import { forkJoin } from 'rxjs';
+import { ProgrammingTypeInfoResponse } from '../../interfaces/responses/programming-type-info.response';
 
 @Component({
   selector: 'app-schedule-programming-register',
@@ -58,12 +53,15 @@ import { SportFieldsService } from 'src/app/sport-fields/services/sport-fields.s
 })
 export class ScheduleProgrammingRegisterComponent implements OnInit {
   sportFieldsService = inject(SportFieldsService);
+  programmingTypesService = inject(ProgrammingTypesService);
+  scheduleProgrammingValidator = inject(SchedulesProgrammingValidatorService);
 
   destroyRef = inject(DestroyRef);
   formBuilder = inject(FormBuilder);
 
   scheduleProgrammingForm!: FormGroup;
   sportFields: SportFieldInfoResponse[] = [];
+  programmingTypes: ProgrammingTypeInfoResponse[] = [];
 
   loading: boolean = false;
 
@@ -74,25 +72,63 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.scheduleProgrammingForm.get('endHour')?.disable();
+
     this.loading = true;
 
-    this.sportFieldsService
-      .getAll()
+    forkJoin({
+      sportFields: this.sportFieldsService.getAll(),
+      programmingTypes: this.programmingTypesService.getAll(),
+    })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((response) => {
-        this.sportFields = response;
+      .subscribe(({ sportFields, programmingTypes }) => {
+        this.programmingTypes = programmingTypes;
+        this.sportFields = sportFields;
         this.loading = false;
+      });
+
+    this.scheduleProgrammingForm
+      .get('startHour')
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        if (this.scheduleProgrammingForm.get('startHour')?.invalid) {
+          this.scheduleProgrammingForm.get('endHour')?.disable();
+          this.scheduleProgrammingForm.get('endHour')?.reset();
+          return;
+        }
+
+        this.scheduleProgrammingForm.get('endHour')?.enable();
       });
   }
 
   buildForm(): void {
-    this.scheduleProgrammingForm = this.formBuilder.group({
-      sportFieldId: [null, Validators.required],
-      startDate: [null, Validators.required],
-      endDate: [null, Validators.required],
-      comment: ['', [Validators.required]],
-      updateProgrammingComment: ['', []],
-    });
+    this.scheduleProgrammingForm = this.formBuilder.group(
+      {
+        sportFieldId: [null, Validators.required],
+        startDate: [null, Validators.required],
+        startHour: [
+          null,
+          [
+            Validators.required,
+            this.scheduleProgrammingValidator.validateHour(),
+          ],
+        ],
+        endHour: [
+          null,
+          [
+            Validators.required,
+            this.scheduleProgrammingValidator.validateHour(),
+          ],
+        ],
+        clientId: [null],
+        type: [null, Validators.required],
+        comment: ['', [Validators.required]],
+        updateProgrammingComment: ['', []],
+      },
+      {
+        validators: [this.scheduleProgrammingValidator.validateEndHour()],
+      }
+    );
   }
 
   todayDateFilter(date: Date | null): boolean {
@@ -101,5 +137,7 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
     return (date || new Date()).getTime() >= today.getTime();
   }
 
-  register(): void {}
+  register(): void {
+    console.log(this.scheduleProgrammingForm.value);
+  }
 }
