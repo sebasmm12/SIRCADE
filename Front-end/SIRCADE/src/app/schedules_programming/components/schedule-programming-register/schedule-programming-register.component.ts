@@ -29,6 +29,10 @@ import { SchedulesProgrammingValidatorService } from '../../services/schedules-p
 import { ProgrammingTypesService } from '../../services/programming-types.service';
 import { forkJoin } from 'rxjs';
 import { ProgrammingTypeInfoResponse } from '../../interfaces/responses/programming-type-info.response';
+import { ScheduleProgrammingRequest } from '../../interfaces/requests/schedule-programming.request';
+import { addHours, addMinutes, setDate, setHours } from 'date-fns';
+import { SchedulesProgrammingService } from '../../services/schedules-programming.service';
+import { C } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-schedule-programming-register',
@@ -54,6 +58,8 @@ import { ProgrammingTypeInfoResponse } from '../../interfaces/responses/programm
 export class ScheduleProgrammingRegisterComponent implements OnInit {
   sportFieldsService = inject(SportFieldsService);
   programmingTypesService = inject(ProgrammingTypesService);
+  schedulesProgrammingService = inject(SchedulesProgrammingService);
+
   scheduleProgrammingValidator = inject(SchedulesProgrammingValidatorService);
 
   destroyRef = inject(DestroyRef);
@@ -123,7 +129,6 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
         clientId: [null],
         type: [null, Validators.required],
         comment: ['', [Validators.required]],
-        updateProgrammingComment: ['', []],
       },
       {
         validators: [this.scheduleProgrammingValidator.validateEndHour()],
@@ -138,6 +143,31 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
   }
 
   register(): void {
-    console.log(this.scheduleProgrammingForm.value);
+    let request: ScheduleProgrammingRequest = {
+      sportFieldId: this.scheduleProgrammingForm.get('sportFieldId')?.value,
+      clientId: this.scheduleProgrammingForm.get('clientId')?.value,
+      comment: this.scheduleProgrammingForm.get('comment')?.value,
+      type: this.scheduleProgrammingForm.get('type')?.value,
+      startDate: this.getDate('startDate', 'startHour'),
+      endDate: this.getDate('startDate', 'endHour'),
+    };
+
+    this.schedulesProgrammingService
+      .register(request)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.dialogRef.close(true));
+  }
+
+  getDate(startDateKey: string, hourKey: string): Date {
+    let date: Date = this.scheduleProgrammingForm.get(startDateKey)?.value;
+
+    date = setHours(date, -1 * date.getUTCHours());
+
+    const hour: Date = this.scheduleProgrammingForm.get(hourKey)?.value;
+
+    date = addHours(date, hour.getHours());
+    date = addMinutes(date, hour.getMinutes());
+
+    return date;
   }
 }

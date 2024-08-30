@@ -40,6 +40,7 @@ public static class ServiceCollectionExtension
         services.AddTransient<IUsersService, UsersService>();
         services.AddTransient<IPermissionsService, PermissionsService>();
         services.AddTransient<IProgrammingTypesService, ProgrammingTypesService>();
+        services.AddTransient<ISchedulesProgrammingService, SchedulesProgrammingService>();
 
         return services;
     }
@@ -62,6 +63,8 @@ public static class ServiceCollectionExtension
         services.AddScoped<IGetPermissionsPersistence, GetPermissionsPersistence>();
 
         services.AddScoped<IGetProgrammingTypesPersistence, GetProgrammingTypesPersistence>();
+
+        services.AddScoped<ICreateScheduleProgrammingPersistence, CreateScheduleProgrammingPersistence>();
 
 
         return services;

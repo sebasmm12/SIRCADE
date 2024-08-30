@@ -13,7 +13,6 @@
   <ItemGroup>
     <Folder Include="Common\Responses\" />
     <Folder Include="Permissions\Requests\" />
-    <Folder Include="SchedulesProgramming\Requests\" />
     <Folder Include="Users\Responses\" />
   </ItemGroup>
 
