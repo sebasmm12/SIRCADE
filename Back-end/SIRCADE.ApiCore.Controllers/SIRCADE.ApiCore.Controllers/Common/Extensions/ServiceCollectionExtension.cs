@@ -1,4 +1,6 @@
-﻿using SIRCADE.ApiCore.Controllers.Common.Services.Contracts;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using SIRCADE.ApiCore.Controllers.Common.Services.Contracts;
 using SIRCADE.ApiCore.Controllers.Common.Services.Interfaces;
 using SIRCADE.ApiCore.Controllers.Permissions.Services;
 using SIRCADE.ApiCore.Controllers.Permissions.Services.Imp;
@@ -20,6 +22,9 @@ using SIRCADE.ApiCore.Models.SportFields.Persistence;
 using SIRCADE.ApiCore.Models.SportFields.Persistence.Imp;
 using SIRCADE.ApiCore.Models.Users.Persistence;
 using SIRCADE.ApiCore.Models.Users.Persistence.Imp;
+using System.Text;
+using SIRCADE.ApiCore.Controllers.Accounts.Services;
+using SIRCADE.ApiCore.Controllers.Accounts.Services.Imp;
 
 namespace SIRCADE.ApiCore.Controllers.Common.Extensions;
 
@@ -41,6 +46,7 @@ public static class ServiceCollectionExtension
         services.AddTransient<IPermissionsService, PermissionsService>();
         services.AddTransient<IProgrammingTypesService, ProgrammingTypesService>();
         services.AddTransient<ISchedulesProgrammingService, SchedulesProgrammingService>();
+        services.AddTransient<IAccountsService, AccountsService>();
 
         return services;
     }
@@ -59,13 +65,33 @@ public static class ServiceCollectionExtension
         services.AddScoped<IUpdateSportFieldPersistence, UpdateSportFieldPersistence>();
 
         services.AddScoped<ICreateUserPersistence, CreateUserPersistence>();
+        services.AddScoped<IGetUsersPersistence, GetUsersPersistence>();
 
         services.AddScoped<IGetPermissionsPersistence, GetPermissionsPersistence>();
 
         services.AddScoped<IGetProgrammingTypesPersistence, GetProgrammingTypesPersistence>();
 
         services.AddScoped<ICreateScheduleProgrammingPersistence, CreateScheduleProgrammingPersistence>();
+        services.AddScoped<IGetSchedulesProgrammingPersistence, GetSchedulesProgrammingPersistence>();
 
+        return services;
+    }
+
+    public static IServiceCollection AddAuthentication(this IServiceCollection services, WebApplicationBuilder applicationBuilder)
+    {
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options => options.TokenValidationParameters = new()
+            {
+                ValidateIssuer = true,
+                ValidIssuer = applicationBuilder.Configuration.GetValue<string>("JWT:Issuer"),
+                ValidateAudience = true,
+                ValidAudience = applicationBuilder.Configuration.GetValue<string>("JWT:Audience"),
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(applicationBuilder.Configuration.GetValue<string>("JWT:Key")!)),
+                ClockSkew = TimeSpan.Zero
+            });
+
+        services.AddSingleton<IBearerTokenService, BearerTokenService>();
 
         return services;
     }

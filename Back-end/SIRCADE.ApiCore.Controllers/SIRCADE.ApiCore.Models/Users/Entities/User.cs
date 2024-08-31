@@ -24,4 +24,10 @@ public class User
     public UserDetail Detail { get; set; } = default!;
 
     public ICollection<ScheduleProgramming>? ScheduleProgrammings { get; set; }
+
+
+    public string GetFullName()
+    {
+        return $"{Detail.Names} {Detail.PaternalLastName} {Detail.MaternalLastName}";
+    }
 }

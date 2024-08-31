@@ -9,4 +9,9 @@ public static class PermissionsMapper
     {
         return new(permission.Id, permission.Name);
     }
+
+    public static RolePermissionResponse MapToRolePermissionResponse(this Permission permission)
+    {
+        return new(permission.Id, permission.Name, permission.Type, permission.Url, permission.Icon);
+    }
 }

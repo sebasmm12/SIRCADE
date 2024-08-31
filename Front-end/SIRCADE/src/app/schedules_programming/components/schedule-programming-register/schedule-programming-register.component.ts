@@ -143,6 +143,11 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
   }
 
   register(): void {
+    this.scheduleProgrammingForm.markAllAsTouched();
+    this.scheduleProgrammingForm.updateValueAndValidity();
+
+    if (this.scheduleProgrammingForm.invalid) return;
+
     let request: ScheduleProgrammingRequest = {
       sportFieldId: this.scheduleProgrammingForm.get('sportFieldId')?.value,
       clientId: this.scheduleProgrammingForm.get('clientId')?.value,

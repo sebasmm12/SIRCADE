@@ -14,4 +14,17 @@ public class GetPermissionsPersistence(ApplicationDbContext context) : IGetPermi
 
         return permissions;
     }
+
+    public async Task<IEnumerable<Permission>> ExecuteAsync(int roleId)
+    {
+        var permissions = await context
+                                    .RolePermissions
+                                    .Include(rolePermission => rolePermission.Permission)
+                                    .Where(rolePermission => rolePermission.RoleId == roleId)
+                                    .AsNoTracking()
+                                    .Select(rolePermission => rolePermission.Permission)
+                                    .ToListAsync();
+
+        return permissions;
+    }
 }

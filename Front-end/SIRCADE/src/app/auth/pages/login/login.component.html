@@ -1,0 +1,112 @@
+<div class="blank-layout-container justify-content-center">
+  <div class="position-relative row w-100 h-100">
+    <div class="col-lg-7 col-xl-8 bg-gredient p-0">
+      <div class="p-24 h-100">
+        @if(options.theme === 'light') {
+        <a [routerLink]="['/dashboards/dashboard1']">
+          <img
+            src="./assets/images/logos/dark-logo.svg"
+            class="align-middle m-2"
+            alt="logo"
+          />
+        </a>
+        } @if(options.theme === 'dark') {
+        <a [routerLink]="['/dashboards/dashboard1']">
+          <img
+            src="./assets/images/logos/light-logo.svg"
+            class="align-middle m-2"
+            alt="logo"
+          />
+        </a>
+        }
+
+        <div
+          class="align-items-center justify-content-center img-height d-none d-lg-flex"
+        >
+          <img
+            src="/assets/images/backgrounds/login-bg.svg"
+            alt="login"
+            style="max-width: 500px"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-5 col-xl-4 p-0">
+      <div
+        class="p-32 d-flex align-items-start align-items-lg-center justify-content-center h-100"
+      >
+        <div class="row justify-content-center w-100">
+          <div class="col-lg-9 max-width-form">
+            <h4 class="f-w-700 f-s-24 m-0">Welcome to SIRCADE</h4>
+            <span class="f-s-14 d-block mat-body-1 m-t-8"
+              >Tu página de reservas de canchas favorita</span
+            >
+            <form
+              class="m-t-30"
+              [formGroup]="accountForm"
+              (ngSubmit)="submit()"
+            >
+              @if(generalErrorMessage != '') {
+              <mat-error class="m-b-12">{{ generalErrorMessage }}</mat-error>
+              }
+              <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block"
+                >NSA</mat-label
+              >
+              <mat-form-field
+                appearance="outline"
+                class="w-100"
+                color="primary"
+              >
+                <input matInput formControlName="nsa" />
+                @if(accountsValidatorService.isFieldInvalid(accountForm, 'nsa'))
+                {
+                <mat-error>{{
+                  accountsValidatorService.showErrorMessage(accountForm, "nsa")
+                }}</mat-error>
+                }
+              </mat-form-field>
+
+              <!-- password -->
+              <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block"
+                >Contraseña</mat-label
+              >
+              <mat-form-field
+                appearance="outline"
+                class="w-100"
+                color="primary"
+              >
+                <input matInput type="password" formControlName="password" />
+                @if(accountsValidatorService.isFieldInvalid(accountForm,
+                'password')) {
+                <mat-error>{{
+                  accountsValidatorService.showErrorMessage(
+                    accountForm,
+                    "password"
+                  )
+                }}</mat-error>
+                }
+              </mat-form-field>
+
+              <div class="d-flex align-items-center m-b-12">
+                <a
+                  [routerLink]="['/authentication/side-forgot-pwd']"
+                  class="text-primary f-w-600 text-decoration-none m-l-auto f-s-14"
+                  >¿ Olvidaste tu contraseña ?</a
+                >
+              </div>
+              <button
+                mat-flat-button
+                color="primary"
+                class="w-100"
+                [disabled]="!accountForm.valid"
+              >
+                Iniciar Sesión
+              </button>
+              <!-- input -->
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

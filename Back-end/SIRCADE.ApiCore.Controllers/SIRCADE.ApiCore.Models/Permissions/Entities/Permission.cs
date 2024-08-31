@@ -31,5 +31,8 @@ public class Permission
     [Column("Icono")]
     public string? Icon { get; set; }
 
+    [Column("Url")]
+    public string? Url { get; set; } = default!;
+
     public ICollection<RolePermission> Roles { get; set; } = [];
 }

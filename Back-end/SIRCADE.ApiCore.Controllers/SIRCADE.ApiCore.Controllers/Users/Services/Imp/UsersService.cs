@@ -29,7 +29,7 @@ public class UsersService
 
     #region private methods
 
-    private void SetPasswordToUser(HashDto hashDto, User user)
+    private static void SetPasswordToUser(HashDto hashDto, User user)
     {
         user.Password = hashDto.Hash;
         user.Salt = hashDto.Salt;

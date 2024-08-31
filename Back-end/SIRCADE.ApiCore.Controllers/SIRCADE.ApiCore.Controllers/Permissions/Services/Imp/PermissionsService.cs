@@ -15,4 +15,13 @@ public class PermissionsService
 
         return permissionsResponse;
     }
+
+    public async Task<IEnumerable<RolePermissionResponse>> GetAsync(int roleId)
+    {
+        var permissions = await getPermissionsPersistence.ExecuteAsync(roleId);
+
+        var permissionsResponse = permissions.Select(permission => permission.MapToRolePermissionResponse());
+
+        return permissionsResponse;
+    }
 }

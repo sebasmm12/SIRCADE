@@ -15,4 +15,12 @@ public class PermissionsController(IPermissionsService permissionsService) : Con
 
         return Ok(permissions);
     }
+
+    [HttpGet("roles/{roleId:int}")]
+    public async Task<IActionResult> GetAsync([FromRoute]int roleId)
+    {
+        var permissions = await permissionsService.GetAsync(roleId);
+
+        return Ok(permissions);
+    }
 }

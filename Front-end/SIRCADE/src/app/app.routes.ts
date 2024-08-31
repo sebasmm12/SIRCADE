@@ -109,6 +109,11 @@ export const routes: Routes = [
             (m) => m.LandingPageRoutes
           ),
       },
+      {
+        path: '',
+        loadChildren: () =>
+          import('./auth/auth.routes').then((m) => m.authRoutes),
+      },
     ],
   },
   {

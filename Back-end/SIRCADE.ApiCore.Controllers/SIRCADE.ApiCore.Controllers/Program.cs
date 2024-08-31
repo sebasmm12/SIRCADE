@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using SIRCADE.ApiCore.Controllers.Common.Extensions;
 using SIRCADE.ApiCore.Models;
 
@@ -13,7 +14,32 @@ builder
         jsonOptions.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("Bearer", new()
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header
+    });
+
+    c.AddSecurityRequirement(new()
+    {
+        {
+            new()
+            {
+                Reference = new()
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 // Add Db context to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -29,6 +55,9 @@ builder.Services.AddPersistence();
 
 // Add services to the container.
 builder.Services.AddServices();
+
+// Add authentication to the container.
+builder.Services.AddAuthentication(builder);
 
 
 // Enable CORS to connect with the SIRCADE angular projects

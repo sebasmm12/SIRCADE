@@ -70,9 +70,9 @@ public class ScheduleProgramming
     public DateTime? ModifyDate { get; set; }
 
 
-    public ICollection<SportField> SportField { get; set; } = [];
+    public SportField SportField { get; set; } = default!;
 
-    public ICollection<User>? Clients { get; set; }
+    public User? Client { get; set; }
 
     public ProgrammingType ProgrammingType { get; set; } = default!;
 }

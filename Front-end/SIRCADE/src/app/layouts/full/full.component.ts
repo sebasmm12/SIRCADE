@@ -1,12 +1,18 @@
 import { BreakpointObserver, MediaMatcher } from '@angular/cdk/layout';
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
 import { CoreService } from 'src/app/services/core.service';
 import { AppSettings } from 'src/app/config';
 import { filter } from 'rxjs/operators';
 import { NavigationEnd, Router } from '@angular/router';
-import { navItems } from './vertical/sidebar/sidebar-data';
 import { NavService } from '../../services/nav.service';
 import { AppNavItemComponent } from './vertical/sidebar/nav-item/nav-item.component';
 import { RouterModule } from '@angular/router';
@@ -20,6 +26,10 @@ import { AppHorizontalHeaderComponent } from './horizontal/header/header.compone
 import { AppHorizontalSidebarComponent } from './horizontal/sidebar/sidebar.component';
 import { AppBreadcrumbComponent } from './shared/breadcrumb/breadcrumb.component';
 import { CustomizerComponent } from './shared/customizer/customizer.component';
+import { NavigationService } from '../services/navigation.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AccountsService } from 'src/app/auth/services/accounts.service';
+import { NavItem } from './vertical/sidebar/nav-item/nav-item';
 
 const MOBILE_VIEW = 'screen and (max-width: 768px)';
 const TABLET_VIEW = 'screen and (min-width: 769px) and (max-width: 1024px)';
@@ -63,7 +73,11 @@ interface quicklinks {
   encapsulation: ViewEncapsulation.None,
 })
 export class FullComponent implements OnInit {
-  navItems = navItems;
+  destroyRef = inject(DestroyRef);
+  navigationService = inject(NavigationService);
+  accountsService = inject(AccountsService);
+
+  navItems: NavItem[] = [];
 
   @ViewChild('leftsidenav')
   public sidenav: MatSidenav;
@@ -220,7 +234,22 @@ export class FullComponent implements OnInit {
       });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const roleId = this.accountsService.User.roleId;
+
+    this.navigationService
+      .getRolePermissions(roleId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((response) => {
+        this.navItems = response.map((item) => {
+          return {
+            displayName: item.name,
+            route: item.url,
+            iconName: item.icon,
+          };
+        });
+      });
+  }
 
   ngOnDestroy() {
     this.layoutChangesSubscription.unsubscribe();

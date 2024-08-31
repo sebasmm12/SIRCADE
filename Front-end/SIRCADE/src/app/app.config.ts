@@ -5,8 +5,10 @@ import {
   LOCALE_ID,
 } from '@angular/core';
 import {
+  HTTP_INTERCEPTORS,
   HttpClient,
   provideHttpClient,
+  withInterceptors,
   withInterceptorsFromDi,
 } from '@angular/common/http';
 import { routes } from './app.routes';
@@ -35,6 +37,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { MAT_TIME_LOCALE } from '@dhutaryan/ngx-mat-timepicker';
+import { authInterceptor } from './auth/helpers/auth.interceptor';
 
 registerLocaleData(localeEs);
 
@@ -55,7 +58,10 @@ export const appConfig: ApplicationConfig = {
       }),
       withComponentInputBinding()
     ),
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(
+      withInterceptorsFromDi(),
+      withInterceptors([authInterceptor])
+    ),
     provideClientHydration(),
     provideAnimationsAsync(),
 

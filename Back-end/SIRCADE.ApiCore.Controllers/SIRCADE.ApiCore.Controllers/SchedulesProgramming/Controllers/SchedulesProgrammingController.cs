@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SIRCADE.ApiCore.Controllers.SchedulesProgramming.Requests;
 using SIRCADE.ApiCore.Controllers.SchedulesProgramming.Services;
+using SIRCADE.ApiCore.Models.SchedulesProgramming.Queries;
 
 namespace SIRCADE.ApiCore.Controllers.SchedulesProgramming.Controllers;
 
@@ -14,5 +15,13 @@ public class SchedulesProgrammingController(ISchedulesProgrammingService schedul
         var scheduleProgrammingId = await schedulesProgrammingService.CreateAsync(scheduleProgrammingCreationRequest);
 
         return Ok(scheduleProgrammingId);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAsync([FromQuery] SchedulesProgrammingWeeklyQueries schedulesProgrammingWeeklyQueries) 
+    {
+        var schedulesProgramming = await schedulesProgrammingService.GetAsync(schedulesProgrammingWeeklyQueries);
+
+        return Ok(schedulesProgramming);
     }
 }

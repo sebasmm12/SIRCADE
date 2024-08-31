@@ -4,6 +4,7 @@ import {
   EventEmitter,
   Input,
   ViewEncapsulation,
+  inject,
 } from '@angular/core';
 import { CoreService } from 'src/app/services/core.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,6 +16,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgScrollbarModule } from 'ngx-scrollbar';
+import { AccountsService } from 'src/app/auth/services/accounts.service';
 
 interface notifications {
   id: number;
@@ -59,6 +61,8 @@ interface quicklinks {
   encapsulation: ViewEncapsulation.None,
 })
 export class HeaderComponent {
+  accountsService = inject(AccountsService);
+
   @Input() showToggle = true;
   @Input() toggleChecked = false;
   @Output() toggleMobileNav = new EventEmitter<void>();
@@ -277,6 +281,10 @@ export class HeaderComponent {
       link: '/theme-pages/treeview',
     },
   ];
+
+  logOut(): void {
+    this.accountsService.logOut();
+  }
 }
 
 @Component({
