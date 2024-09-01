@@ -59,6 +59,8 @@ builder.Services.AddServices();
 // Add authentication to the container.
 builder.Services.AddAuthentication(builder);
 
+builder.Services.AddHttpContextAccessor();
+
 
 // Enable CORS to connect with the SIRCADE angular projects
 builder.Services.AddCors(x =>

@@ -73,6 +73,7 @@ public static class ServiceCollectionExtension
 
         services.AddScoped<ICreateScheduleProgrammingPersistence, CreateScheduleProgrammingPersistence>();
         services.AddScoped<IGetSchedulesProgrammingPersistence, GetSchedulesProgrammingPersistence>();
+        services.AddScoped<IUpdateScheduleProgrammingPersistence, UpdateScheduleProgrammingPersistence>();
 
         return services;
     }

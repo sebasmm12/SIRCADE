@@ -1,14 +1,14 @@
 <mat-card appearance="outlined">
   <mat-card-content>
     <div class="d-flex align-items-center">
-      <mat-card-title class="m-b-0">Programación de horarios</mat-card-title>
+      <mat-card-title class="m-b-0">{{ Title }}</mat-card-title>
       <div class="m-l-auto">
         <button
           mat-flat-button
           color="primary"
           (click)="showScheduleProgrammingRegister()"
         >
-          Programar horario
+          {{ RegisterButtonTitle }}
         </button>
       </div>
     </div>
@@ -67,6 +67,7 @@
         [dayStartHour]="dayStartHour"
         [dayEndHour]="dayEndHour"
         [events]="events"
+        (eventClicked)="showDetail($event.event)"
       >
       </mwl-calendar-week-view>
     </div>

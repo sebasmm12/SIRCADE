@@ -32,7 +32,8 @@ import { ProgrammingTypeInfoResponse } from '../../interfaces/responses/programm
 import { ScheduleProgrammingRequest } from '../../interfaces/requests/schedule-programming.request';
 import { addHours, addMinutes, setDate, setHours } from 'date-fns';
 import { SchedulesProgrammingService } from '../../services/schedules-programming.service';
-import { C } from '@angular/cdk/keycodes';
+import { AccountsService } from 'src/app/auth/services/accounts.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-schedule-programming-register',
@@ -59,6 +60,7 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
   sportFieldsService = inject(SportFieldsService);
   programmingTypesService = inject(ProgrammingTypesService);
   schedulesProgrammingService = inject(SchedulesProgrammingService);
+  accountsService = inject(AccountsService);
 
   scheduleProgrammingValidator = inject(SchedulesProgrammingValidatorService);
 
@@ -70,6 +72,7 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
   programmingTypes: ProgrammingTypeInfoResponse[] = [];
 
   loading: boolean = false;
+  generalErrorMessage = '';
 
   constructor(
     public dialogRef: MatDialogRef<ScheduleProgrammingRegisterComponent>
@@ -90,6 +93,9 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
       .subscribe(({ sportFields, programmingTypes }) => {
         this.programmingTypes = programmingTypes;
         this.sportFields = sportFields;
+
+        this.disableType();
+
         this.loading = false;
       });
 
@@ -160,7 +166,14 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
     this.schedulesProgrammingService
       .register(request)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.dialogRef.close(true));
+      .subscribe({
+        next: () => {
+          this.dialogRef.close(true);
+        },
+        error: (error: HttpErrorResponse) => {
+          this.generalErrorMessage = error.error;
+        },
+      });
   }
 
   getDate(startDateKey: string, hourKey: string): Date {
@@ -174,5 +187,21 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
     date = addMinutes(date, hour.getMinutes());
 
     return date;
+  }
+
+  disableType(): void {
+    if (this.accountsService.User?.role == 'Socio') {
+      this.scheduleProgrammingForm
+        .get('clientId')
+        ?.setValue(this.accountsService.User?.id);
+
+      this.scheduleProgrammingForm.get('type')?.disable();
+
+      const type = this.programmingTypes.find(
+        (programmingType) => programmingType.name == 'Reserva'
+      );
+
+      this.scheduleProgrammingForm.get('type')?.setValue(type?.id);
+    }
   }
 }

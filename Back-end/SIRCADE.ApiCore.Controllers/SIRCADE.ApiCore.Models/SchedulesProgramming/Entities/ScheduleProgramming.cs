@@ -75,4 +75,19 @@ public class ScheduleProgramming
     public User? Client { get; set; }
 
     public ProgrammingType ProgrammingType { get; set; } = default!;
+
+    public User RegisterUser { get; set; }
+
+    public User ModifyUser { get; set; }
+
+
+    public string GetRegisterUserFullName()
+    {
+        return $"{RegisterUser.Detail.Names} {RegisterUser.Detail.PaternalLastName} { RegisterUser.Detail.MaternalLastName }";
+    }
+
+    public string? GetClientFullName()
+    {
+        return ClientId is null ? null : $"{Client!.Detail.Names} {Client!.Detail.PaternalLastName} { Client!.Detail.MaternalLastName }";
+    }
 }

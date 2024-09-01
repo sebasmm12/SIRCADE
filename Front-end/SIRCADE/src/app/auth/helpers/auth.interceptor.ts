@@ -20,7 +20,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         accountsService.logOut();
       }
 
-      return throwError(() => new Error(error.message));
+      return throwError(() => error);
     })
   );
 };

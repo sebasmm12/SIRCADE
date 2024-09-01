@@ -1,0 +1,20 @@
+::ng-deep .schedule-programming-header {
+
+  &::before {
+    height: 0 !important;
+    content: none !important;
+  }
+}
+
+.schedule-programming-detail {
+.schedule-programming-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+}
+
+.schedule-programming-date {
+  padding-right: 5px !important;
+}
+}
+

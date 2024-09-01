@@ -9,5 +9,8 @@ public record ScheduleProgrammingInfoResponse(
     DateTime StartDate,
     DateTime EndDate,
     string? Comment,
+    string RegisterUser,
     int Type,
-    string TypeName);
+    string TypeName,
+    string LightColor,
+    string DarkColor);

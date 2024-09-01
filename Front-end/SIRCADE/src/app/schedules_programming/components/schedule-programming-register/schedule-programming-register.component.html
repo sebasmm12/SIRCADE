@@ -3,6 +3,9 @@
 <mat-spinner></mat-spinner>
 } @else {
 <mat-dialog-content>
+  @if(generalErrorMessage != '') {
+  <mat-error class="m-b-12">{{ generalErrorMessage }}</mat-error>
+  }
   <form [formGroup]="scheduleProgrammingForm" novalidate>
     <div class="row m-b-8">
       <div class="col-sm-12 d-flex align-items-center">

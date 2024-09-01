@@ -3,6 +3,7 @@ using SIRCADE.ApiCore.Models.Permissions.Entities;
 using SIRCADE.ApiCore.Models.RolePermissions.Entities;
 using SIRCADE.ApiCore.Models.Roles.Entities;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Entities;
+using SIRCADE.ApiCore.Models.SchedulesProgramming.Enums;
 using SIRCADE.ApiCore.Models.SportFields.Entities;
 using SIRCADE.ApiCore.Models.Unities.Entities;
 using SIRCADE.ApiCore.Models.Users.Entities;
@@ -38,8 +39,29 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
             .WithMany(programmingType => programmingType.SchedulesProgramming)
             .HasForeignKey(scheduleProgramming => scheduleProgramming.Type);
 
+        modelBuilder
+            .Entity<ScheduleProgramming>()
+            .HasOne(scheduleProgramming => scheduleProgramming.RegisterUser)
+            .WithMany(user => user.ScheduleProgrammingsRegister)
+            .HasForeignKey(scheduleProgramming => scheduleProgramming.RegisterUserId);
+
+        modelBuilder
+            .Entity<ScheduleProgramming>()
+            .HasOne(scheduleProgramming => scheduleProgramming.ModifyUser)
+            .WithMany(user => user.ScheduleProgrammingsModify)
+            .HasForeignKey(scheduleProgramming => scheduleProgramming.ModifyUserId);
+
+        modelBuilder
+            .Entity<ScheduleProgramming>()
+            .HasOne(scheduleProgramming => scheduleProgramming.Client)
+            .WithMany(user => user.ScheduleProgrammings)
+            .HasForeignKey(scheduleProgramming => scheduleProgramming.ClientId);
+
         modelBuilder.Entity<Role>()
             .HasQueryFilter(x => x.Active);
+
+        modelBuilder.Entity<ScheduleProgramming>()
+            .HasQueryFilter(x => x.State != ScheduleProgrammingState.Cancelled);
 
     }
 

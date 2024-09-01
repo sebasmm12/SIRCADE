@@ -14,4 +14,17 @@ public class GetProgrammingTypesPersistence(ApplicationDbContext applicationDbCo
 
         return programmingTypes;
     }
+
+
+    public async Task<ProgrammingType> ExecuteAsync(int programmingTypeId)
+    {
+        var programmingType = await applicationDbContext
+                                        .ProgrammingTypes
+                                        .AsNoTracking()
+                                        .FirstOrDefaultAsync(programmingType => programmingType.Id == programmingTypeId);
+
+        ArgumentNullException.ThrowIfNull(programmingType);
+
+        return programmingType;
+    }
 }

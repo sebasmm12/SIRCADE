@@ -9,4 +9,10 @@ public interface ISchedulesProgrammingService
     Task<int> CreateAsync(ScheduleProgrammingRegisterRequest scheduleProgrammingRegisterRequest);
 
     Task<IEnumerable<ScheduleProgrammingInfoResponse>> GetAsync(SchedulesProgrammingWeeklyQueries schedulesProgrammingWeeklyQueries);
+    
+    Task UpdateAsync(ScheduleProgrammingUpdateRequest scheduleProgrammingUpdateRequest);
+    
+    Task<ScheduleProgrammingInfoResponse> GetAsync(int scheduleProgrammingId);
+    
+    Task CancelAsync(int scheduleProgrammingId);
 }

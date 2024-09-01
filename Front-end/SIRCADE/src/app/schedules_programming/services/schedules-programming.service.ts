@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { ScheduleProgrammingInfoResponse } from '../interfaces/responses/schedule-programming-info.response';
 import { SchedulesProgrammingWeeklyQueries } from '../interfaces/queries/schedules-programming-weekly.queries';
 import queryString from 'query-string';
+import { ScheduleProgrammingUpdateRequest } from '../interfaces/requests/schedule-programming-update.request';
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +32,21 @@ export class SchedulesProgrammingService {
 
     return this.httpClient.get<ScheduleProgrammingInfoResponse[]>(
       `${this.baseUrl}/schedules-programming?${params}`
+    );
+  }
+
+  cancel(scheduleProgrammingId: number): Observable<void> {
+    return this.httpClient.delete<void>(
+      `${this.baseUrl}/schedules-programming/${scheduleProgrammingId}`
+    );
+  }
+
+  reschedule(
+    scheduleProgrammingUpdateRequest: ScheduleProgrammingUpdateRequest
+  ): Observable<void> {
+    return this.httpClient.put<void>(
+      `${this.baseUrl}/schedules-programming`,
+      scheduleProgrammingUpdateRequest
     );
   }
 }

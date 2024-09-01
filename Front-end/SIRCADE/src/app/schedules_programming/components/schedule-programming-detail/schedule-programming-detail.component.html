@@ -1,0 +1,186 @@
+<div matDialogTitle class="schedule-programming-header">
+  <div class="w-100 row justify-content-end m-t-16">
+    @if(startDate > currentDate) {
+    <div>
+      <button mat-icon-button matTooltip="Reprogramar" (click)="reschedule()">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </div>
+    <div>
+      <button
+        mat-icon-button
+        matTooltip="Cancelar"
+        (click)="showCancellationConfirmation()"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+    }
+
+    <div>
+      <button mat-icon-button matTooltip="Cerrar" (click)="close()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
+<mat-dialog-content>
+  <form
+    class="schedule-programming-detail"
+    [formGroup]="scheduleProgrammingUpdateForm"
+  >
+    <div class="row m-b-16">
+      <div class="col-sm-1">
+        <div
+          class="schedule-programming-color"
+          [style.backgroundColor]="scheduleProgrammingColor"
+        ></div>
+      </div>
+      <div class="col-sm-11">
+        <div class="f-s-24 f-w-700">
+          {{ scheduleProgrammingInfo.typeName }}
+        </div>
+        <div class="f-s-16 f-w-600 m-t-8">
+          {{ scheduleProgrammingInfo.sportFieldName }}
+        </div>
+        <div class="f-s-16 f-w-600 m-t-4">
+          @if(canEdit) { @if(generalErrorMessage != '') {
+          <mat-error class="m-b-12">{{ generalErrorMessage }}</mat-error>
+          }
+          <div class="row m-t-16">
+            <div class="col-sm-12 schedule-programming-date">
+              <mat-form-field appearance="outline" class="w-100">
+                <input
+                  matInput
+                  name="startDate"
+                  formControlName="startDate"
+                  [matDatepicker]="picker"
+                  [matDatepickerFilter]="todayDateFilter"
+                />
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="picker"
+                ></mat-datepicker-toggle>
+                @if(scheduleProgrammingValidator.isFieldInvalid(scheduleProgrammingUpdateForm,
+                'startDate')) {
+                <mat-error>{{
+                  scheduleProgrammingValidator.showErrorMessage(
+                    scheduleProgrammingUpdateForm,
+                    "startDate"
+                  )
+                }}</mat-error>
+                }
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <mat-form-field appearance="outline">
+                <input
+                  type="text"
+                  matInput
+                  [matTimepicker]="startTimepicker"
+                  formControlName="startHour"
+                  name="startHour"
+                />
+                <mat-timepicker-toggle
+                  matSuffix
+                  [for]="startTimepicker"
+                ></mat-timepicker-toggle>
+                <mat-timepicker
+                  #startTimepicker
+                  mode="input"
+                  orientation="horizontal"
+                >
+                </mat-timepicker>
+                @if(scheduleProgrammingValidator.isFieldInvalid(scheduleProgrammingUpdateForm,
+                'startHour')) {
+                <mat-error>{{
+                  scheduleProgrammingValidator.showErrorMessage(
+                    scheduleProgrammingUpdateForm,
+                    "startHour"
+                  )
+                }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            <div class="col-sm-6">
+              <mat-form-field appearance="outline">
+                <input
+                  type="text"
+                  matInput
+                  [matTimepicker]="endTimepicker"
+                  formControlName="endHour"
+                  name="endHour"
+                />
+                <mat-timepicker-toggle
+                  matSuffix
+                  [for]="endTimepicker"
+                ></mat-timepicker-toggle>
+                <mat-timepicker
+                  #endTimepicker
+                  mode="input"
+                  orientation="horizontal"
+                >
+                </mat-timepicker>
+                @if(scheduleProgrammingValidator.isFieldInvalid(scheduleProgrammingUpdateForm,
+                'endHour')) {
+                <mat-error>{{
+                  scheduleProgrammingValidator.showErrorMessage(
+                    scheduleProgrammingUpdateForm,
+                    "endHour"
+                  )
+                }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row justify-content-end gap-8">
+            <button mat-button (click)="cancelEdition()">Cancelar</button>
+            <button
+              mat-raised-button
+              color="primary"
+              [disabled]="scheduleProgrammingUpdateForm.invalid"
+              (click)="save()"
+            >
+              Guardar
+            </button>
+          </div>
+
+          } @else {
+          <span class="m-r-4">{{
+            scheduleProgrammingInfo.startDate | date : "dd/MM/yyyy"
+          }}</span>
+          {{ scheduleProgrammingInfo.startDate | date : "HH:mm" }} -
+          {{ scheduleProgrammingInfo.endDate | date : "HH:mm" }}
+          }
+        </div>
+      </div>
+    </div>
+    <div class="row m-b-16">
+      <div class="col-sm-1">
+        <mat-icon>notifications</mat-icon>
+      </div>
+      <div class="col-sm-11 f-s-16 f-w-600">1 día antes</div>
+    </div>
+    <div class="row m-b-16">
+      <div class="col-sm-1">
+        <mat-icon>people</mat-icon>
+      </div>
+      <div class="col-sm-11 f-s-16 f-w-600">
+        {{ scheduleProgrammingInfo.registerUser }}
+      </div>
+    </div>
+    <div class="row m-b-16">
+      <div class="col-sm-1">
+        <mat-icon>comments</mat-icon>
+      </div>
+      <div class="col-sm-11 f-s-16 f-w-600">
+        <p class="m-t-0 m-b-0">
+          {{ scheduleProgrammingInfo.comment || "Sin comentarios" }}
+        </p>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>

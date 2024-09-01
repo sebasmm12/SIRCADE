@@ -1,5 +1,5 @@
 import { CommonModule, NgSwitch } from '@angular/common';
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, Input, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -22,6 +22,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ScheduleProgrammingInfoResponse } from '../../interfaces/responses/schedule-programming-info.response';
 import { SchedulesProgrammingWeeklyQueries } from '../../interfaces/queries/schedules-programming-weekly.queries';
 import { getLocalDate } from 'src/app/shared/extensions/date.extensions';
+import { Title } from '@angular/platform-browser';
+import { ScheduleProgrammingDetailComponent } from '../../components/schedule-programming-detail/schedule-programming-detail.component';
+import { CoreService } from 'src/app/services/core.service';
 
 @Component({
   selector: 'app-schedules-programming-calendar',
@@ -45,8 +48,15 @@ import { getLocalDate } from 'src/app/shared/extensions/date.extensions';
   providers: [provideNativeDateAdapter(), CalendarDateFormatter],
 })
 export class SchedulesProgrammingCalendarComponent implements OnInit {
+  @Input('title')
+  Title: string;
+
+  @Input('register-title-button')
+  RegisterButtonTitle: string;
+
   dialogService = inject(MatDialog);
   destroyRef = inject(DestroyRef);
+  coreService = inject(CoreService);
   scheduleProgrammingService = inject(SchedulesProgrammingService);
 
   view: any = 'month';
@@ -87,10 +97,27 @@ export class SchedulesProgrammingCalendarComponent implements OnInit {
   ): CalendarEvent[] {
     const events: CalendarEvent[] = schedulesProgramming.map(
       (scheduleProgramming) => {
+        const color =
+          this.coreService.getOptions().theme === 'dark'
+            ? scheduleProgramming.darkColor
+            : scheduleProgramming.lightColor;
+
+        const scheduleProgrammingCssClass =
+          scheduleProgramming.typeName == 'Mantenimiento'
+            ? 'maintenance'
+            : 'reservation';
+
         return {
           start: new Date(scheduleProgramming.startDate),
           end: new Date(scheduleProgramming.endDate),
           title: this.getTitleTemplate(scheduleProgramming),
+          id: scheduleProgramming.id,
+          meta: scheduleProgramming,
+          color: {
+            primary: color,
+            secondary: color,
+          },
+          cssClass: scheduleProgrammingCssClass,
         };
       }
     );
@@ -136,6 +163,19 @@ export class SchedulesProgrammingCalendarComponent implements OnInit {
         this.schedulesProgramming = response;
         this.events = this.mapToCalendarEvents(this.schedulesProgramming);
         this.loading = false;
+      });
+  }
+
+  showDetail(event: CalendarEvent) {
+    this.dialogService
+      .open(ScheduleProgrammingDetailComponent, {
+        width: '600px',
+        data: event.meta,
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (!result) return;
+        this.getAllByWeek();
       });
   }
 }

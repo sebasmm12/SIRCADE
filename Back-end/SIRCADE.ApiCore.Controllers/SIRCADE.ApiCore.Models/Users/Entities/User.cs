@@ -25,6 +25,10 @@ public class User
 
     public ICollection<ScheduleProgramming>? ScheduleProgrammings { get; set; }
 
+    public ICollection<ScheduleProgramming>? ScheduleProgrammingsRegister { get; set; }
+
+    public ICollection<ScheduleProgramming>? ScheduleProgrammingsModify { get; set; }
+
 
     public string GetFullName()
     {

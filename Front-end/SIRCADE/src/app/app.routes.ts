@@ -83,7 +83,7 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'programacion-horarios',
+        path: '',
         loadChildren: () =>
           import('./schedules_programming/schedules_programming.routes').then(
             (m) => m.schedulesProgrammingRoutes

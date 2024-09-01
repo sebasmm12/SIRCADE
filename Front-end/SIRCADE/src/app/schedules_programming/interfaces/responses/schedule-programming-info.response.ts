@@ -9,4 +9,7 @@ export interface ScheduleProgrammingInfoResponse {
   startDate: Date;
   endDate: Date;
   comment?: string;
+  registerUser: string;
+  lightColor: string;
+  darkColor: string;
 }

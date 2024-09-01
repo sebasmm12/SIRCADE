@@ -20,5 +20,11 @@ public class ProgrammingType
     [Column("Nombre")]
     public string Name { get; set; } = default!;
 
+    [Column("ColorTemaBlanco")]
+    public string LightColor { get; set; } = default!;
+
+    [Column("ColorTemaOscuro")]
+    public string DarkColor { get; set; } = default!;
+
     public ICollection<ScheduleProgramming> SchedulesProgramming { get; set; } = [];
 }

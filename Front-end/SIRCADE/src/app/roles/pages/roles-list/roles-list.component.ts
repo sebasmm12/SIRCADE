@@ -27,6 +27,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RoleUpdateDialogComponent } from '../../components/role-update-dialog/role-update-dialog.component';
 import { RoleRegisterDialogComponent } from '../../components/role-register-dialog/role-register-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ResultMessageService } from 'src/app/shared/services/result-message.service';
+import { ResultActionType } from 'src/app/shared/interfaces/enums/result-action-type';
 
 @Component({
   selector: 'app-roles-list',
@@ -50,7 +52,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class RolesListComponent implements OnInit, AfterViewInit {
   rolesService: RolesService = inject(RolesService);
   dialogService = inject(MatDialog);
-  snackBarService = inject(MatSnackBar);
+  resultMessageService = inject(ResultMessageService);
 
   destroyRef = inject(DestroyRef);
 
@@ -124,10 +126,10 @@ export class RolesListComponent implements OnInit, AfterViewInit {
           .delete(roleId)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe(() => {
-            this.snackBarService.open('Role eliminado exitosamente', 'Cerrar', {
-              panelClass: ['snackbar-error'],
-              duration: 3000,
-            });
+            this.resultMessageService.showMessage(
+              'Role eliminado exitosamente',
+              ResultActionType.Deletion
+            );
             this.get();
           });
       });
@@ -144,10 +146,11 @@ export class RolesListComponent implements OnInit, AfterViewInit {
       .subscribe((updated: boolean) => {
         if (!updated) return;
 
-        this.snackBarService.open('Role actualizado exitosamente', 'Cerrar', {
-          panelClass: ['snackbar-warning'],
-          duration: 3000,
-        });
+        this.resultMessageService.showMessage(
+          'Role actualizado exitosamente',
+          ResultActionType.Update
+        );
+
         this.get();
       });
   }
@@ -162,10 +165,10 @@ export class RolesListComponent implements OnInit, AfterViewInit {
       .subscribe((created: boolean) => {
         if (!created) return;
 
-        this.snackBarService.open('Role creado exitosamente', 'Cerrar', {
-          panelClass: ['snackbar-success'],
-          duration: 3000,
-        });
+        this.resultMessageService.showMessage(
+          'Role creado exitosamente',
+          ResultActionType.Register
+        );
         this.get();
       });
   }

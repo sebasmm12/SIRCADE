@@ -15,7 +15,6 @@
     <Folder Include="Roles\DTOs\" />
     <Folder Include="Roles\Enums\" />
     <Folder Include="Roles\Validations\" />
-    <Folder Include="SchedulesProgramming\Dtos\" />
     <Folder Include="SchedulesProgramming\Validations\" />
     <Folder Include="SportFields\DTOs\" />
     <Folder Include="SportFields\Enums\" />
