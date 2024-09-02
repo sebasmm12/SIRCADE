@@ -154,7 +154,7 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-select formControlName="type">
             @for (programmingType of programmingTypes; track $index) {
-            <mat-option [value]="programmingType.id">{{
+            <mat-option [value]="programmingType">{{
               programmingType.name
             }}</mat-option>
             }

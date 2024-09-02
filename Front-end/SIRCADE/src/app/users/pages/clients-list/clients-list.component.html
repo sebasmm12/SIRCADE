@@ -1,0 +1,8 @@
+<app-users-list
+  user-type="Socio"
+  [roles]="clientRoles"
+  activated-button-text="Afiliar socio"
+  deactivated-button-text="Desafiliar socio"
+  (register)="goToRegister()"
+  (update)="goToUpdate($event)"
+></app-users-list>

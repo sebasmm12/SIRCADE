@@ -1,0 +1,8 @@
+<app-users-list
+  user-type="Personal"
+  [roles]="workerRoles"
+  activated-button-text="Activar personal"
+  deactivated-button-text="Desactivar personal"
+  (register)="goToRegister()"
+  (update)="goToUpdate($event)"
+></app-users-list>

@@ -15,7 +15,6 @@
     <Folder Include="Accounts\Mappers\" />
     <Folder Include="Common\Responses\" />
     <Folder Include="Permissions\Requests\" />
-    <Folder Include="Users\Responses\" />
   </ItemGroup>
 
   <ItemGroup>

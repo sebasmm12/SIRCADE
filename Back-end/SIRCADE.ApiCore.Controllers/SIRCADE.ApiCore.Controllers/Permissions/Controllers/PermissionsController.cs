@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SIRCADE.ApiCore.Controllers.Permissions.Services;
 
 namespace SIRCADE.ApiCore.Controllers.Permissions.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class PermissionsController(IPermissionsService permissionsService) : ControllerBase
 {
 

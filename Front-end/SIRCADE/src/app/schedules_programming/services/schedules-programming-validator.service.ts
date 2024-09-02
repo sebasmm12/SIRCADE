@@ -6,6 +6,7 @@ import {
   Validator,
   ValidatorFn,
 } from '@angular/forms';
+import { ProgrammingTypeInfoResponse } from '../interfaces/responses/programming-type-info.response';
 
 @Injectable({
   providedIn: 'root',
@@ -58,6 +59,9 @@ export class SchedulesProgrammingValidatorService {
       case 'invalidEndHour':
         message = 'Hora fin tiene que ser mayor a la hora inicio';
         break;
+      case 'invalidReservationHour':
+        message = 'Solo se puede reservar máximo 1 hora';
+        break;
       default:
         break;
     }
@@ -88,9 +92,16 @@ export class SchedulesProgrammingValidatorService {
     return (formGroup: AbstractControl): ValidationErrors | null => {
       const startHour = formGroup.get('startHour')?.value as Date;
       const endHour = formGroup.get('endHour')?.value as Date;
+      const type = formGroup.get('type')?.value as ProgrammingTypeInfoResponse;
 
       if (endHour <= startHour) {
         formGroup.get('endHour')?.setErrors({ invalidEndHour: true });
+      }
+
+      if (!type || type.name != 'Reserva') return null;
+
+      if (endHour?.getHours() - startHour?.getHours() > 1) {
+        formGroup.get('endHour')?.setErrors({ invalidReservationHour: true });
       }
 
       return null;

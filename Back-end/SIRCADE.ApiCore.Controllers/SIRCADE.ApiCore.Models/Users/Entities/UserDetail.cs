@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using SIRCADE.ApiCore.Models.Unities.Entities;
 using SIRCADE.ApiCore.Models.Users.Enums;
 
 namespace SIRCADE.ApiCore.Models.Users.Entities;

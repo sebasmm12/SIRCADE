@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SIRCADE.ApiCore.Models.Unities.Entities;
+namespace SIRCADE.ApiCore.Models.Users.Entities;
 
 [Table("Unidades")]
 public class Unity
@@ -15,4 +15,6 @@ public class Unity
 
     [Column("Siglas")]
     public string Acronym { get; set; } = default!;
+
+    public ICollection<UserDetail> UserDetails { get; set; } = default!;
 }

@@ -235,6 +235,11 @@ export class FullComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (!this.accountsService.AccessToken) {
+      this.accountsService.logOut();
+      return;
+    }
+
     const roleId = this.accountsService.User.roleId;
 
     this.navigationService

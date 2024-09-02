@@ -5,7 +5,6 @@ using SIRCADE.ApiCore.Models.Roles.Entities;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Entities;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Enums;
 using SIRCADE.ApiCore.Models.SportFields.Entities;
-using SIRCADE.ApiCore.Models.Unities.Entities;
 using SIRCADE.ApiCore.Models.Users.Entities;
 
 namespace SIRCADE.ApiCore.Models;

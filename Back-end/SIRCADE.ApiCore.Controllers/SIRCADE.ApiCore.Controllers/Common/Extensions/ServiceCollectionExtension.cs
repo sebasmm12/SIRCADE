@@ -47,6 +47,7 @@ public static class ServiceCollectionExtension
         services.AddTransient<IProgrammingTypesService, ProgrammingTypesService>();
         services.AddTransient<ISchedulesProgrammingService, SchedulesProgrammingService>();
         services.AddTransient<IAccountsService, AccountsService>();
+        services.AddTransient<IUnitiesService, UnitiesService>();
 
         return services;
     }
@@ -66,6 +67,7 @@ public static class ServiceCollectionExtension
 
         services.AddScoped<ICreateUserPersistence, CreateUserPersistence>();
         services.AddScoped<IGetUsersPersistence, GetUsersPersistence>();
+        services.AddScoped<IUpdateUsersPersistence, UpdateUserPersistence>();
 
         services.AddScoped<IGetPermissionsPersistence, GetPermissionsPersistence>();
 
@@ -74,6 +76,9 @@ public static class ServiceCollectionExtension
         services.AddScoped<ICreateScheduleProgrammingPersistence, CreateScheduleProgrammingPersistence>();
         services.AddScoped<IGetSchedulesProgrammingPersistence, GetSchedulesProgrammingPersistence>();
         services.AddScoped<IUpdateScheduleProgrammingPersistence, UpdateScheduleProgrammingPersistence>();
+        services.AddScoped<ICountSchedulesProgrammingPersistence, CountSchedulesProgrammingPersistence>();
+
+        services.AddScoped<IGetUnitiesPersistence, GetUnitiesPersistence>();
 
         return services;
     }

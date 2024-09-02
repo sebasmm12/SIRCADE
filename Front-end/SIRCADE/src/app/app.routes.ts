@@ -89,6 +89,11 @@ export const routes: Routes = [
             (m) => m.schedulesProgrammingRoutes
           ),
       },
+      {
+        path: '',
+        loadChildren: () =>
+          import('./users/users.routes').then((m) => m.usersRoutes),
+      },
     ],
   },
   {

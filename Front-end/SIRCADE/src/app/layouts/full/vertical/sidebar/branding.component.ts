@@ -1,4 +1,3 @@
-
 import { Component } from '@angular/core';
 import { CoreService } from 'src/app/services/core.service';
 
@@ -18,14 +17,23 @@ import { CoreService } from 'src/app/services/core.service';
       } @if(options.theme === 'dark') {
       <a href="/">
         <img
-          src="./assets/images/logos/light-logo.svg"
-          class="align-middle m-2"
+          src="./assets/images/layout/layout_icon.png"
+          class="align-middle layout-logo"
+          width="220"
+          height="100"
           alt="logo"
         />
       </a>
       }
     </div>
   `,
+  styles: [
+    `
+      .layout-logo {
+        margin-left: 8px;
+      }
+    `,
+  ],
 })
 export class BrandingComponent {
   options = this.settings.getOptions();

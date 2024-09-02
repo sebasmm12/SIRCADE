@@ -158,7 +158,7 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
       sportFieldId: this.scheduleProgrammingForm.get('sportFieldId')?.value,
       clientId: this.scheduleProgrammingForm.get('clientId')?.value,
       comment: this.scheduleProgrammingForm.get('comment')?.value,
-      type: this.scheduleProgrammingForm.get('type')?.value,
+      type: this.scheduleProgrammingForm.get('type')?.value.id,
       startDate: this.getDate('startDate', 'startHour'),
       endDate: this.getDate('startDate', 'endHour'),
     };
@@ -190,18 +190,18 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
   }
 
   disableType(): void {
-    if (this.accountsService.User?.role == 'Socio') {
-      this.scheduleProgrammingForm
-        .get('clientId')
-        ?.setValue(this.accountsService.User?.id);
+    if (this.accountsService.User?.role != 'Socio') return;
 
-      this.scheduleProgrammingForm.get('type')?.disable();
+    this.scheduleProgrammingForm
+      .get('clientId')
+      ?.setValue(this.accountsService.User?.id);
 
-      const type = this.programmingTypes.find(
-        (programmingType) => programmingType.name == 'Reserva'
-      );
+    this.scheduleProgrammingForm.get('type')?.disable();
 
-      this.scheduleProgrammingForm.get('type')?.setValue(type?.id);
-    }
+    const type = this.programmingTypes.find(
+      (programmingType) => programmingType.name == 'Reserva'
+    );
+
+    this.scheduleProgrammingForm.get('type')?.setValue(type);
   }
 }

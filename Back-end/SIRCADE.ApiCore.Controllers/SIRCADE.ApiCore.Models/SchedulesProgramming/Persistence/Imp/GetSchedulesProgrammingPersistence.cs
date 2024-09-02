@@ -53,8 +53,8 @@ public class GetSchedulesProgrammingPersistence(ApplicationDbContext application
                                             .SchedulesProgramming
                                             .Include(scheduleProgramming => scheduleProgramming.ProgrammingType)
                                             .FirstOrDefaultAsync(scheduleProgramming => scheduleProgramming.SportFieldId == scheduleProgrammingFiltersDto.SportFieldId
-                                                                     && (scheduleProgramming.StartDate == scheduleProgrammingFiltersDto.StartDate
-                                                                         || scheduleProgramming.EndDate == scheduleProgrammingFiltersDto.EndDate));
+                                                                     && (scheduleProgramming.StartDate >= scheduleProgrammingFiltersDto.StartDate
+                                                                         && scheduleProgramming.EndDate <= scheduleProgrammingFiltersDto.EndDate));
 
         return scheduleProgramming;
     }

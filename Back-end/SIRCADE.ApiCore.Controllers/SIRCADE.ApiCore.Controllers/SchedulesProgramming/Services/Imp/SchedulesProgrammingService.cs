@@ -16,12 +16,14 @@ public class SchedulesProgrammingService
      IGetSchedulesProgrammingPersistence getSchedulesProgrammingPersistence,
      IUpdateScheduleProgrammingPersistence updateScheduleProgrammingPersistence,
      IGetProgrammingTypesPersistence getProgrammingTypesPersistence,
+     ICountSchedulesProgrammingPersistence countSchedulesProgrammingPersistence,
      IHttpContextAccessor httpContextAccessor): ISchedulesProgrammingService
 {
+    private const string RestrictedType = "Reserva";
 
     public async Task<int> CreateAsync(ScheduleProgrammingRegisterRequest scheduleProgrammingRegisterRequest)
     {
-        await ProcessValidationAsync(scheduleProgrammingRegisterRequest.MapToScheduleFiltersDto("Reserva"));
+        await ProcessValidationAsync(scheduleProgrammingRegisterRequest.MapToScheduleFiltersDto(RestrictedType));
 
         var userId = Convert.ToInt32(httpContextAccessor.HttpContext!.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value);
 
@@ -48,11 +50,11 @@ public class SchedulesProgrammingService
 
     public async Task UpdateAsync(ScheduleProgrammingUpdateRequest scheduleProgrammingUpdateRequest)
     {
-        var scheduleProgramming = await getSchedulesProgrammingPersistence.ExecuteAsync(scheduleProgrammingUpdateRequest.Id, isTracked: true, needsInclude: true);
+        var scheduleProgramming = await getSchedulesProgrammingPersistence.ExecuteAsync(scheduleProgrammingUpdateRequest.Id, isTracked: true);
 
         scheduleProgrammingUpdateRequest.MapToScheduleProgramming(scheduleProgramming);
 
-        await ProcessValidationAsync(scheduleProgramming.MapToScheduleFiltersDto(scheduleProgramming.ProgrammingType.Name));
+        await ProcessValidationAsync(scheduleProgramming.MapToScheduleFiltersDto(RestrictedType));
 
         await updateScheduleProgrammingPersistence.ExecuteAsync();
     }
@@ -86,6 +88,11 @@ public class SchedulesProgrammingService
 
     private async Task<ValidateMessageDto> ValidateRequestAsync(ScheduleProgrammingFiltersDto programmingFiltersDto)
     {
+        var isTotalByUserValid = await ValidateTotalByUserAsync(RestrictedType, programmingFiltersDto.StartDate);
+
+        if(!isTotalByUserValid)
+            return new(false, "El usuario ya tiene una programación registrada para el día seleccionado");
+
         var currentScheduleProgramming = await getSchedulesProgrammingPersistence.ExecuteAsync(programmingFiltersDto);
 
         if (currentScheduleProgramming is null)
@@ -98,6 +105,18 @@ public class SchedulesProgrammingService
             return new(true, string.Empty, currentScheduleProgramming);
 
         return new(false, "Ya existe una programación en el rango de fechas seleccionado");
+    }
+
+    private async Task<bool> ValidateTotalByUserAsync(string type, DateTime startDate)
+    {
+        if(type != RestrictedType)
+            return true;
+
+        var userId = Convert.ToInt32(httpContextAccessor.HttpContext!.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value);
+
+        var totalUserScheduleProgramming = await countSchedulesProgrammingPersistence.ExecuteAsync(userId, startDate);
+
+        return totalUserScheduleProgramming < 1;
     }
     #endregion
 
