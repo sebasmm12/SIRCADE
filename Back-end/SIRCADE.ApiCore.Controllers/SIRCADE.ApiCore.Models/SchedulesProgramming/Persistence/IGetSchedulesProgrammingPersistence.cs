@@ -1,4 +1,5 @@
-﻿using SIRCADE.ApiCore.Models.SchedulesProgramming.Dtos;
+﻿using SIRCADE.ApiCore.Models.Dashboards.DTOs;
+using SIRCADE.ApiCore.Models.SchedulesProgramming.Dtos;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Entities;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Queries;
 
@@ -12,4 +13,6 @@ public interface IGetSchedulesProgrammingPersistence
         bool isTracked = false);
 
     Task<ScheduleProgramming?> ExecuteAsync(ScheduleProgrammingFiltersDto scheduleProgrammingFiltersDto);
+
+    Task<IEnumerable<ScheduleProgramming>> ExecuteAsync(DashboardFiltersDto dashboardFilters);
 }

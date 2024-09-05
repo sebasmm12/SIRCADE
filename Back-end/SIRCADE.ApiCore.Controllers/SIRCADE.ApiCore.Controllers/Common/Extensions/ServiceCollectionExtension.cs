@@ -25,6 +25,8 @@ using SIRCADE.ApiCore.Models.Users.Persistence.Imp;
 using System.Text;
 using SIRCADE.ApiCore.Controllers.Accounts.Services;
 using SIRCADE.ApiCore.Controllers.Accounts.Services.Imp;
+using SIRCADE.ApiCore.Controllers.Dashboards.Services;
+using SIRCADE.ApiCore.Controllers.Dashboards.Services.Imp;
 
 namespace SIRCADE.ApiCore.Controllers.Common.Extensions;
 
@@ -48,6 +50,7 @@ public static class ServiceCollectionExtension
         services.AddTransient<ISchedulesProgrammingService, SchedulesProgrammingService>();
         services.AddTransient<IAccountsService, AccountsService>();
         services.AddTransient<IUnitiesService, UnitiesService>();
+        services.AddTransient<IDashboardsService, DashboardsService>();
 
         return services;
     }

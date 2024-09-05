@@ -14,7 +14,10 @@
   <ItemGroup>
     <Folder Include="Accounts\Mappers\" />
     <Folder Include="Common\Responses\" />
+    <Folder Include="Dashboards\Controllers\" />
     <Folder Include="Dashboards\Mappers\" />
+    <Folder Include="Dashboards\NewFolder\" />
+    <Folder Include="Dashboards\Responses\" />
     <Folder Include="Dashboards\Requests\" />
     <Folder Include="Permissions\Requests\" />
   </ItemGroup>
