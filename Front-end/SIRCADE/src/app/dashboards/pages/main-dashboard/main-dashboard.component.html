@@ -1,0 +1,25 @@
+<app-reservation-widgets></app-reservation-widgets>
+
+<div class="row">
+  <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+    <app-sport-field-reservations></app-sport-field-reservations>
+  </div>
+  <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+    <app-sport-field-rescheduled-reservations></app-sport-field-rescheduled-reservations>
+  </div>
+  <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+    <app-sport-field-cancelled-reservations></app-sport-field-cancelled-reservations>
+  </div>
+  @if(accountsService.User.role != 'Socio') {
+  <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+    <app-grades-reservations></app-grades-reservations>
+  </div>
+  }
+
+  <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+    <app-reservations-by-month></app-reservations-by-month>
+  </div>
+  <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+    <app-reservation-pyramid></app-reservation-pyramid>
+  </div>
+</div>

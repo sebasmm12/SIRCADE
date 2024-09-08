@@ -5,5 +5,6 @@ public enum DashboardTimeType
     Daily,
     Weekly,
     Monthly,
-    Yearly
+    Yearly,
+    CurrentMonth
 }

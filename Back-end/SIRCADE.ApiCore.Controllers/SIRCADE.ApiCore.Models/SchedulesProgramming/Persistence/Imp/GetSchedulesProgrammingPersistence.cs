@@ -1,12 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SIRCADE.ApiCore.Models.Dashboards.DTOs;
+using SIRCADE.ApiCore.Models.Dashboards.Enums;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Dtos;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Entities;
+using SIRCADE.ApiCore.Models.SchedulesProgramming.Enums;
+using SIRCADE.ApiCore.Models.SchedulesProgramming.Factories;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Queries;
 
 namespace SIRCADE.ApiCore.Models.SchedulesProgramming.Persistence.Imp;
 
-public class GetSchedulesProgrammingPersistence(ApplicationDbContext applicationDbContext) : IGetSchedulesProgrammingPersistence
+public class GetSchedulesProgrammingPersistence(
+    ApplicationDbContext applicationDbContext,
+    ISchedulesProgrammingInTimeFactory schedulesProgrammingInTimeFactory) : IGetSchedulesProgrammingPersistence
 {
     private const string ReservationType = "Reserva";
 
@@ -36,6 +41,23 @@ public class GetSchedulesProgrammingPersistence(ApplicationDbContext application
                                                 .AsQueryable();
 
         schedulesProgrammingContext = ResolverFiltersForDashboards(schedulesProgrammingContext, dashboardFilters);
+
+        var schedulesProgramming = await schedulesProgrammingContext.ToListAsync();
+
+        return schedulesProgramming;
+    }
+
+    public async Task<IEnumerable<ScheduleProgramming>> ExecuteAsync(DashboardTimeType dashboardTimeType)
+    {
+        var schedulesProgrammingContext = applicationDbContext
+                                            .SchedulesProgramming
+                                            .IgnoreQueryFilters()
+                                            .Where(scheduleProgramming => scheduleProgramming.ClientId != null)
+                                            .AsQueryable();
+
+        var schedulesProgrammingByTimeStrategy = schedulesProgrammingInTimeFactory.GetStrategyByTime(dashboardTimeType, schedulesProgrammingContext);
+
+        schedulesProgrammingContext = schedulesProgrammingByTimeStrategy.Execute(schedulesProgrammingContext);
 
         var schedulesProgramming = await schedulesProgrammingContext.ToListAsync();
 
@@ -81,11 +103,14 @@ public class GetSchedulesProgrammingPersistence(ApplicationDbContext application
 
     private IQueryable<ScheduleProgramming> ResolverFiltersForDashboards(IQueryable<ScheduleProgramming> schedulesProgrammingContext, DashboardFiltersDto dashboardFilters)
     {
+        schedulesProgrammingContext = schedulesProgrammingContext
+            .Where(scheduleProgramming => scheduleProgramming.ProgrammingType.Name == ReservationType);
+
         if (dashboardFilters.ClientId.HasValue)
             schedulesProgrammingContext = schedulesProgrammingContext.Where(scheduleProgramming => scheduleProgramming.ClientId == dashboardFilters.ClientId);
 
-        schedulesProgrammingContext = schedulesProgrammingContext
-                                            .Where(scheduleProgramming => scheduleProgramming.ProgrammingType.Name == ReservationType);
+        if(dashboardFilters.State.HasValue)
+            schedulesProgrammingContext = schedulesProgrammingContext.Where(scheduleProgramming => scheduleProgramming.State == dashboardFilters.State);
 
         if(dashboardFilters.IsSportTypeIncluded)
             schedulesProgrammingContext = schedulesProgrammingContext
@@ -97,9 +122,11 @@ public class GetSchedulesProgrammingPersistence(ApplicationDbContext application
                                             .Include(scheduleProgramming => scheduleProgramming.Client)
                                             .ThenInclude(client => client.Detail);
 
+        var schedulesProgrammingByTimeStrategy = schedulesProgrammingInTimeFactory.GetStrategyByTime(dashboardFilters.TimeType, schedulesProgrammingContext);
+
+        schedulesProgrammingContext = schedulesProgrammingByTimeStrategy.Execute(schedulesProgrammingContext);
+
         return schedulesProgrammingContext;
     }
-    
-
     #endregion
 }

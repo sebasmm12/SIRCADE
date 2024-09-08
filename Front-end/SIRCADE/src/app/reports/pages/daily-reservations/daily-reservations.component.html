@@ -1,0 +1,38 @@
+<mat-card>
+  <mat-card-content>
+    <div class="d-flex w-100 justify-content-end align-items-end">
+      <button mat-raised-button color="primary" class="m-l-8">
+        <span class="m-l-4">Exportar</span>
+      </button>
+    </div>
+    <div>
+      @if(loading) {
+      <mat-spinner></mat-spinner>
+      }
+      <table mat-table [dataSource]="monthlyReservations">
+        <ng-container matColumnDef="state">
+          <th mat-header-cell *matHeaderCellDef>Estado de reserva</th>
+          <td mat-cell *matCellDef="let row">{{ row.state }}</td>
+        </ng-container>
+        @for(monthType of monthTypeColumns; track $index) {
+        <ng-container [matColumnDef]="monthType">
+          <th mat-header-cell *matHeaderCellDef>{{ monthType }}</th>
+          <td mat-cell *matCellDef="let row">
+            {{ getQuantityByType(row, monthType) }}
+          </td>
+        </ng-container>
+        }
+        <tr mat-header-row *matHeaderRowDef="monthlyReservationColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: monthlyReservationColumns"
+        ></tr>
+      </table>
+      <mat-paginator
+        [pageSize]="pageSize"
+        [length]="totalMonthlyReservations"
+        [pageSizeOptions]="[5, 10, 25, 100]"
+      ></mat-paginator>
+    </div>
+  </mat-card-content>
+</mat-card>

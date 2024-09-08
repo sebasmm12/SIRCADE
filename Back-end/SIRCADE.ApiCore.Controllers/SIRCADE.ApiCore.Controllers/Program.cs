@@ -59,6 +59,12 @@ builder.Services.AddServices();
 // Add authentication to the container.
 builder.Services.AddAuthentication(builder);
 
+// Add strategies to the container
+builder.Services.AddStrategies();
+
+// Add factories to the container
+builder.Services.AddFactories();
+
 builder.Services.AddHttpContextAccessor();
 
 

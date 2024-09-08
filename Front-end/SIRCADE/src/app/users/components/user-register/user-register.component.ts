@@ -119,7 +119,7 @@ export class UserRegisterComponent implements OnInit {
       birthDate: [null, Validators.required],
       phone: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      cellphone: ['', Validators.required],
+      cellPhone: ['', Validators.required],
       address: [''],
       documentNumber: ['', Validators.required],
       maritalStatus: ['', Validators.required],

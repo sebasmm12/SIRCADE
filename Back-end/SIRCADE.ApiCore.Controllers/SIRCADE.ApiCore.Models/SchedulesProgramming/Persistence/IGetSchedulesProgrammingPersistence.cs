@@ -1,4 +1,5 @@
 ﻿using SIRCADE.ApiCore.Models.Dashboards.DTOs;
+using SIRCADE.ApiCore.Models.Dashboards.Enums;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Dtos;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Entities;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Queries;
@@ -15,4 +16,5 @@ public interface IGetSchedulesProgrammingPersistence
     Task<ScheduleProgramming?> ExecuteAsync(ScheduleProgrammingFiltersDto scheduleProgrammingFiltersDto);
 
     Task<IEnumerable<ScheduleProgramming>> ExecuteAsync(DashboardFiltersDto dashboardFilters);
+    Task<IEnumerable<ScheduleProgramming>> ExecuteAsync(DashboardTimeType dashboardTimeType);
 }

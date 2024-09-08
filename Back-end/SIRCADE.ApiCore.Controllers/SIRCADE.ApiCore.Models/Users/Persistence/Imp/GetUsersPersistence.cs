@@ -7,6 +7,8 @@ namespace SIRCADE.ApiCore.Models.Users.Persistence.Imp;
 
 public class GetUsersPersistence(ApplicationDbContext applicationDbContext) : IGetUsersPersistence
 {
+    private const string ClientRole = "Socio";
+
     public async Task<User> ExecuteAsync(string nsa)
     {
         var user = await applicationDbContext
@@ -59,6 +61,38 @@ public class GetUsersPersistence(ApplicationDbContext applicationDbContext) : IG
                             .OrderBy(user => user.Detail.Names)
                             .Skip(userDataTableQueries.Page)
                             .Take(userDataTableQueries.PageSize)
+                            .AsNoTracking()
+                            .ToListAsync();
+
+        var totalUsers = await usersContext.CountAsync();
+
+        return new(users, totalUsers);
+    }
+
+    public async Task<DataTableDto<User>> ExecuteForReportsAsync(FrequentlyUserDataTableQueriesDto userDataTableQueriesDto)
+    {
+        var usersContext = applicationDbContext
+                                .Users
+                                .Include(user => user.Detail)
+                                .Include(user => user.Role)
+                                .Include(user => user.ScheduleProgrammings!)
+                                .ThenInclude(scheduleProgramming => scheduleProgramming.SportField)
+                                .ThenInclude(sportField => sportField.SportFieldType)
+                                .Where(user => user.Role.Name == ClientRole &&
+                                               user.ScheduleProgrammings!.Count >= 3)
+                                .IgnoreQueryFilters()
+                                .AsQueryable();
+
+        if (!string.IsNullOrEmpty(userDataTableQueriesDto.Search))
+            usersContext = usersContext
+                                .Where(user => user.Detail.Names.Contains(userDataTableQueriesDto.Search) ||
+                                         user.Detail.PaternalLastName.Contains(userDataTableQueriesDto.Search) ||
+                                         user.Detail.MaternalLastName.Contains(userDataTableQueriesDto.Search));
+
+        var users = await usersContext
+                            .OrderBy(user => user.Detail.Names)
+                            .Skip(userDataTableQueriesDto.Page)
+                            .Take(userDataTableQueriesDto.PageSize)
                             .AsNoTracking()
                             .ToListAsync();
 

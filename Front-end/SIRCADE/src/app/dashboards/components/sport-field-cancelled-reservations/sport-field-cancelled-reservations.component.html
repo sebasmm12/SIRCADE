@@ -1,0 +1,16 @@
+@if(!loading){
+<mat-card class="cardWithShadow">
+  <mat-card-header>
+    <mat-card-title>Cancelación de reservas</mat-card-title>
+    <mat-card-subtitle class="mat-body-1 m-t-10">Mensual</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <apx-chart
+      [series]="chartOptions.series!"
+      [chart]="chartOptions.chart!"
+      [labels]="chartOptions.labels!"
+    ></apx-chart>
+  </mat-card-content>
+</mat-card>
+
+}

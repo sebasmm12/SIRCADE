@@ -27,6 +27,12 @@ using SIRCADE.ApiCore.Controllers.Accounts.Services;
 using SIRCADE.ApiCore.Controllers.Accounts.Services.Imp;
 using SIRCADE.ApiCore.Controllers.Dashboards.Services;
 using SIRCADE.ApiCore.Controllers.Dashboards.Services.Imp;
+using SIRCADE.ApiCore.Controllers.Reports.Services;
+using SIRCADE.ApiCore.Controllers.Reports.Services.Imp;
+using SIRCADE.ApiCore.Models.SchedulesProgramming.Factories;
+using SIRCADE.ApiCore.Models.SchedulesProgramming.Factories.Imp;
+using SIRCADE.ApiCore.Models.SchedulesProgramming.Strategies;
+using SIRCADE.ApiCore.Models.SchedulesProgramming.Strategies.Imp;
 
 namespace SIRCADE.ApiCore.Controllers.Common.Extensions;
 
@@ -51,6 +57,7 @@ public static class ServiceCollectionExtension
         services.AddTransient<IAccountsService, AccountsService>();
         services.AddTransient<IUnitiesService, UnitiesService>();
         services.AddTransient<IDashboardsService, DashboardsService>();
+        services.AddTransient<IReportsService, ReportsService>();
 
         return services;
     }
@@ -82,6 +89,24 @@ public static class ServiceCollectionExtension
         services.AddScoped<ICountSchedulesProgrammingPersistence, CountSchedulesProgrammingPersistence>();
 
         services.AddScoped<IGetUnitiesPersistence, GetUnitiesPersistence>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddStrategies(this IServiceCollection services)
+    {
+        services.AddScoped<ISchedulesProgrammingInTimeStrategy, SchedulesProgrammingWeeklyStrategy>();
+        services.AddScoped<ISchedulesProgrammingInTimeStrategy, SchedulesProgrammingMonthlyStrategy>();
+        services.AddScoped<ISchedulesProgrammingInTimeStrategy, SchedulesProgrammingYearlyStrategy>();
+        services.AddScoped<ISchedulesProgrammingInTimeStrategy, SchedulesProgrammingDailyStrategy>();
+        services.AddScoped<ISchedulesProgrammingInTimeStrategy, SchedulesProgrammingCurrentMonthStrategy>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddFactories(this IServiceCollection services)
+    {
+        services.AddScoped<ISchedulesProgrammingInTimeFactory, SchedulesProgrammingInTimeFactory>();
 
         return services;
     }

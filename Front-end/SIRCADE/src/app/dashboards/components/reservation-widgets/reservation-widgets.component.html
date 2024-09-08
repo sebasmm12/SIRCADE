@@ -1,0 +1,41 @@
+@if(!loading) {
+<div class="row reservation-widgets">
+  <div class="col-lg-4 col-sm-4 col-6">
+    <mat-card class="shadow-none text-center bg-light-success shadow-none">
+      <mat-card-content class="p-32">
+        <mat-icon class="reservation-icon-success">today</mat-icon>
+        <h4 class="mat-subtitle-2 f-w-600 text-success m-t-8">Reservas</h4>
+        <h6 class="m-t-4 mat-subtitle-1 f-w-600 text-success m-t-8">
+          {{ dashboardWidgets.totalReservations }}
+        </h6>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="col-lg-4 col-sm-4 col-6">
+    <mat-card class="shadow-none text-center bg-light-warning shadow-none">
+      <mat-card-content class="p-32">
+        <mat-icon class="reservation-icon-warning">edit_calendar</mat-icon>
+        <h4 class="mat-subtitle-2 f-w-600 text-warning m-t-8">
+          Reservar reprogramadas
+        </h4>
+        <h6 class="m-t-4 mat-subtitle-1 f-w-600 text-warning m-t-8">
+          {{ dashboardWidgets.totalRescheduledReservations }}
+        </h6>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div class="col-lg-4 col-sm-4 col-6">
+    <mat-card class="shadow-none text-center bg-light-error shadow-none">
+      <mat-card-content class="p-32">
+        <mat-icon class="reservation-icon-error">event_busy</mat-icon>
+        <h4 class="mat-subtitle-2 f-w-600 text-error m-t-8">
+          Reservas canceladas
+        </h4>
+        <h6 class="m-t-4 mat-subtitle-1 f-w-600 text-error m-t-8">
+          {{ dashboardWidgets.totalCancelledReservations }}
+        </h6>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+}

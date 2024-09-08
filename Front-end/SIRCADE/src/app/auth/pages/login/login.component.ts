@@ -56,7 +56,7 @@ export class LoginComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
-          this.router.navigate(['/dashboards/dashboard1']);
+          this.router.navigate(['/principal']);
         },
         error: (error: HttpErrorResponse) => {
           this.generalErrorMessage = error.error;

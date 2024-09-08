@@ -17,6 +17,7 @@
     <Folder Include="Dashboards\Mappers\" />
     <Folder Include="Dashboards\Requests\" />
     <Folder Include="Permissions\Requests\" />
+    <Folder Include="Reports\Requests\" />
   </ItemGroup>
 
   <ItemGroup>

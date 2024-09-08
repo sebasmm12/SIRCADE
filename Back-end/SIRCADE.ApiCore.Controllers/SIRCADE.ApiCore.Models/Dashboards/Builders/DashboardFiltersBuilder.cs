@@ -1,5 +1,6 @@
 ﻿using SIRCADE.ApiCore.Models.Dashboards.DTOs;
 using SIRCADE.ApiCore.Models.Dashboards.Enums;
+using SIRCADE.ApiCore.Models.SchedulesProgramming.Enums;
 
 namespace SIRCADE.ApiCore.Models.Dashboards.Builders;
 
@@ -8,9 +9,16 @@ public class DashboardFiltersBuilder
     private DashboardFiltersDto dashboardFilters = new();
 
 
-    public DashboardFiltersBuilder WithClientId(int clientId)
+    public DashboardFiltersBuilder WithClientId(int? clientId)
     {
         dashboardFilters.ClientId = clientId;
+
+        return this;
+    }
+
+    public DashboardFiltersBuilder WithState(ScheduleProgrammingState? state)
+    {
+        dashboardFilters.State = state;
 
         return this;
     }

@@ -1,0 +1,24 @@
+.reservation-widgets {
+  ::ng-deep {
+    .reservation-icon-success {
+      font-size: 40px;
+      width: 40px;
+      height: 40px;
+      color: #13deb9;
+    }
+
+    .reservation-icon-warning {
+      font-size: 40px;
+      width: 40px;
+      height: 40px;
+      color: #ffae1f;
+    }
+
+    .reservation-icon-error {
+      font-size: 40px;
+      width: 40px;
+      height: 40px;
+      color: #fa896b;
+    }
+  }
+}

@@ -247,11 +247,45 @@ export class FullComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((response) => {
         this.navItems = response.map((item) => {
-          return {
+          let navItem: NavItem = {
             displayName: item.name,
             route: item.url,
             iconName: item.icon,
           };
+
+          if (navItem.displayName === 'Reportes')
+            navItem.children = [
+              {
+                displayName: 'Socios frecuentes',
+                route: '/reportes/socios-frecuentes',
+              },
+              {
+                displayName: 'Socios por cancelación',
+                route: '/reportes/cancelaciones-socio',
+              },
+              {
+                displayName: 'Reservas por turno',
+                route: '/reportes/reservas-turno',
+              },
+              {
+                displayName: 'Reservas diarias',
+                route: '/reportes/reservas-diarias',
+              },
+              {
+                displayName: 'Reservas semanales',
+                route: '/reportes/reservas-semanales',
+              },
+              {
+                displayName: 'Reservas mensuales',
+                route: '/reportes/reservas-mensuales',
+              },
+              {
+                displayName: 'Reservas anuales',
+                route: '/reportes/reservas-anuales',
+              },
+            ];
+
+          return navItem;
         });
       });
   }
