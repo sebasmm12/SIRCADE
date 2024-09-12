@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { MaterialModule } from 'src/app/material.module';
 import { ReportsService } from '../../services/reports.service';
-import { FrequentlyUsersResponse } from '../../interfaces/responses/frequently-users.response';
 import { MatPaginator } from '@angular/material/paginator';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
@@ -16,6 +15,7 @@ import { FrequentlyUsersQueries } from '../../interfaces/queries/frequently-user
 import { ScheduleProgrammingState } from 'src/app/schedules_programming/interfaces/enums/schedule-programming-state.enum';
 import { SearchTextComponent } from 'src/app/shared/components/search-text/search-text.component';
 import { TypeQuantitiesDto } from '../../interfaces/dtos/type-quantities';
+import { ReservationInfoResponse } from '../../interfaces/responses/reservation-info.response';
 
 @Component({
   selector: 'app-frequently-users-report',
@@ -28,9 +28,9 @@ export class FrequentlyUsersReportComponent implements OnInit, AfterViewInit {
   destroyRef = inject(DestroyRef);
   reportsService = inject(ReportsService);
 
-  frequentlyUsers: FrequentlyUsersResponse[] = [];
+  frequentlyUsers: ReservationInfoResponse[] = [];
   totalFrequentlyUsers: number = 0;
-  frequentlyUserColumns: string[] = ['userName'];
+  frequentlyUserColumns: string[] = ['label'];
   pageSize: number = 10;
   searchText: string = '';
   loading: boolean = true;
@@ -43,10 +43,10 @@ export class FrequentlyUsersReportComponent implements OnInit, AfterViewInit {
   paginator: MatPaginator = Object.create(null);
 
   getQuantityByType(
-    frequentlyUsers: FrequentlyUsersResponse,
+    frequentlyUsers: ReservationInfoResponse,
     sportFieldType: string
   ): number {
-    const quantity = frequentlyUsers.sportFieldTypeQuantities.find(
+    const quantity = frequentlyUsers.typeQuantities.find(
       (sportFieldTypeQuantity) => sportFieldTypeQuantity.name === sportFieldType
     )?.quantity;
     return quantity ?? 0;
@@ -109,16 +109,13 @@ export class FrequentlyUsersReportComponent implements OnInit, AfterViewInit {
 
         if (this.canIncludeColumns) {
           this.sportFieldTypeQuantities =
-            this.frequentlyUsers[0].sportFieldTypeQuantities;
+            this.frequentlyUsers[0].typeQuantities;
           this.sportFieldTypeColumns =
-            this.frequentlyUsers[0].sportFieldTypeQuantities.map(
+            this.frequentlyUsers[0].typeQuantities.map(
               (sportField) => sportField.name
             );
 
-          this.frequentlyUserColumns = [
-            'userName',
-            ...this.sportFieldTypeColumns,
-          ];
+          this.frequentlyUserColumns = ['label', ...this.sportFieldTypeColumns];
 
           this.canIncludeColumns = false;
         }

@@ -4,10 +4,8 @@ import { environment } from 'src/environments/environment';
 import { FrequentlyUsersQueries } from '../interfaces/queries/frequently-users.queries';
 import queryString from 'query-string';
 import { DataTableResponse } from '../../shared/interfaces/responses/data-table.response';
-import { FrequentlyUsersResponse } from '../interfaces/responses/frequently-users.response';
 import { Observable } from 'rxjs';
-import { MonthlyReservationsComponent } from '../pages/monthly-reservations/monthly-reservations.component';
-import { ReservationsByDateResponse } from '../interfaces/responses/reservations-by-date.response';
+import { ReservationInfoResponse } from '../interfaces/responses/reservation-info.response';
 
 @Injectable({
   providedIn: 'root',
@@ -21,12 +19,12 @@ export class ReportsService {
 
   getFrequentlyUsers(
     frequentlyUsersQueries: FrequentlyUsersQueries
-  ): Observable<DataTableResponse<FrequentlyUsersResponse>> {
+  ): Observable<DataTableResponse<ReservationInfoResponse>> {
     const params = queryString.stringify(frequentlyUsersQueries);
 
     let url = `${this.baseUrl}/reports/frequently-users?${params}`;
 
-    return this.httpClient.get<DataTableResponse<FrequentlyUsersResponse>>(url);
+    return this.httpClient.get<DataTableResponse<ReservationInfoResponse>>(url);
   }
 
   getCancelledReservationsByUser(
@@ -40,42 +38,34 @@ export class ReportsService {
   }
 
   getMonthlyReservations(): Observable<
-    DataTableResponse<ReservationsByDateResponse>
+    DataTableResponse<ReservationInfoResponse>
   > {
     let url = `${this.baseUrl}/reports/monthly-reservations`;
 
-    return this.httpClient.get<DataTableResponse<ReservationsByDateResponse>>(
-      url
-    );
+    return this.httpClient.get<DataTableResponse<ReservationInfoResponse>>(url);
   }
 
   getYearlyReservations(): Observable<
-    DataTableResponse<ReservationsByDateResponse>
+    DataTableResponse<ReservationInfoResponse>
   > {
     let url = `${this.baseUrl}/reports/yearly-reservations`;
 
-    return this.httpClient.get<DataTableResponse<ReservationsByDateResponse>>(
-      url
-    );
+    return this.httpClient.get<DataTableResponse<ReservationInfoResponse>>(url);
   }
 
   getDailyReservations(): Observable<
-    DataTableResponse<ReservationsByDateResponse>
+    DataTableResponse<ReservationInfoResponse>
   > {
     let url = `${this.baseUrl}/reports/daily-reservations`;
 
-    return this.httpClient.get<DataTableResponse<ReservationsByDateResponse>>(
-      url
-    );
+    return this.httpClient.get<DataTableResponse<ReservationInfoResponse>>(url);
   }
 
   getWeeklyReservations(): Observable<
-    DataTableResponse<ReservationsByDateResponse>
+    DataTableResponse<ReservationInfoResponse>
   > {
     let url = `${this.baseUrl}/reports/weekly-reservations`;
 
-    return this.httpClient.get<DataTableResponse<ReservationsByDateResponse>>(
-      url
-    );
+    return this.httpClient.get<DataTableResponse<ReservationInfoResponse>>(url);
   }
 }

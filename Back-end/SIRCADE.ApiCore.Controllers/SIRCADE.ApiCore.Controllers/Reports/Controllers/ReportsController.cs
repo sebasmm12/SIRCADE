@@ -16,6 +16,14 @@ public class ReportsController (IReportsService reportsService): ControllerBase
         return Ok(response);
     }
 
+    [HttpGet("frequently-users/exports")]
+    public async Task<IActionResult> ExportFrequentlyUsersAsync([FromQuery] FrequentlyUserDataTableQueriesDto frequentlyUserDataTableQueriesDto)
+    {
+        var response = await reportsService.GetFrequentlyUsersAsync(frequentlyUserDataTableQueriesDto);
+
+        return Ok(response);
+    }
+
     [HttpGet("monthly-reservations")]
     public async Task<IActionResult> GetReservationsMonthlyAsync()
     {

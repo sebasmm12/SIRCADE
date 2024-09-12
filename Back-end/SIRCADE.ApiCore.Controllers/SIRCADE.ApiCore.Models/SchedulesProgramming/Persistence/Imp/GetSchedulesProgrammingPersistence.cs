@@ -3,7 +3,6 @@ using SIRCADE.ApiCore.Models.Dashboards.DTOs;
 using SIRCADE.ApiCore.Models.Dashboards.Enums;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Dtos;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Entities;
-using SIRCADE.ApiCore.Models.SchedulesProgramming.Enums;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Factories;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Queries;
 

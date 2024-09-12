@@ -58,6 +58,7 @@ public static class ServiceCollectionExtension
         services.AddTransient<IUnitiesService, UnitiesService>();
         services.AddTransient<IDashboardsService, DashboardsService>();
         services.AddTransient<IReportsService, ReportsService>();
+        services.AddTransient<IExcelFilesService, ExcelFilesService>();
 
         return services;
     }

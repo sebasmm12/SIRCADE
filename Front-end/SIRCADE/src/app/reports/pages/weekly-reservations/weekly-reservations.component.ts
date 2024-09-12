@@ -1,11 +1,11 @@
 import { Component, DestroyRef, inject, ViewChild } from '@angular/core';
 import { ReportsService } from '../../services/reports.service';
-import { ReservationsByDateResponse } from '../../interfaces/responses/reservations-by-date.response';
 import { TypeQuantitiesDto } from '../../interfaces/dtos/type-quantities';
 import { MatPaginator } from '@angular/material/paginator';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
 import { MaterialModule } from 'src/app/material.module';
+import { ReservationInfoResponse } from '../../interfaces/responses/reservation-info.response';
 
 @Component({
   selector: 'app-weekly-reservations',
@@ -18,9 +18,9 @@ export class WeeklyReservationsComponent {
   destroyRef = inject(DestroyRef);
   reportsService = inject(ReportsService);
 
-  monthlyReservations: ReservationsByDateResponse[] = [];
+  monthlyReservations: ReservationInfoResponse[] = [];
   totalMonthlyReservations: number = 0;
-  monthlyReservationColumns: string[] = ['state'];
+  monthlyReservationColumns: string[] = ['label'];
   pageSize: number = 10;
   searchText: string = '';
   loading: boolean = true;
@@ -32,7 +32,7 @@ export class WeeklyReservationsComponent {
   paginator: MatPaginator = Object.create(null);
 
   getQuantityByType(
-    weeklyReservation: ReservationsByDateResponse,
+    weeklyReservation: ReservationInfoResponse,
     weeklyType: string
   ): number {
     const quantity = weeklyReservation.typeQuantities.find(
@@ -79,7 +79,7 @@ export class WeeklyReservationsComponent {
               (dateType) => dateType.name
             );
 
-          this.monthlyReservationColumns = ['state', ...this.monthTypeColumns];
+          this.monthlyReservationColumns = ['label', ...this.monthTypeColumns];
 
           this.canIncludeColumns = false;
         }

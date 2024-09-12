@@ -6,14 +6,14 @@ namespace SIRCADE.ApiCore.Controllers.Reports.Mappers;
 
 public static class ReportsMapper
 {
-    public static IEnumerable<FrequentlyUserByReservationResponse> MapToFrequentlyUsersByReservationResponse(this IEnumerable<User> users, IEnumerable<string> sportFieldTypes, IEnumerable<ScheduleProgrammingState> reservationStates)
+    public static IEnumerable<ReportInfoResponse> MapToFrequentlyUsersByReservationResponse(this IEnumerable<User> users, IEnumerable<string> sportFieldTypes, IEnumerable<ScheduleProgrammingState> reservationStates)
     {
         var frequentlyUsersByReservation = users.Select(user => GetFrequentlyUserByReservation(user, sportFieldTypes, reservationStates));
 
         return frequentlyUsersByReservation;
     }
 
-    private static FrequentlyUserByReservationResponse GetFrequentlyUserByReservation(User user,
+    private static ReportInfoResponse GetFrequentlyUserByReservation(User user,
         IEnumerable<string> sportFieldTypes, IEnumerable<ScheduleProgrammingState> reservationStates)
     {
         var reservations = user

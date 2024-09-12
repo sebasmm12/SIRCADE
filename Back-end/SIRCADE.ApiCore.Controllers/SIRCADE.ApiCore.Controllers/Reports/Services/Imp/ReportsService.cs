@@ -24,7 +24,7 @@ public class ReportsService(
         new(ScheduleProgrammingState.Cancelled, "Cancelado")
     ]; 
 
-    public async Task<DataTableDto<FrequentlyUserByReservationResponse>> GetFrequentlyUsersAsync(FrequentlyUserDataTableQueriesDto frequentlyUserDataTableQueriesDto)
+    public async Task<DataTableDto<ReportInfoResponse>> GetFrequentlyUsersAsync(FrequentlyUserDataTableQueriesDto frequentlyUserDataTableQueriesDto)
     {
         var users = await getUsersPersistence.ExecuteForReportsAsync(frequentlyUserDataTableQueriesDto);
 
@@ -36,12 +36,12 @@ public class ReportsService(
             users.Data.MapToFrequentlyUsersByReservationResponse(sportFieldTypeNames,
                 frequentlyUserDataTableQueriesDto.ReservationStates);
 
-        var response = new DataTableDto<FrequentlyUserByReservationResponse>(frequentlyUsersByReservation, users.TotalElements);
+        var response = new DataTableDto<ReportInfoResponse>(frequentlyUsersByReservation, users.TotalElements);
 
         return response;
     }
 
-    public async Task<DataTableDto<ReservationInTimeResponse>> GetReservationsMonthlyAsync()
+    public async Task<DataTableDto<ReportInfoResponse>> GetReservationsMonthlyAsync()
     {
         var reservations = await getSchedulesProgrammingPersistence.ExecuteAsync(DashboardTimeType.Monthly);
 
@@ -55,7 +55,7 @@ public class ReportsService(
 
         var allAvailableReservations = GetAllAvailableReservations(reservationsMonthly);
 
-        var reservedReservationsIndex = reservationsMonthly.FindIndex(reservation => reservation.State == "Reservado");
+        var reservedReservationsIndex = reservationsMonthly.FindIndex(reservation => reservation.Label == "Reservado");
 
         reservationsMonthly.RemoveAt(reservedReservationsIndex);
 
@@ -65,7 +65,7 @@ public class ReportsService(
 
     }
 
-    public async Task<DataTableDto<ReservationInTimeResponse>> GetReservationsYearlyAsync()
+    public async Task<DataTableDto<ReportInfoResponse>> GetReservationsYearlyAsync()
     {
         var reservations = await getSchedulesProgrammingPersistence.ExecuteAsync(DashboardTimeType.Yearly);
 
@@ -79,7 +79,7 @@ public class ReportsService(
 
         var allAvailableReservations = GetAllAvailableReservations(reservationsYearly);
 
-        var reservedReservationsIndex = reservationsYearly.FindIndex(reservation => reservation.State == "Reservado");
+        var reservedReservationsIndex = reservationsYearly.FindIndex(reservation => reservation.Label == "Reservado");
 
         reservationsYearly.RemoveAt(reservedReservationsIndex);
 
@@ -88,7 +88,7 @@ public class ReportsService(
         return new(reservationsYearly, reservationsYearly.Count());
     }
 
-    public async Task<DataTableDto<ReservationInTimeResponse>> GetReservationsDailyAsync()
+    public async Task<DataTableDto<ReportInfoResponse>> GetReservationsDailyAsync()
     {
         var reservations = await getSchedulesProgrammingPersistence.ExecuteAsync(DashboardTimeType.Daily);
 
@@ -102,7 +102,7 @@ public class ReportsService(
 
         var allAvailableReservations = GetAllAvailableReservations(reservationsYearly);
 
-        var reservedReservationsIndex = reservationsYearly.FindIndex(reservation => reservation.State == "Reservado");
+        var reservedReservationsIndex = reservationsYearly.FindIndex(reservation => reservation.Label == "Reservado");
 
         reservationsYearly.RemoveAt(reservedReservationsIndex);
 
@@ -111,7 +111,7 @@ public class ReportsService(
         return new(reservationsYearly, reservationsYearly.Count());
     }
 
-    public async Task<DataTableDto<ReservationInTimeResponse>> GetReservationsWeeklyAsync()
+    public async Task<DataTableDto<ReportInfoResponse>> GetReservationsWeeklyAsync()
     {
         var reservations = await getSchedulesProgrammingPersistence.ExecuteAsync(DashboardTimeType.Weekly);
 
@@ -125,7 +125,7 @@ public class ReportsService(
 
         var allAvailableReservations = GetAllAvailableReservations(reservationsYearly);
 
-        var reservedReservationsIndex = reservationsYearly.FindIndex(reservation => reservation.State == "Reservado");
+        var reservedReservationsIndex = reservationsYearly.FindIndex(reservation => reservation.Label == "Reservado");
 
         reservationsYearly.RemoveAt(reservedReservationsIndex);
 
@@ -135,7 +135,7 @@ public class ReportsService(
     }
 
     #region private methods
-    private ReservationInTimeResponse GetReservationMonthly(IGrouping<ScheduleProgrammingState, ScheduleProgramming> reservationsByState, IEnumerable<OptionDto<int>> months)
+    private ReportInfoResponse GetReservationMonthly(IGrouping<ScheduleProgrammingState, ScheduleProgramming> reservationsByState, IEnumerable<OptionDto<int>> months)
     {
         var reservationsByMonth = months.Select(month => new TypeQuantity(month.Label, reservationsByState.Count(reservation => reservation.StartDate.Month == month.Id)));
 
@@ -144,7 +144,7 @@ public class ReportsService(
         return new(reservationState.Label, reservationsByMonth);
     }
 
-    private ReservationInTimeResponse GetReservationYearly(IGrouping<ScheduleProgrammingState, ScheduleProgramming> reservationsByState, IEnumerable<OptionDto<int>> years)
+    private ReportInfoResponse GetReservationYearly(IGrouping<ScheduleProgrammingState, ScheduleProgramming> reservationsByState, IEnumerable<OptionDto<int>> years)
     {
         var reservationsByYear = years.Select(year => new TypeQuantity(year.Label, reservationsByState.Count(reservation => reservation.StartDate.Year == year.Id)));
 
@@ -153,7 +153,7 @@ public class ReportsService(
         return new(reservationState.Label, reservationsByYear);
     }
 
-    private ReservationInTimeResponse GetReservationDaily(IGrouping<ScheduleProgrammingState, ScheduleProgramming> reservationsByState, IEnumerable<OptionDto<DayOfWeek>> days)
+    private ReportInfoResponse GetReservationDaily(IGrouping<ScheduleProgrammingState, ScheduleProgramming> reservationsByState, IEnumerable<OptionDto<DayOfWeek>> days)
     {
         var reservationsByDay = days.Select(day => new TypeQuantity(day.Label, reservationsByState.Count(reservation => reservation.StartDate.DayOfWeek == day.Id)));
 
@@ -162,7 +162,7 @@ public class ReportsService(
         return new(reservationState.Label, reservationsByDay);
     }
 
-    private ReservationInTimeResponse GetReservationWeekly(
+    private ReportInfoResponse GetReservationWeekly(
         IGrouping<ScheduleProgrammingState, ScheduleProgramming> reservationsByState,
         IEnumerable<OptionDto<WeeksDto>> weeks)
     { 
@@ -173,13 +173,13 @@ public class ReportsService(
         return new(reservationState.Label, reservationsByWeek);
     }
 
-    private ReservationInTimeResponse GetAllAvailableReservations(IList<ReservationInTimeResponse> reservations)
+    private ReportInfoResponse GetAllAvailableReservations(IList<ReportInfoResponse> reservations)
     {
         var reservedType = scheduleProgrammingStates.First(x => x.Id == ScheduleProgrammingState.Reserved);
 
-        var reservedReservations = reservations.First(reservation => reservation.State == reservedType.Label);
+        var reservedReservations = reservations.First(reservation => reservation.Label == reservedType.Label);
 
-        var reScheduledReservations = reservations.First(reservation => reservation.State == "Reprogramado");
+        var reScheduledReservations = reservations.First(reservation => reservation.Label == "Reprogramado");
 
         var availableMonthTypeQuantities = reservedReservations
                                     .TypeQuantities

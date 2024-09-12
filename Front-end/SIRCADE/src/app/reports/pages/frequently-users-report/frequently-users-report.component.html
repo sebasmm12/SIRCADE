@@ -11,9 +11,9 @@
       <mat-spinner></mat-spinner>
       }
       <table mat-table [dataSource]="frequentlyUsers">
-        <ng-container matColumnDef="userName">
+        <ng-container matColumnDef="label">
           <th mat-header-cell *matHeaderCellDef>Nombre</th>
-          <td mat-cell *matCellDef="let row">{{ row.userName }}</td>
+          <td mat-cell *matCellDef="let row">{{ row.label }}</td>
         </ng-container>
         @for(sportFieldType of sportFieldTypeColumns; track $index) {
         <ng-container [matColumnDef]="sportFieldType">
@@ -26,11 +26,8 @@
         <tr mat-header-row *matHeaderRowDef="frequentlyUserColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: frequentlyUserColumns"></tr>
       </table>
-      <mat-paginator
-        [pageSize]="pageSize"
-        [length]="totalFrequentlyUsers"
-        [pageSizeOptions]="[5, 10, 25, 100]"
-      ></mat-paginator>
+      <mat-paginator [pageSize]="pageSize" [length]="totalFrequentlyUsers"
+        [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
   </mat-card-content>
 </mat-card>

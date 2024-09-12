@@ -9,13 +9,13 @@ import {
 import { MaterialModule } from 'src/app/material.module';
 import { SearchTextComponent } from 'src/app/shared/components/search-text/search-text.component';
 import { ReportsService } from '../../services/reports.service';
-import { FrequentlyUsersResponse } from '../../interfaces/responses/frequently-users.response';
 import { TypeQuantitiesDto } from '../../interfaces/dtos/type-quantities';
 import { MatPaginator } from '@angular/material/paginator';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
 import { FrequentlyUsersQueries } from '../../interfaces/queries/frequently-users.queries';
 import { ScheduleProgrammingState } from 'src/app/schedules_programming/interfaces/enums/schedule-programming-state.enum';
+import { ReservationInfoResponse } from '../../interfaces/responses/reservation-info.response';
 
 @Component({
   selector: 'app-cancelled-reservations-by-user-report',
@@ -30,9 +30,9 @@ export class CancelledReservationsByUserReportComponent
   destroyRef = inject(DestroyRef);
   reportsService = inject(ReportsService);
 
-  frequentlyUsers: FrequentlyUsersResponse[] = [];
+  frequentlyUsers: ReservationInfoResponse[] = [];
   totalFrequentlyUsers: number = 0;
-  frequentlyUserColumns: string[] = ['userName'];
+  frequentlyUserColumns: string[] = ['label'];
   pageSize: number = 10;
   searchText: string = '';
   loading: boolean = true;
@@ -45,10 +45,10 @@ export class CancelledReservationsByUserReportComponent
   paginator: MatPaginator = Object.create(null);
 
   getQuantityByType(
-    frequentlyUsers: FrequentlyUsersResponse,
+    frequentlyUsers: ReservationInfoResponse,
     sportFieldType: string
   ): number {
-    const quantity = frequentlyUsers.sportFieldTypeQuantities.find(
+    const quantity = frequentlyUsers.typeQuantities.find(
       (sportFieldTypeQuantity) => sportFieldTypeQuantity.name === sportFieldType
     )?.quantity;
     return quantity ?? 0;
@@ -105,16 +105,13 @@ export class CancelledReservationsByUserReportComponent
 
         if (this.canIncludeColumns) {
           this.sportFieldTypeQuantities =
-            this.frequentlyUsers[0].sportFieldTypeQuantities;
+            this.frequentlyUsers[0].typeQuantities;
           this.sportFieldTypeColumns =
-            this.frequentlyUsers[0].sportFieldTypeQuantities.map(
+            this.frequentlyUsers[0].typeQuantities.map(
               (sportField) => sportField.name
             );
 
-          this.frequentlyUserColumns = [
-            'userName',
-            ...this.sportFieldTypeColumns,
-          ];
+          this.frequentlyUserColumns = ['label', ...this.sportFieldTypeColumns];
 
           this.canIncludeColumns = false;
         }

@@ -1,6 +1,6 @@
 import { TypeQuantitiesDto } from '../dtos/type-quantities';
 
-export interface ReservationsByDateResponse {
-  state: string;
+export interface ReservationInfoResponse {
+  label: string;
   typeQuantities: TypeQuantitiesDto[];
 }

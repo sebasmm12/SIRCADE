@@ -6,9 +6,9 @@ namespace SIRCADE.ApiCore.Controllers.Reports.Services;
 
 public interface IReportsService
 {
-    Task<DataTableDto<FrequentlyUserByReservationResponse>> GetFrequentlyUsersAsync(FrequentlyUserDataTableQueriesDto frequentlyUserDataTableQueriesDto);
-    Task<DataTableDto<ReservationInTimeResponse>> GetReservationsMonthlyAsync();
-    Task<DataTableDto<ReservationInTimeResponse>> GetReservationsYearlyAsync();
-    Task<DataTableDto<ReservationInTimeResponse>> GetReservationsDailyAsync();
-    Task<DataTableDto<ReservationInTimeResponse>> GetReservationsWeeklyAsync();
+    Task<DataTableDto<ReportInfoResponse>> GetFrequentlyUsersAsync(FrequentlyUserDataTableQueriesDto frequentlyUserDataTableQueriesDto);
+    Task<DataTableDto<ReportInfoResponse>> GetReservationsMonthlyAsync();
+    Task<DataTableDto<ReportInfoResponse>> GetReservationsYearlyAsync();
+    Task<DataTableDto<ReportInfoResponse>> GetReservationsDailyAsync();
+    Task<DataTableDto<ReportInfoResponse>> GetReservationsWeeklyAsync();
 }
