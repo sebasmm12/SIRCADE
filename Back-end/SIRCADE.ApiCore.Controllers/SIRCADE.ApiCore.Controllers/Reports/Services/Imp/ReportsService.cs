@@ -15,7 +15,8 @@ namespace SIRCADE.ApiCore.Controllers.Reports.Services.Imp;
 public class ReportsService(
     IGetUsersPersistence getUsersPersistence,
     IGetSportFieldTypesPersistence getSportFieldTypesPersistence,
-    IGetSchedulesProgrammingPersistence getSchedulesProgrammingPersistence) : IReportsService
+    IGetSchedulesProgrammingPersistence getSchedulesProgrammingPersistence,
+    IExcelFilesService excelFilesService) : IReportsService
 {
     private readonly IEnumerable<OptionDto<ScheduleProgrammingState>> scheduleProgrammingStates =
     [
@@ -24,9 +25,9 @@ public class ReportsService(
         new(ScheduleProgrammingState.Cancelled, "Cancelado")
     ]; 
 
-    public async Task<DataTableDto<ReportInfoResponse>> GetFrequentlyUsersAsync(FrequentlyUserDataTableQueriesDto frequentlyUserDataTableQueriesDto)
+    public async Task<DataTableDto<ReportInfoResponse>> GetFrequentlyUsersAsync(FrequentlyUserDataTableQueriesDto frequentlyUserDataTableQueriesDto, bool isPaginated = true)
     {
-        var users = await getUsersPersistence.ExecuteForReportsAsync(frequentlyUserDataTableQueriesDto);
+        var users = await getUsersPersistence.ExecuteForReportsAsync(frequentlyUserDataTableQueriesDto, isPaginated);
 
         var sportFieldTypes = await getSportFieldTypesPersistence.ExecuteAsync();
 
@@ -39,6 +40,24 @@ public class ReportsService(
         var response = new DataTableDto<ReportInfoResponse>(frequentlyUsersByReservation, users.TotalElements);
 
         return response;
+    }
+
+    public async Task<string> ExportFrequentlyUsersAsync(FrequentlyUserExportQueriesDto frequentlyUserExportQueriesDto)
+    {
+        var users = await GetFrequentlyUsersAsync(frequentlyUserExportQueriesDto, false);
+
+        var convertedExcelFile = excelFilesService.Generate(frequentlyUserExportQueriesDto.ReportTitle, "Socio", users.Data);
+
+        return convertedExcelFile;
+    }
+
+    public async Task<string> ExportReservationsAsync(Func<Task<DataTableDto<ReportInfoResponse>>> reservationsAsyncFunc, string reportTitle)
+    {
+        var reservations = await reservationsAsyncFunc();
+
+        var convertedExcelFile = excelFilesService.Generate(reportTitle, "Estado de Reserva", reservations.Data);
+
+        return convertedExcelFile;
     }
 
     public async Task<DataTableDto<ReportInfoResponse>> GetReservationsMonthlyAsync()
@@ -61,7 +80,7 @@ public class ReportsService(
 
         reservationsMonthly.Insert(reservedReservationsIndex, allAvailableReservations);
 
-        return new(reservationsMonthly, reservationsMonthly.Count());
+        return new(reservationsMonthly, reservationsMonthly.Count);
 
     }
 
@@ -85,7 +104,7 @@ public class ReportsService(
 
         reservationsYearly.Insert(reservedReservationsIndex, allAvailableReservations);
 
-        return new(reservationsYearly, reservationsYearly.Count());
+        return new(reservationsYearly, reservationsYearly.Count);
     }
 
     public async Task<DataTableDto<ReportInfoResponse>> GetReservationsDailyAsync()
@@ -108,7 +127,7 @@ public class ReportsService(
 
         reservationsYearly.Insert(reservedReservationsIndex, allAvailableReservations);
 
-        return new(reservationsYearly, reservationsYearly.Count());
+        return new(reservationsYearly, reservationsYearly.Count);
     }
 
     public async Task<DataTableDto<ReportInfoResponse>> GetReservationsWeeklyAsync()
@@ -131,7 +150,7 @@ public class ReportsService(
 
         reservationsYearly.Insert(reservedReservationsIndex, allAvailableReservations);
 
-        return new(reservationsYearly, reservationsYearly.Count());
+        return new(reservationsYearly, reservationsYearly.Count);
     }
 
     #region private methods

@@ -69,7 +69,7 @@ public class GetUsersPersistence(ApplicationDbContext applicationDbContext) : IG
         return new(users, totalUsers);
     }
 
-    public async Task<DataTableDto<User>> ExecuteForReportsAsync(FrequentlyUserDataTableQueriesDto userDataTableQueriesDto)
+    public async Task<DataTableDto<User>> ExecuteForReportsAsync(FrequentlyUserDataTableQueriesDto userDataTableQueriesDto, bool isPaginated = true)
     {
         var usersContext = applicationDbContext
                                 .Users
@@ -89,10 +89,13 @@ public class GetUsersPersistence(ApplicationDbContext applicationDbContext) : IG
                                          user.Detail.PaternalLastName.Contains(userDataTableQueriesDto.Search) ||
                                          user.Detail.MaternalLastName.Contains(userDataTableQueriesDto.Search));
 
-        var users = await usersContext
+        if (isPaginated)
+            usersContext = usersContext
                             .OrderBy(user => user.Detail.Names)
                             .Skip(userDataTableQueriesDto.Page)
-                            .Take(userDataTableQueriesDto.PageSize)
+                            .Take(userDataTableQueriesDto.PageSize);
+
+        var users = await usersContext
                             .AsNoTracking()
                             .ToListAsync();
 

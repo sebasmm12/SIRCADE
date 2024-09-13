@@ -6,6 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
 import { MaterialModule } from 'src/app/material.module';
 import { ReservationInfoResponse } from '../../interfaces/responses/reservation-info.response';
+import { ExportsService } from '../../services/exports.service';
 
 @Component({
   selector: 'app-weekly-reservations',
@@ -17,6 +18,7 @@ import { ReservationInfoResponse } from '../../interfaces/responses/reservation-
 export class WeeklyReservationsComponent {
   destroyRef = inject(DestroyRef);
   reportsService = inject(ReportsService);
+  exportsService = inject(ExportsService);
 
   monthlyReservations: ReservationInfoResponse[] = [];
   totalMonthlyReservations: number = 0;
@@ -86,5 +88,16 @@ export class WeeklyReservationsComponent {
 
         this.loading = false;
       });
+  }
+
+  export(): void {
+    const reportTitle = 'Reservas semanales';
+
+    const exportFunction = () =>
+      this.reportsService
+        .exportWeeklyReservations(reportTitle)
+        .pipe(takeUntilDestroyed(this.destroyRef));
+
+    this.exportsService.downloadExcel(exportFunction, reportTitle);
   }
 }

@@ -6,6 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
 import { ReservationInfoResponse } from '../../interfaces/responses/reservation-info.response';
+import { ExportsService } from '../../services/exports.service';
 
 @Component({
   selector: 'app-yearly-reservations',
@@ -17,6 +18,7 @@ import { ReservationInfoResponse } from '../../interfaces/responses/reservation-
 export class YearlyReservationsComponent {
   destroyRef = inject(DestroyRef);
   reportsService = inject(ReportsService);
+  exportsService = inject(ExportsService);
 
   monthlyReservations: ReservationInfoResponse[] = [];
   totalMonthlyReservations: number = 0;
@@ -86,5 +88,16 @@ export class YearlyReservationsComponent {
 
         this.loading = false;
       });
+  }
+
+  export(): void {
+    const reportTitle = 'Reservas anuales';
+
+    const exportFunction = () =>
+      this.reportsService
+        .exportYearlyReservations(reportTitle)
+        .pipe(takeUntilDestroyed(this.destroyRef));
+
+    this.exportsService.downloadExcel(exportFunction, reportTitle);
   }
 }

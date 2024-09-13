@@ -6,6 +6,7 @@ import queryString from 'query-string';
 import { DataTableResponse } from '../../shared/interfaces/responses/data-table.response';
 import { Observable } from 'rxjs';
 import { ReservationInfoResponse } from '../interfaces/responses/reservation-info.response';
+import { FrequentlyUsersExportQueries } from '../interfaces/queries/frequently-users-export.queries';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +28,16 @@ export class ReportsService {
     return this.httpClient.get<DataTableResponse<ReservationInfoResponse>>(url);
   }
 
+  exportUsers(
+    frequentlyUsersExportQueries: FrequentlyUsersExportQueries
+  ): Observable<string> {
+    const params = queryString.stringify(frequentlyUsersExportQueries);
+
+    let url = `${this.baseUrl}/reports/frequently-users/exports?${params}`;
+
+    return this.httpClient.get<string>(url, { responseType: 'text' as 'json' });
+  }
+
   getCancelledReservationsByUser(
     frequentlyUsersQueries: FrequentlyUsersQueries
   ) {
@@ -45,12 +56,24 @@ export class ReportsService {
     return this.httpClient.get<DataTableResponse<ReservationInfoResponse>>(url);
   }
 
+  exportMonthlyReservations(reportTitle: string): Observable<string> {
+    let url = `${this.baseUrl}/reports/monthly-reservations/exports?reportTitle=${reportTitle}`;
+
+    return this.httpClient.get<string>(url, { responseType: 'text' as 'json' });
+  }
+
   getYearlyReservations(): Observable<
     DataTableResponse<ReservationInfoResponse>
   > {
     let url = `${this.baseUrl}/reports/yearly-reservations`;
 
     return this.httpClient.get<DataTableResponse<ReservationInfoResponse>>(url);
+  }
+
+  exportYearlyReservations(reportTitle: string): Observable<string> {
+    let url = `${this.baseUrl}/reports/yearly-reservations/exports?reportTitle=${reportTitle}`;
+
+    return this.httpClient.get<string>(url, { responseType: 'text' as 'json' });
   }
 
   getDailyReservations(): Observable<
@@ -61,11 +84,23 @@ export class ReportsService {
     return this.httpClient.get<DataTableResponse<ReservationInfoResponse>>(url);
   }
 
+  exportDailyReservations(reportTitle: string): Observable<string> {
+    let url = `${this.baseUrl}/reports/daily-reservations/exports?reportTitle=${reportTitle}`;
+
+    return this.httpClient.get<string>(url, { responseType: 'text' as 'json' });
+  }
+
   getWeeklyReservations(): Observable<
     DataTableResponse<ReservationInfoResponse>
   > {
     let url = `${this.baseUrl}/reports/weekly-reservations`;
 
     return this.httpClient.get<DataTableResponse<ReservationInfoResponse>>(url);
+  }
+
+  exportWeeklyReservations(reportTitle: string): Observable<string> {
+    let url = `${this.baseUrl}/reports/weekly-reservations/exports?reportTitle=${reportTitle}`;
+
+    return this.httpClient.get<string>(url, { responseType: 'text' as 'json' });
   }
 }

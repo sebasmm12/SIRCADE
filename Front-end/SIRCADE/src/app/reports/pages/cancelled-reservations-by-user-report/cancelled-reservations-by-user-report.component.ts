@@ -16,6 +16,8 @@ import { switchMap } from 'rxjs';
 import { FrequentlyUsersQueries } from '../../interfaces/queries/frequently-users.queries';
 import { ScheduleProgrammingState } from 'src/app/schedules_programming/interfaces/enums/schedule-programming-state.enum';
 import { ReservationInfoResponse } from '../../interfaces/responses/reservation-info.response';
+import { ExportsService } from '../../services/exports.service';
+import { FrequentlyUsersExportQueries } from '../../interfaces/queries/frequently-users-export.queries';
 
 @Component({
   selector: 'app-cancelled-reservations-by-user-report',
@@ -29,6 +31,7 @@ export class CancelledReservationsByUserReportComponent
 {
   destroyRef = inject(DestroyRef);
   reportsService = inject(ReportsService);
+  exportsService = inject(ExportsService);
 
   frequentlyUsers: ReservationInfoResponse[] = [];
   totalFrequentlyUsers: number = 0;
@@ -118,5 +121,26 @@ export class CancelledReservationsByUserReportComponent
 
         this.loading = false;
       });
+  }
+
+  export(): void {
+    const frequentlyUsersExportQueries: FrequentlyUsersExportQueries = {
+      page: 0,
+      pageSize: this.pageSize,
+      search: this.searchText,
+      roles: this.roles,
+      reservationStates: [ScheduleProgrammingState.Cancelled],
+      reportTitle: 'Socios por Cancelación',
+    };
+
+    const exportFunction = () =>
+      this.reportsService
+        .exportUsers(frequentlyUsersExportQueries)
+        .pipe(takeUntilDestroyed(this.destroyRef));
+
+    this.exportsService.downloadExcel(
+      exportFunction,
+      frequentlyUsersExportQueries.reportTitle
+    );
   }
 }

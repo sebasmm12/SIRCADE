@@ -16,6 +16,8 @@ import { ScheduleProgrammingState } from 'src/app/schedules_programming/interfac
 import { SearchTextComponent } from 'src/app/shared/components/search-text/search-text.component';
 import { TypeQuantitiesDto } from '../../interfaces/dtos/type-quantities';
 import { ReservationInfoResponse } from '../../interfaces/responses/reservation-info.response';
+import { ExportsService } from '../../services/exports.service';
+import { FrequentlyUsersExportQueries } from '../../interfaces/queries/frequently-users-export.queries';
 
 @Component({
   selector: 'app-frequently-users-report',
@@ -27,6 +29,7 @@ import { ReservationInfoResponse } from '../../interfaces/responses/reservation-
 export class FrequentlyUsersReportComponent implements OnInit, AfterViewInit {
   destroyRef = inject(DestroyRef);
   reportsService = inject(ReportsService);
+  exportsService = inject(ExportsService);
 
   frequentlyUsers: ReservationInfoResponse[] = [];
   totalFrequentlyUsers: number = 0;
@@ -122,5 +125,29 @@ export class FrequentlyUsersReportComponent implements OnInit, AfterViewInit {
 
         this.loading = false;
       });
+  }
+
+  export(): void {
+    const frequentlyUsersExportQueries: FrequentlyUsersExportQueries = {
+      page: 0,
+      pageSize: this.pageSize,
+      search: this.searchText,
+      roles: this.roles,
+      reservationStates: [
+        ScheduleProgrammingState.ReScheduled,
+        ScheduleProgrammingState.Reserved,
+      ],
+      reportTitle: 'Socios frecuentes',
+    };
+
+    const exportFunction = () =>
+      this.reportsService
+        .exportUsers(frequentlyUsersExportQueries)
+        .pipe(takeUntilDestroyed(this.destroyRef));
+
+    this.exportsService.downloadExcel(
+      exportFunction,
+      frequentlyUsersExportQueries.reportTitle
+    );
   }
 }

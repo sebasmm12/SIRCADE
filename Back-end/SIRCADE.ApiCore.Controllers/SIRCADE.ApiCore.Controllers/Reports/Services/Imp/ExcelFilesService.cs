@@ -32,9 +32,9 @@ public class ExcelFilesService : IExcelFilesService
                                 .TypeQuantities
                                 .ToList();
 
-        for (var i = 1; i <= typeQuantities.Count; i++)
+        for (var i = 0; i < typeQuantities.Count; i++)
         {
-            sheet.Cell(1, i + 1).Value = typeQuantities.ElementAt(i).Name;
+            sheet.Cell(1, i + 2).Value = typeQuantities.ElementAt(i).Name;
         }
     }
 
