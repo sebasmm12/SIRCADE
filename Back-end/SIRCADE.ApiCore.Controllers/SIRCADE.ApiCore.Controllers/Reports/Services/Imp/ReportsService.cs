@@ -3,9 +3,11 @@ using SIRCADE.ApiCore.Controllers.Reports.Responses;
 using SIRCADE.ApiCore.Models.Common.DTOs;
 using SIRCADE.ApiCore.Models.Common.Extensions;
 using SIRCADE.ApiCore.Models.Dashboards.Enums;
+using SIRCADE.ApiCore.Models.SchedulesProgramming.Dtos;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Entities;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Enums;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Persistence;
+using SIRCADE.ApiCore.Models.SportFields.DTOs;
 using SIRCADE.ApiCore.Models.SportFields.Persistence;
 using SIRCADE.ApiCore.Models.Users.DTOs;
 using SIRCADE.ApiCore.Models.Users.Persistence;
@@ -24,6 +26,13 @@ public class ReportsService(
         new(ScheduleProgrammingState.ReScheduled, "Reprogramado"),
         new(ScheduleProgrammingState.Cancelled, "Cancelado")
     ]; 
+
+    private readonly IEnumerable<OptionDto<TurnDatesDto>> turnDates =
+    [
+        new(new(360, 660), "Mañana"),
+        new(new(661, 1080), "Tarde"),
+        new(new(1081, 1440), "Noche")
+    ];
 
     public async Task<DataTableDto<ReportInfoResponse>> GetFrequentlyUsersAsync(FrequentlyUserDataTableQueriesDto frequentlyUserDataTableQueriesDto, bool isPaginated = true)
     {
@@ -51,11 +60,11 @@ public class ReportsService(
         return convertedExcelFile;
     }
 
-    public async Task<string> ExportReservationsAsync(Func<Task<DataTableDto<ReportInfoResponse>>> reservationsAsyncFunc, string reportTitle)
+    public async Task<string> ExportReportAsync(Func<Task<DataTableDto<ReportInfoResponse>>> reservationsAsyncFunc, string reportTitle, string reportName)
     {
         var reservations = await reservationsAsyncFunc();
 
-        var convertedExcelFile = excelFilesService.Generate(reportTitle, "Estado de Reserva", reservations.Data);
+        var convertedExcelFile = excelFilesService.Generate(reportTitle, reportName, reservations.Data);
 
         return convertedExcelFile;
     }
@@ -153,7 +162,37 @@ public class ReportsService(
         return new(reservationsYearly, reservationsYearly.Count);
     }
 
+    public async Task<DataTableDto<ReportInfoResponse>> GetSportFieldTypesByTurnAsync(ScheduleProgrammingByTurnDto scheduleProgrammingByTurnDto)
+    {
+        var sportFieldTypes = await getSportFieldTypesPersistence.ExecuteAsync();
+
+        var reservations = await getSchedulesProgrammingPersistence.ExecuteAsync(DashboardTimeType.Turn, scheduleProgrammingByTurnDto, false);
+
+
+        var sportFieldTypeReservations = sportFieldTypes.Select(sportFieldType => new SportFieldReservationsDto(sportFieldType.Name,
+                                                                                                                reservations.Where(reservation => reservation.SportField.Type == sportFieldType.Id)));
+
+        var sportFieldsByTurn = turnDates
+                                    .Select(turnDate => GetSportFieldsByTurn(turnDate, sportFieldTypeReservations))
+                                    .ToList();
+
+        return new(sportFieldsByTurn, sportFieldsByTurn.Count);
+    }
+
     #region private methods
+
+    private static ReportInfoResponse GetSportFieldsByTurn(OptionDto<TurnDatesDto> turnDatesDto,
+        IEnumerable<SportFieldReservationsDto> sportFieldReservationsDtos)
+    {
+        var sportFieldsByTurn = sportFieldReservationsDtos.Select(sportFieldReservationsDto => new TypeQuantity(
+            sportFieldReservationsDto.SportFieldType,
+            sportFieldReservationsDto.Reservations.Count(sportFieldReservationDto =>
+                sportFieldReservationDto.StartDate.TimeOfDay.TotalMinutes >= turnDatesDto.Id.StartMinutes &&
+                sportFieldReservationDto.StartDate.TimeOfDay.TotalMinutes <= turnDatesDto.Id.EndMinutes)));
+
+        return new(turnDatesDto.Label, sportFieldsByTurn);
+    }
+
     private ReportInfoResponse GetReservationMonthly(IGrouping<ScheduleProgrammingState, ScheduleProgramming> reservationsByState, IEnumerable<OptionDto<int>> months)
     {
         var reservationsByMonth = months.Select(month => new TypeQuantity(month.Label, reservationsByState.Count(reservation => reservation.StartDate.Month == month.Id)));

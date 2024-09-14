@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SIRCADE.ApiCore.Controllers.Reports.Services;
+using SIRCADE.ApiCore.Models.SchedulesProgramming.Dtos;
 using SIRCADE.ApiCore.Models.Users.DTOs;
 
 namespace SIRCADE.ApiCore.Controllers.Reports.Controllers;
@@ -64,7 +65,7 @@ public class ReportsController(IReportsService reportsService) : ControllerBase
         try
         {
             var response =
-                await reportsService.ExportReservationsAsync(reportsService.GetReservationsMonthlyAsync, reportTitle);
+                await reportsService.ExportReportAsync(reportsService.GetReservationsMonthlyAsync, reportTitle, "Estado de reserva");
 
             return Ok(response);
         }
@@ -96,7 +97,7 @@ public class ReportsController(IReportsService reportsService) : ControllerBase
         try
         {
             var response =
-                await reportsService.ExportReservationsAsync(reportsService.GetReservationsYearlyAsync, reportTitle);
+                await reportsService.ExportReportAsync(reportsService.GetReservationsYearlyAsync, reportTitle, "Estado de reserva");
 
             return Ok(response);
         }
@@ -128,7 +129,7 @@ public class ReportsController(IReportsService reportsService) : ControllerBase
         try
         {
             var response =
-                await reportsService.ExportReservationsAsync(reportsService.GetReservationsDailyAsync, reportTitle);
+                await reportsService.ExportReportAsync(reportsService.GetReservationsDailyAsync, reportTitle, "Estado de reserva");
 
             return Ok(response);
         }
@@ -159,7 +160,39 @@ public class ReportsController(IReportsService reportsService) : ControllerBase
         try
         {
             var response =
-                await reportsService.ExportReservationsAsync(reportsService.GetReservationsWeeklyAsync, reportTitle);
+                await reportsService.ExportReportAsync(reportsService.GetReservationsWeeklyAsync, reportTitle, "Estado de reserva");
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
+    }
+
+    [HttpGet("sport-fields-by-turn")]
+    public async Task<IActionResult> GetSportFieldTypesByTurnAsync(
+        [FromQuery] ScheduleProgrammingByTurnDto scheduleProgrammingByTurnDto)
+    {
+        try
+        {
+            var response = await reportsService.GetSportFieldTypesByTurnAsync(scheduleProgrammingByTurnDto);
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
+    }
+
+    [HttpGet("sport-fields-by-turn/exports")]
+    public async Task<IActionResult> ExportSportFieldTypesByTurnAsync([FromQuery] ScheduleProgrammingByTurnDto scheduleProgrammingByTurnDto,
+        [FromQuery] string reportTitle)
+    {
+        try
+        {
+            var response = await reportsService.ExportReportAsync(() => reportsService.GetSportFieldTypesByTurnAsync(scheduleProgrammingByTurnDto), reportTitle, "Horario");
 
             return Ok(response);
         }

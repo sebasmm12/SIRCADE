@@ -7,7 +7,7 @@ public class SchedulesProgrammingWeeklyStrategy : ISchedulesProgrammingInTimeStr
 {
     public DashboardTimeType DashboardTimeType => DashboardTimeType.Weekly;
 
-    public IQueryable<ScheduleProgramming> Execute(IQueryable<ScheduleProgramming> context)
+    public IQueryable<ScheduleProgramming> Execute(IQueryable<ScheduleProgramming> context, object? filters = null)
     {
         var currentDate = DateTime.Now;
 

@@ -103,4 +103,18 @@ export class ReportsService {
 
     return this.httpClient.get<string>(url, { responseType: 'text' as 'json' });
   }
+
+  getSportFieldTypesByTurn(): Observable<
+    DataTableResponse<ReservationInfoResponse>
+  > {
+    let url = `${this.baseUrl}/reports/sport-fields-by-turn`;
+
+    return this.httpClient.get<DataTableResponse<ReservationInfoResponse>>(url);
+  }
+
+  exportSportFieldTypesByTurn(reportTitle: string): Observable<string> {
+    let url = `${this.baseUrl}/reports/sport-fields-by-turn/exports?reportTitle=${reportTitle}`;
+
+    return this.httpClient.get<string>(url, { responseType: 'text' as 'json' });
+  }
 }

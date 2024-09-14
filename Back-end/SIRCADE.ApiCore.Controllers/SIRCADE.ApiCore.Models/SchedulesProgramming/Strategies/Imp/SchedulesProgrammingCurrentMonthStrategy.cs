@@ -5,7 +5,7 @@ namespace SIRCADE.ApiCore.Models.SchedulesProgramming.Strategies.Imp;
 
 public class SchedulesProgrammingCurrentMonthStrategy : ISchedulesProgrammingInTimeStrategy
 {
-    public IQueryable<ScheduleProgramming> Execute(IQueryable<ScheduleProgramming> context)
+    public IQueryable<ScheduleProgramming> Execute(IQueryable<ScheduleProgramming> context, object? filters = null)
     {
         var currentDate = DateTime.Now;
 

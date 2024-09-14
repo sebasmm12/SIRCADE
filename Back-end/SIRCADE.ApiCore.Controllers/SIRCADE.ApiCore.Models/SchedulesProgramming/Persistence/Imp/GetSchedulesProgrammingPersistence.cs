@@ -46,17 +46,20 @@ public class GetSchedulesProgrammingPersistence(
         return schedulesProgramming;
     }
 
-    public async Task<IEnumerable<ScheduleProgramming>> ExecuteAsync(DashboardTimeType dashboardTimeType)
+    public async Task<IEnumerable<ScheduleProgramming>> ExecuteAsync(DashboardTimeType dashboardTimeType, object? filters = null, bool canIgnoreQueryFilters = true)
     {
         var schedulesProgrammingContext = applicationDbContext
                                             .SchedulesProgramming
-                                            .IgnoreQueryFilters()
                                             .Where(scheduleProgramming => scheduleProgramming.ClientId != null)
+                                            .Include(scheduleProgramming => scheduleProgramming.SportField)
                                             .AsQueryable();
 
         var schedulesProgrammingByTimeStrategy = schedulesProgrammingInTimeFactory.GetStrategyByTime(dashboardTimeType, schedulesProgrammingContext);
 
-        schedulesProgrammingContext = schedulesProgrammingByTimeStrategy.Execute(schedulesProgrammingContext);
+        schedulesProgrammingContext = schedulesProgrammingByTimeStrategy.Execute(schedulesProgrammingContext, filters);
+
+        if (canIgnoreQueryFilters)
+            schedulesProgrammingContext = schedulesProgrammingContext.IgnoreQueryFilters();
 
         var schedulesProgramming = await schedulesProgrammingContext.ToListAsync();
 

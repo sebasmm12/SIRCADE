@@ -5,7 +5,7 @@ namespace SIRCADE.ApiCore.Models.SchedulesProgramming.Strategies;
 
 public interface ISchedulesProgrammingInTimeStrategy
 {
-    IQueryable<ScheduleProgramming> Execute(IQueryable<ScheduleProgramming> context);
+    IQueryable<ScheduleProgramming> Execute(IQueryable<ScheduleProgramming> context, object? filters = null);
 
     DashboardTimeType DashboardTimeType { get;}
 }

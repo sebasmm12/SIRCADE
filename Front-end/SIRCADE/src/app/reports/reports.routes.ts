@@ -5,6 +5,7 @@ import { MonthlyReservationsComponent } from './pages/monthly-reservations/month
 import { YearlyReservationsComponent } from './pages/yearly-reservations/yearly-reservations.component';
 import { DailyReservationsComponent } from './pages/daily-reservations/daily-reservations.component';
 import { WeeklyReservationsComponent } from './pages/weekly-reservations/weekly-reservations.component';
+import { SportFieldTypesByTurnComponent } from './pages/sport-field-types-by-turn/sport-field-types-by-turn.component';
 
 export const routes: Routes = [
   {
@@ -70,6 +71,17 @@ export const routes: Routes = [
       urls: [
         { title: 'Dashboard', url: '/principal' },
         { title: 'Reservas Semanales' },
+      ],
+    },
+  },
+  {
+    path: 'canchas-por-turno',
+    component: SportFieldTypesByTurnComponent,
+    data: {
+      title: 'Canchas deportiva por Turno',
+      urls: [
+        { title: 'Dashboard', url: '/principal' },
+        { title: 'Canchas deportiva por Turno' },
       ],
     },
   },

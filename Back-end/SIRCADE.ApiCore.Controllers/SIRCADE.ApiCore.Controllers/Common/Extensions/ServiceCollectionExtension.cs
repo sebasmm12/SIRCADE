@@ -101,6 +101,7 @@ public static class ServiceCollectionExtension
         services.AddScoped<ISchedulesProgrammingInTimeStrategy, SchedulesProgrammingYearlyStrategy>();
         services.AddScoped<ISchedulesProgrammingInTimeStrategy, SchedulesProgrammingDailyStrategy>();
         services.AddScoped<ISchedulesProgrammingInTimeStrategy, SchedulesProgrammingCurrentMonthStrategy>();
+        services.AddScoped<ISchedulesProgrammingInTimeStrategy, SchedulesProgrammingByTurnStrategy>();
 
         return services;
     }

@@ -264,10 +264,6 @@ export class FullComponent implements OnInit {
                 route: '/reportes/cancelaciones-socio',
               },
               {
-                displayName: 'Reservas por turno',
-                route: '/reportes/reservas-turno',
-              },
-              {
                 displayName: 'Reservas diarias',
                 route: '/reportes/reservas-diarias',
               },
@@ -282,6 +278,10 @@ export class FullComponent implements OnInit {
               {
                 displayName: 'Reservas anuales',
                 route: '/reportes/reservas-anuales',
+              },
+              {
+                displayName: 'Canchas por turno',
+                route: '/reportes/canchas-por-turno',
               },
             ];
 
