@@ -27,8 +27,12 @@ using SIRCADE.ApiCore.Controllers.Accounts.Services;
 using SIRCADE.ApiCore.Controllers.Accounts.Services.Imp;
 using SIRCADE.ApiCore.Controllers.Dashboards.Services;
 using SIRCADE.ApiCore.Controllers.Dashboards.Services.Imp;
+using SIRCADE.ApiCore.Controllers.Notifications.Services;
+using SIRCADE.ApiCore.Controllers.Notifications.Services.Imp;
 using SIRCADE.ApiCore.Controllers.Reports.Services;
 using SIRCADE.ApiCore.Controllers.Reports.Services.Imp;
+using SIRCADE.ApiCore.Models.Notifications.Persistence;
+using SIRCADE.ApiCore.Models.Notifications.Persistence.Imp;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Factories;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Factories.Imp;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Strategies;
@@ -59,6 +63,7 @@ public static class ServiceCollectionExtension
         services.AddTransient<IDashboardsService, DashboardsService>();
         services.AddTransient<IReportsService, ReportsService>();
         services.AddTransient<IExcelFilesService, ExcelFilesService>();
+        services.AddTransient<INotificationsService, NotificationsService>();
 
         return services;
     }
@@ -90,6 +95,8 @@ public static class ServiceCollectionExtension
         services.AddScoped<ICountSchedulesProgrammingPersistence, CountSchedulesProgrammingPersistence>();
 
         services.AddScoped<IGetUnitiesPersistence, GetUnitiesPersistence>();
+
+        services.AddScoped<IGetUserNotificationsPersistence, GetUserNotificationsPersistence>();
 
         return services;
     }

@@ -5,6 +5,8 @@ import {
   Input,
   ViewEncapsulation,
   inject,
+  OnInit,
+  DestroyRef,
 } from '@angular/core';
 import { CoreService } from 'src/app/services/core.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,6 +19,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { AccountsService } from 'src/app/auth/services/accounts.service';
+import { NotificationsService } from 'src/app/layouts/services/notifications.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NotificationResponse } from 'src/app/layouts/interfaces/responses/notification.response';
 
 interface notifications {
   id: number;
@@ -60,8 +65,10 @@ interface quicklinks {
   templateUrl: './header.component.html',
   encapsulation: ViewEncapsulation.None,
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   accountsService = inject(AccountsService);
+  destroyRef = inject(DestroyRef);
+  notificationsService = inject(NotificationsService);
 
   @Input() showToggle = true;
   @Input() toggleChecked = false;
@@ -70,6 +77,8 @@ export class HeaderComponent {
   @Output() toggleCollapsed = new EventEmitter<void>();
 
   showFiller = false;
+  totalNotifications: number = 0;
+  notifications: NotificationResponse[] = [];
 
   public selectedLanguage: any = {
     language: 'English',
@@ -110,6 +119,26 @@ export class HeaderComponent {
     translate.setDefaultLang('en');
   }
 
+  ngOnInit(): void {
+    this.notificationsService
+      .getNotifications()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((notifications) => {
+        this.totalNotifications = notifications.length;
+        this.notifications = notifications;
+
+        setInterval(() => {
+          this.notificationsService
+            .getNotifications()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((notifications) => {
+              this.totalNotifications = notifications.length;
+              this.notifications = notifications;
+            });
+        }, 10000);
+      });
+  }
+
   openDialog() {
     const dialogRef = this.dialog.open(AppSearchDialogComponent);
 
@@ -123,38 +152,38 @@ export class HeaderComponent {
     this.selectedLanguage = lang;
   }
 
-  notifications: notifications[] = [
-    {
-      id: 1,
-      img: '/assets/images/profile/user-1.jpg',
-      title: 'Roman Joined thes Team!',
-      subtitle: 'Congratulate him',
-    },
-    {
-      id: 2,
-      img: '/assets/images/profile/user-2.jpg',
-      title: 'New message received',
-      subtitle: 'Salma sent you new message',
-    },
-    {
-      id: 3,
-      img: '/assets/images/profile/user-3.jpg',
-      title: 'New Payment received',
-      subtitle: 'Check your earnings',
-    },
-    {
-      id: 4,
-      img: '/assets/images/profile/user-4.jpg',
-      title: 'Jolly completed tasks',
-      subtitle: 'Assign her new tasks',
-    },
-    {
-      id: 5,
-      img: '/assets/images/profile/user-5.jpg',
-      title: 'Roman Joined the Team!',
-      subtitle: 'Congratulatse him',
-    },
-  ];
+  // notifications: notifications[] = [
+  //   {
+  //     id: 1,
+  //     img: '/assets/images/profile/user-1.jpg',
+  //     title: 'Roman Joined thes Team!',
+  //     subtitle: 'Congratulate him',
+  //   },
+  //   {
+  //     id: 2,
+  //     img: '/assets/images/profile/user-2.jpg',
+  //     title: 'New message received',
+  //     subtitle: 'Salma sent you new message',
+  //   },
+  //   {
+  //     id: 3,
+  //     img: '/assets/images/profile/user-3.jpg',
+  //     title: 'New Payment received',
+  //     subtitle: 'Check your earnings',
+  //   },
+  //   {
+  //     id: 4,
+  //     img: '/assets/images/profile/user-4.jpg',
+  //     title: 'Jolly completed tasks',
+  //     subtitle: 'Assign her new tasks',
+  //   },
+  //   {
+  //     id: 5,
+  //     img: '/assets/images/profile/user-5.jpg',
+  //     title: 'Roman Joined the Team!',
+  //     subtitle: 'Congratulatse him',
+  //   },
+  // ];
 
   profiledd: profiledd[] = [
     {

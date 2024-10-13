@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using SIRCADE.ApiCore.Models.Notifications.Entities;
 using SIRCADE.ApiCore.Models.Roles.Entities;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Entities;
 
@@ -29,6 +30,9 @@ public class User
 
     public ICollection<ScheduleProgramming>? ScheduleProgrammingsModify { get; set; }
 
+    public ICollection<UserNotification>? SenderNotifications { get; set; }
+
+    public ICollection<UserNotification>? ReceiverNotifications { get; set; }
 
     public string GetFullName()
     {

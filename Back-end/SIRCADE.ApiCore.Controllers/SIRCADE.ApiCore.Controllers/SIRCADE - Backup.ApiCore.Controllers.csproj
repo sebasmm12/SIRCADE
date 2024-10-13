@@ -17,7 +17,11 @@
     <Folder Include="Common\Responses\" />
     <Folder Include="Dashboards\Mappers\" />
     <Folder Include="Dashboards\Requests\" />
+    <Folder Include="Notifications\Controllers\" />
+    <Folder Include="Notifications\Mappers\" />
+    <Folder Include="Notifications\Responses\" />
     <Folder Include="Notifications\Requests\" />
+    <Folder Include="Notifications\Services\NewFolder\" />
     <Folder Include="Permissions\Requests\" />
     <Folder Include="Reports\Requests\" />
   </ItemGroup>

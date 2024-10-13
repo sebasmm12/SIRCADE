@@ -1,0 +1,6 @@
+@SIRCADE.Notifications.Worker_HostAddress = http://localhost:5229
+
+GET {{SIRCADE.Notifications.Worker_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

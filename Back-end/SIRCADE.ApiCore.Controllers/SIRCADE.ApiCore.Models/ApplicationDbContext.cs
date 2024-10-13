@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SIRCADE.ApiCore.Models.Notifications.Entities;
 using SIRCADE.ApiCore.Models.Permissions.Entities;
 using SIRCADE.ApiCore.Models.RolePermissions.Entities;
 using SIRCADE.ApiCore.Models.Roles.Entities;
@@ -31,7 +32,6 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
             .WithMany(sportFieldType => sportFieldType.SportFields)
             .HasForeignKey(sportField => sportField.Type);
 
-
         modelBuilder
             .Entity<ScheduleProgramming>()
             .HasOne(scheduleProgramming => scheduleProgramming.ProgrammingType)
@@ -62,6 +62,18 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
         modelBuilder.Entity<ScheduleProgramming>()
             .HasQueryFilter(x => x.State != ScheduleProgrammingState.Cancelled);
 
+        modelBuilder
+            .Entity<UserNotification>()
+            .HasOne(userNotification => userNotification.SenderUser)
+            .WithMany(user => user.SenderNotifications)
+            .HasForeignKey(userNotification => userNotification.SenderUserId);
+
+        modelBuilder
+            .Entity<UserNotification>()
+            .HasOne(userNotification => userNotification.ReceiverUser)
+            .WithMany(user => user.ReceiverNotifications)
+            .HasForeignKey(userNotification => userNotification.ReceiverUserId);
+
     }
 
     public DbSet<User> Users { get; set; } = default!;
@@ -83,4 +95,8 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<ScheduleProgramming> SchedulesProgramming { get; set; } = default!;
 
     public DbSet<ProgrammingType> ProgrammingTypes { get; set; } = default!;
+
+    public DbSet<Notification> Notifications { get; set; } = default!;
+
+    public DbSet<UserNotification> UserNotifications { get; set; } = default!;
 }

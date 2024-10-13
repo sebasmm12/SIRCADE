@@ -16,5 +16,8 @@ public interface IGetSchedulesProgrammingPersistence
     Task<ScheduleProgramming?> ExecuteAsync(ScheduleProgrammingFiltersDto scheduleProgrammingFiltersDto);
 
     Task<IEnumerable<ScheduleProgramming>> ExecuteAsync(DashboardFiltersDto dashboardFilters);
+    
     Task<IEnumerable<ScheduleProgramming>> ExecuteAsync(DashboardTimeType dashboardTimeType, object? filters = null, bool canIgnoreQueryFilters = true);
+    
+    Task<IEnumerable<ScheduleProgramming>> ExecuteAsync(DateTime reminderDate);
 }

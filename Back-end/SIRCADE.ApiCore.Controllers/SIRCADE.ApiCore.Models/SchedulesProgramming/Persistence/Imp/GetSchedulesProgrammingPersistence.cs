@@ -14,6 +14,20 @@ public class GetSchedulesProgrammingPersistence(
 {
     private const string ReservationType = "Reserva";
 
+    public async Task<IEnumerable<ScheduleProgramming>> ExecuteAsync(DateTime reminderDate)
+    {
+        var schedulesProgramming = await applicationDbContext
+                                            .SchedulesProgramming
+                                            .Include(scheduleProgramming => scheduleProgramming.SportField)
+                                            .Include(scheduleProgramming => scheduleProgramming.ProgrammingType)
+                                            .Where(scheduleProgramming => scheduleProgramming.ProgrammingType.Name == ReservationType &&
+                                                                          scheduleProgramming.StartDate.Date == reminderDate)
+                                            .AsNoTracking()
+                                            .ToListAsync();
+
+        return schedulesProgramming;
+    }
+
     public async Task<IEnumerable<ScheduleProgramming>> ExecuteAsync(SchedulesProgrammingWeeklyQueries schedulesProgrammingWeeklyQueries)
     {
         var schedulesProgramming = await applicationDbContext
