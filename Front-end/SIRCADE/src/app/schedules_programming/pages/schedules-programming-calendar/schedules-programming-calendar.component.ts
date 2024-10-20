@@ -22,7 +22,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ScheduleProgrammingInfoResponse } from '../../interfaces/responses/schedule-programming-info.response';
 import { SchedulesProgrammingWeeklyQueries } from '../../interfaces/queries/schedules-programming-weekly.queries';
 import { getLocalDate } from 'src/app/shared/extensions/date.extensions';
-import { Title } from '@angular/platform-browser';
 import { ScheduleProgrammingDetailComponent } from '../../components/schedule-programming-detail/schedule-programming-detail.component';
 import { CoreService } from 'src/app/services/core.service';
 

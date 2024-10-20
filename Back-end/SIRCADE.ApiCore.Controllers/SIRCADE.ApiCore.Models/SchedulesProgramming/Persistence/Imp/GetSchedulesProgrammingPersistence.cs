@@ -103,16 +103,19 @@ public class GetSchedulesProgrammingPersistence(
     }
 
 
-    public async Task<ScheduleProgramming?> ExecuteAsync(ScheduleProgrammingFiltersDto scheduleProgrammingFiltersDto)
+    public async Task<IEnumerable<ScheduleProgramming>> ExecuteAsync(ScheduleProgrammingFiltersDto scheduleProgrammingFiltersDto)
     {
-        var scheduleProgramming = await applicationDbContext
+        var schedulesProgramming = await applicationDbContext
                                             .SchedulesProgramming
                                             .Include(scheduleProgramming => scheduleProgramming.ProgrammingType)
-                                            .FirstOrDefaultAsync(scheduleProgramming => scheduleProgramming.SportFieldId == scheduleProgrammingFiltersDto.SportFieldId
-                                                                     && (scheduleProgramming.StartDate >= scheduleProgrammingFiltersDto.StartDate
-                                                                         && scheduleProgramming.EndDate <= scheduleProgrammingFiltersDto.EndDate));
+                                            .Where(scheduleProgramming => scheduleProgramming.SportFieldId == scheduleProgrammingFiltersDto.SportFieldId
+                                                                     && ((scheduleProgramming.StartDate < scheduleProgrammingFiltersDto.EndDate &&
+                                                                          scheduleProgramming.EndDate > scheduleProgrammingFiltersDto.EndDate) ||
+                                                                         (scheduleProgramming.StartDate < scheduleProgrammingFiltersDto.StartDate &&
+                                                                          scheduleProgramming.EndDate > scheduleProgrammingFiltersDto.StartDate)))
+                                            .ToListAsync();
 
-        return scheduleProgramming;
+        return schedulesProgramming;
     }
 
     #region private methods

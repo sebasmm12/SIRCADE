@@ -9,18 +9,21 @@ using SIRCADE.ApiCore.Models.Users.Persistence;
 
 namespace SIRCADE.ApiCore.Controllers.Users.Services.Imp;
 
-public class UsersService
-    (IHashService hashService,
-     ICreateUserPersistence createUserPersistence,
-     IGetUsersPersistence getUsersPersistence,
-     IUpdateUsersPersistence updateUsersPersistence): IUsersService
+public class UsersService(
+    IHashService hashService,
+    ICreateUserPersistence createUserPersistence,
+    IGetUsersPersistence getUsersPersistence,
+    IUpdateUsersPersistence updateUsersPersistence,
+    IExistUsersPersistence existUsersPersistence,
+    IConfiguration configuration) : IUsersService
 {
     public async Task<int> CreateAsync(UserCreationRequest userCreationRequest)
     {
+        await ProcessValidationAsync(userCreationRequest);
+
         var user = userCreationRequest.MapToUser();
 
-        // TODO: Set the default password in the app settings
-        const string password = "Sircade123!";
+        var password = configuration.GetValue<string>("DefaultPassword")!;
 
         var generatedHash = hashService.Generate(password);
 
@@ -73,6 +76,26 @@ public class UsersService
     {
         user.Password = hashDto.Hash;
         user.Salt = hashDto.Salt;
+    }
+
+    private async Task ProcessValidationAsync(UserCreationRequest request)
+    {
+        var validationMessage = await ValidateRequestAsync(request);
+
+        if (validationMessage.IsValid)
+           return;
+
+        throw new(validationMessage.Message);
+    }
+
+    private async Task<ValidateMessageDto<User>> ValidateRequestAsync(UserCreationRequest request)
+    {
+        var exists  = await existUsersPersistence.ExecuteAsync(request.Nsa, request.DocumentNumber);
+
+        if (exists)
+            return new(false, "Ya existe un usuario con el mismo NSA o DNI");
+
+        return new(true, string.Empty);
     }
 
 

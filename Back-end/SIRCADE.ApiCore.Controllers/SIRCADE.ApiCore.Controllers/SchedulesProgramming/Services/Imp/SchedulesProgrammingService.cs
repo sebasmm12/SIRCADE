@@ -23,7 +23,7 @@ public class SchedulesProgrammingService
 
     public async Task<int> CreateAsync(ScheduleProgrammingRegisterRequest scheduleProgrammingRegisterRequest)
     {
-        await ProcessValidationAsync(scheduleProgrammingRegisterRequest.MapToScheduleFiltersDto(RestrictedType));
+        await ProcessValidationAsync(scheduleProgrammingRegisterRequest.MapToScheduleFiltersDto(RestrictedType), ScheduleProgrammingAction.Create);
 
         var userId = Convert.ToInt32(httpContextAccessor.HttpContext!.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value);
 
@@ -54,7 +54,7 @@ public class SchedulesProgrammingService
 
         scheduleProgrammingUpdateRequest.MapToScheduleProgramming(scheduleProgramming);
 
-        await ProcessValidationAsync(scheduleProgramming.MapToScheduleFiltersDto(RestrictedType));
+        await ProcessValidationAsync(scheduleProgramming.MapToScheduleFiltersDto(RestrictedType), ScheduleProgrammingAction.Update);
 
         await updateScheduleProgrammingPersistence.ExecuteAsync();
     }
@@ -75,48 +75,70 @@ public class SchedulesProgrammingService
         await updateScheduleProgrammingPersistence.ExecuteAsync();
     }
 
-    private async Task ProcessValidationAsync(ScheduleProgrammingFiltersDto programmingFiltersDto)
+    private async Task ProcessValidationAsync(ScheduleProgrammingFiltersDto programmingFiltersDto, ScheduleProgrammingAction scheduleProgrammingAction)
     {
-        var validationMessage = await ValidateRequestAsync(programmingFiltersDto);
+        var validationMessage = await ValidateRequestAsync(programmingFiltersDto, scheduleProgrammingAction);
 
         if (!validationMessage.IsValid)
             throw new(validationMessage.Message);
 
-        if (validationMessage.ScheduleProgramming is not null)
-            await CancelAsync(validationMessage.ScheduleProgramming);
+        if (validationMessage.Entities is not null)
+        {
+            var cancellationTasks = validationMessage.Entities.Select(CancelAsync);
+
+           await Task.WhenAll(cancellationTasks);
+        }
     }
 
-    private async Task<ValidateMessageDto> ValidateRequestAsync(ScheduleProgrammingFiltersDto programmingFiltersDto)
+    private async Task<ValidateMessageDto<ScheduleProgramming>> ValidateRequestAsync(ScheduleProgrammingFiltersDto programmingFiltersDto, ScheduleProgrammingAction scheduleProgrammingAction)
     {
-        var isTotalByUserValid = await ValidateTotalByUserAsync(RestrictedType, programmingFiltersDto.StartDate);
-
-        if(!isTotalByUserValid)
-            return new(false, "El usuario ya tiene una programación registrada para el día seleccionado");
-
-        var currentScheduleProgramming = await getSchedulesProgrammingPersistence.ExecuteAsync(programmingFiltersDto);
-
-        if (currentScheduleProgramming is null)
-            return new(true, string.Empty);
-
+        // Validation for allowed maximum days of reservation
         var programmingType = await getProgrammingTypesPersistence.ExecuteAsync(programmingFiltersDto.Type);
 
-        if (programmingType.Name != programmingFiltersDto.RestrictedType &&
-            currentScheduleProgramming.ProgrammingType.Name == programmingFiltersDto.RestrictedType)
-            return new(true, string.Empty, currentScheduleProgramming);
+        if (!ValidateAllowedReservations(programmingType.Name, programmingFiltersDto.StartDate))
+            return new(false, "No se pueden realizar reservas con menos de 3 días de anticipación");
 
-        return new(false, "Ya existe una programación en el rango de fechas seleccionado");
+        // Validation for total reservations per day
+        var isTotalByUserValid = await ValidateTotalByUserAsync(RestrictedType, programmingFiltersDto.StartDate, programmingFiltersDto.ScheduleProgrammingId);
+
+        if(!isTotalByUserValid)
+            return new(false, "El socio ya tiene una programación registrada para el día seleccionado");
+
+        // Validation for maintenance programming in the same range of reservation programming for admin and receptionist users
+        var currentScheduleProgrammings = await getSchedulesProgrammingPersistence
+                                                    .ExecuteAsync(programmingFiltersDto);
+
+        if (!currentScheduleProgrammings.Any())
+            return new(true, string.Empty);
+
+        var currentReservations = currentScheduleProgrammings.Where(scheduleProgramming => scheduleProgramming.ProgrammingType.Name == RestrictedType);
+
+        if (programmingType.Name != programmingFiltersDto.RestrictedType)
+            return new(true, string.Empty, currentReservations);
+
+        return new(false, $"{programmingType.Name} no disponible");
     }
 
-    private async Task<bool> ValidateTotalByUserAsync(string type, DateTime startDate)
+    private async Task<bool> ValidateTotalByUserAsync(string type, DateTime startDate, int? scheduleProgrammingId)
     {
         if(type != RestrictedType)
             return true;
 
         var userId = Convert.ToInt32(httpContextAccessor.HttpContext!.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value);
 
-        var totalUserScheduleProgramming = await countSchedulesProgrammingPersistence.ExecuteAsync(userId, startDate);
+        var totalUserScheduleProgramming = await countSchedulesProgrammingPersistence.ExecuteAsync(userId, startDate, scheduleProgrammingId);
 
         return totalUserScheduleProgramming < 1;
+    }
+
+    private static bool ValidateAllowedReservations(string type, DateTime startDate)
+    {
+        if(type != RestrictedType)
+            return true;
+
+        const int totalAllowedDays = 3;
+
+        return startDate.Date >= DateTime.Now.Date.AddDays(totalAllowedDays);
     }
     #endregion
 

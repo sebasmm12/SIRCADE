@@ -18,7 +18,7 @@
                 NSA
               </mat-label>
               <mat-form-field appearance="outline" class="w-100">
-                <input matInput formControlName="nsa" />
+                <input matInput formControlName="nsa" readonly />
                 @if(usersValidatorService.isFieldInvalid(armyDataFormGroup,
                 'nsa')) {
                 <mat-error>{{
@@ -193,11 +193,8 @@
                   name="birthDate"
                   formControlName="birthDate"
                   [matDatepicker]="picker"
+                  readonly
                 />
-                <mat-datepicker-toggle
-                  matIconSuffix
-                  [for]="picker"
-                ></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
                 @if(usersValidatorService.isFieldInvalid(personalDataFormGroup,
                 'birthDate')) {
@@ -215,7 +212,7 @@
                 DNI</mat-label
               >
               <mat-form-field appearance="outline" class="w-100">
-                <input matInput formControlName="documentNumber" />
+                <input matInput formControlName="documentNumber" readonly />
                 @if(usersValidatorService.isFieldInvalid(personalDataFormGroup,
                 'documentNumber')) {
                 <mat-error>{{
@@ -293,7 +290,7 @@
                 Teléfono
               </mat-label>
               <mat-form-field appearance="outline" class="w-100">
-                <input matInput formControlName="phone" />
+                <input matInput formControlName="phone" readonly />
                 @if(usersValidatorService.isFieldInvalid(personalDataFormGroup,
                 'phone')) {
                 <mat-error>{{
@@ -310,7 +307,7 @@
                 Celular
               </mat-label>
               <mat-form-field appearance="outline" class="w-100">
-                <input matInput formControlName="cellPhone" />
+                <input matInput formControlName="cellPhone" readonly />
                 @if(usersValidatorService.isFieldInvalid(personalDataFormGroup,
                 'cellPhone')) {
                 <mat-error>{{

@@ -28,6 +28,7 @@ import { ScheduleProgrammingUpdateRequest } from '../../interfaces/requests/sche
 import { addHours, addMinutes, setHours } from 'date-fns';
 import { SchedulesProgrammingService } from '../../services/schedules-programming.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AccountsService } from 'src/app/auth/services/accounts.service';
 
 @Component({
   selector: 'app-schedule-programming-detail',
@@ -49,6 +50,7 @@ export class ScheduleProgrammingDetailComponent implements OnInit {
   resultMessageService = inject(ResultMessageService);
   scheduleProgrammingValidator = inject(SchedulesProgrammingValidatorService);
   scheduleProgrammingService = inject(SchedulesProgrammingService);
+  accountsService = inject(AccountsService);
 
   destroyRef = inject(DestroyRef);
   formBuilder = inject(FormBuilder);
@@ -110,6 +112,12 @@ export class ScheduleProgrammingDetailComponent implements OnInit {
     this.scheduleProgrammingUpdateForm = this.formBuilder.group(
       {
         id: [this.scheduleProgrammingInfo.id, Validators.required],
+        type: [
+          {
+            id: this.scheduleProgrammingInfo.type,
+            name: this.scheduleProgrammingInfo.typeName,
+          },
+        ],
         startDate: [this.startDate],
         startHour: [
           new Date(this.scheduleProgrammingInfo.startDate),
@@ -133,9 +141,15 @@ export class ScheduleProgrammingDetailComponent implements OnInit {
   }
 
   todayDateFilter(date: Date | null): boolean {
-    const today = new Date();
+    let today = new Date();
     today.setHours(0, 0, 0, 0);
-    return (date || new Date()).getTime() >= today.getTime();
+
+    let dateToCompare = date || new Date();
+
+    return (
+      dateToCompare.getTime() >= today.getTime() &&
+      dateToCompare.getFullYear() == today.getFullYear()
+    );
   }
 
   cancelEdition(): void {
@@ -182,5 +196,15 @@ export class ScheduleProgrammingDetailComponent implements OnInit {
     date = addMinutes(date, hour.getMinutes());
 
     return date;
+  }
+
+  canShowActions(): boolean {
+    const userRole = this.accountsService.getUser().role;
+    return (
+      this.startDate >= this.currentDate &&
+      (userRole != 'Socio' ||
+        this.accountsService.getUser().id ==
+          this.scheduleProgrammingInfo.clientId)
+    );
   }
 }

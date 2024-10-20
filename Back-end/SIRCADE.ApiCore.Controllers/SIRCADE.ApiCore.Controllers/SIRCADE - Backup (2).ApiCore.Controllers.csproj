@@ -14,7 +14,8 @@
 
   <ItemGroup>
     <Folder Include="Accounts\Mappers\" />
-    <Folder Include="Clients\Responses\" />
+    <Folder Include="Clients\Controllers\" />
+    <Folder Include="Clients\NewFolder\" />
     <Folder Include="Common\Responses\" />
     <Folder Include="Dashboards\Mappers\" />
     <Folder Include="Dashboards\Requests\" />

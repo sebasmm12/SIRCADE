@@ -1,8 +1,6 @@
-﻿using SIRCADE.ApiCore.Models.SchedulesProgramming.Entities;
+﻿namespace SIRCADE.ApiCore.Models.Common.DTOs;
 
-namespace SIRCADE.ApiCore.Models.Common.DTOs;
-
-public record ValidateMessageDto(
+public record ValidateMessageDto<T>(
     bool IsValid, 
-    string Message, 
-    ScheduleProgramming? ScheduleProgramming = null);
+    string Message,
+    IEnumerable<T>? Entities = null) where T: class;

@@ -2,5 +2,5 @@
 
 public interface ICountSchedulesProgrammingPersistence
 {
-    Task<int> ExecuteAsync(int clientId, DateTime startDate);
+    Task<int> ExecuteAsync(int clientId, DateTime startDate, int? scheduleProgrammingId);
 }

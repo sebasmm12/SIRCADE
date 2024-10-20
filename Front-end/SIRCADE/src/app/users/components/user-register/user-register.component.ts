@@ -6,6 +6,7 @@ import {
   Input,
   OnInit,
   Output,
+  ViewChild,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -26,6 +27,8 @@ import { RoleResponse } from 'src/app/roles/interfaces/responses/role.response';
 import { forkJoin } from 'rxjs';
 import { UserTypes } from '../../interfaces/enums/user-types.enum';
 import { UserRegisterRequest } from '../../interfaces/requests/user-register.request';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
   selector: 'app-user-register',
@@ -91,6 +94,10 @@ export class UserRegisterComponent implements OnInit {
 
   roles: RoleResponse[] = [];
   unities: SelectorOptionDto[] = [];
+  generalErrorMessage = '';
+
+  @ViewChild('stepper')
+  stepper: MatStepper;
 
   constructor() {
     this.buildForm();
@@ -117,11 +124,14 @@ export class UserRegisterComponent implements OnInit {
   buildForm() {
     this.personalDataFormGroup = this.formBuilder.group({
       birthDate: [null, Validators.required],
-      phone: ['', Validators.required],
+      phone: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       email: ['', [Validators.required, Validators.email]],
-      cellPhone: ['', Validators.required],
+      cellPhone: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       address: [''],
-      documentNumber: ['', Validators.required],
+      documentNumber: [
+        '',
+        [Validators.required, Validators.pattern('^[0-9]*$')],
+      ],
       maritalStatus: ['', Validators.required],
       observation: [''],
     });
@@ -156,8 +166,14 @@ export class UserRegisterComponent implements OnInit {
     this.usersService
       .register(userData)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.onRegisterEvent.emit();
+      .subscribe({
+        next: () => {
+          this.onRegisterEvent.emit();
+        },
+        error: (error: HttpErrorResponse) => {
+          this.generalErrorMessage = error.error;
+          this.stepper.selectedIndex = 0;
+        },
       });
   }
 

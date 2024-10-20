@@ -1,6 +1,6 @@
 <div matDialogTitle class="schedule-programming-header">
   <div class="w-100 row justify-content-end m-t-16">
-    @if(startDate > currentDate) {
+    @if(canShowActions()) {
     <div>
       <button mat-icon-button matTooltip="Reprogramar" (click)="reschedule()">
         <mat-icon>edit</mat-icon>

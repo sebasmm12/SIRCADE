@@ -19,7 +19,6 @@ export class ClientsListComponent {
   }
 
   goToUpdate(userId: number) {
-    console.log(userId);
     this.router.navigate(['socios', userId, 'edicion']);
   }
 }

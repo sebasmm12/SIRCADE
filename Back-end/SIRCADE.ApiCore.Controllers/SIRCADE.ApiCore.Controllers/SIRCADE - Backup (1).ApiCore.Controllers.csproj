@@ -14,10 +14,10 @@
 
   <ItemGroup>
     <Folder Include="Accounts\Mappers\" />
-    <Folder Include="Clients\Responses\" />
     <Folder Include="Common\Responses\" />
     <Folder Include="Dashboards\Mappers\" />
     <Folder Include="Dashboards\Requests\" />
+    <Folder Include="NewFolder\" />
     <Folder Include="Notifications\Requests\" />
     <Folder Include="Permissions\Requests\" />
     <Folder Include="Reports\Requests\" />

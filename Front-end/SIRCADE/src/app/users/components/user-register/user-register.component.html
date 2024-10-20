@@ -13,6 +13,11 @@
         <form class="m-t-24" [formGroup]="armyDataFormGroup">
           <ng-template matStepLabel>Datos de la FAP</ng-template>
           <div class="row">
+            @if(generalErrorMessage != '') {
+            <div class="col-sm-12">
+              <mat-error class="m-b-12">{{ generalErrorMessage }}</mat-error>
+            </div>
+            }
             <div class="col-sm-4">
               <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">
                 NSA
@@ -215,7 +220,11 @@
                 DNI</mat-label
               >
               <mat-form-field appearance="outline" class="w-100">
-                <input matInput formControlName="documentNumber" />
+                <input
+                  matInput
+                  formControlName="documentNumber"
+                  [maxlength]="8"
+                />
                 @if(usersValidatorService.isFieldInvalid(personalDataFormGroup,
                 'documentNumber')) {
                 <mat-error>{{
@@ -293,7 +302,7 @@
                 Teléfono
               </mat-label>
               <mat-form-field appearance="outline" class="w-100">
-                <input matInput formControlName="phone" />
+                <input matInput formControlName="phone" [maxlength]="7" />
                 @if(usersValidatorService.isFieldInvalid(personalDataFormGroup,
                 'phone')) {
                 <mat-error>{{
@@ -310,7 +319,7 @@
                 Celular
               </mat-label>
               <mat-form-field appearance="outline" class="w-100">
-                <input matInput formControlName="cellPhone" />
+                <input matInput formControlName="cellPhone" [maxLength]="9" />
                 @if(usersValidatorService.isFieldInvalid(personalDataFormGroup,
                 'cellPhone')) {
                 <mat-error>{{

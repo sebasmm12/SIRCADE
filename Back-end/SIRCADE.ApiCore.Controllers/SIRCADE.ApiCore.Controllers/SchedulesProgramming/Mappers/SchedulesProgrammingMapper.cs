@@ -66,10 +66,12 @@ public static class SchedulesProgrammingMapper
     public static ScheduleProgrammingFiltersDto MapToScheduleFiltersDto(
         this ScheduleProgramming scheduleProgramming, string restrictedType)
     {
-        return new(scheduleProgramming.SportFieldId,
+        return new(
+                   scheduleProgramming.SportFieldId,
                    scheduleProgramming.StartDate,
                    scheduleProgramming.EndDate,
                    scheduleProgramming.Type,
-                   restrictedType);
+                   restrictedType,
+                   scheduleProgramming.Id);
     }
 }

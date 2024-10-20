@@ -15,11 +15,13 @@ public class GetUsersPersistence(ApplicationDbContext applicationDbContext) : IG
                             .Users
                             .Include(user => user.Role)
                             .Include(user => user.Detail)
-                            .FirstOrDefaultAsync(user => user.NSA == nsa
-                                                 && user.Detail.Associated == true);
+                            .FirstOrDefaultAsync(user => user.NSA == nsa);
 
         if (user is null)
             throw new("Credenciales inválidas");
+
+        if (!user.Detail.Associated)
+            throw new("Socio desafiliado");
 
         return user;
     }

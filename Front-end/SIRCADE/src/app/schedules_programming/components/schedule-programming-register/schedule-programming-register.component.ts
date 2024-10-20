@@ -1,8 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  inject,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormBuilder,
+  FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
@@ -13,8 +21,15 @@ import {
   MatNativeDateModule,
   provideNativeDateAdapter,
 } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import {
+  MatDatepicker,
+  MatDatepickerModule,
+} from '@angular/material/datepicker';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -27,13 +42,26 @@ import { SportFieldInfoResponse } from 'src/app/sport-fields/interfaces/response
 import { SportFieldsService } from 'src/app/sport-fields/services/sport-fields.service';
 import { SchedulesProgrammingValidatorService } from '../../services/schedules-programming-validator.service';
 import { ProgrammingTypesService } from '../../services/programming-types.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, map, Observable, startWith } from 'rxjs';
 import { ProgrammingTypeInfoResponse } from '../../interfaces/responses/programming-type-info.response';
 import { ScheduleProgrammingRequest } from '../../interfaces/requests/schedule-programming.request';
-import { addHours, addMinutes, setDate, setHours } from 'date-fns';
+import {
+  addDays,
+  addHours,
+  addMinutes,
+  addYears,
+  setDate,
+  setHours,
+} from 'date-fns';
 import { SchedulesProgrammingService } from '../../services/schedules-programming.service';
 import { AccountsService } from 'src/app/auth/services/accounts.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import {
+  MatAutocompleteModule,
+  MatAutocompleteSelectedEvent,
+} from '@angular/material/autocomplete';
+import { ClientsService } from '../../services/clients.service';
+import { ClientInfoResponse } from '../../interfaces/responses/client-info.response';
 
 @Component({
   selector: 'app-schedule-programming-register',
@@ -48,6 +76,7 @@ import { HttpErrorResponse } from '@angular/common/http';
     MatDatepickerModule,
     MatTimepickerModule,
     MatNativeDateModule,
+    MatAutocompleteModule,
     ReactiveFormsModule,
     FormsModule,
     CommonModule,
@@ -59,6 +88,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class ScheduleProgrammingRegisterComponent implements OnInit {
   sportFieldsService = inject(SportFieldsService);
   programmingTypesService = inject(ProgrammingTypesService);
+  clientsService = inject(ClientsService);
   schedulesProgrammingService = inject(SchedulesProgrammingService);
   accountsService = inject(AccountsService);
 
@@ -70,9 +100,17 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
   scheduleProgrammingForm!: FormGroup;
   sportFields: SportFieldInfoResponse[] = [];
   programmingTypes: ProgrammingTypeInfoResponse[] = [];
+  clients: ClientInfoResponse[] = [];
 
   loading: boolean = false;
+  test: number = 5;
   generalErrorMessage = '';
+  clientCtrl = new FormControl('');
+  clientId: number | null = null;
+  filteredClients!: Observable<ClientInfoResponse[]>;
+
+  @ViewChild('picker')
+  datePicker: MatDatepicker<Date>;
 
   constructor(
     public dialogRef: MatDialogRef<ScheduleProgrammingRegisterComponent>
@@ -88,11 +126,20 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
     forkJoin({
       sportFields: this.sportFieldsService.getAll(),
       programmingTypes: this.programmingTypesService.getAll(),
+      clients: this.clientsService.getAll(),
     })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ sportFields, programmingTypes }) => {
+      .subscribe(({ sportFields, programmingTypes, clients }) => {
         this.programmingTypes = programmingTypes;
         this.sportFields = sportFields;
+        this.clients = clients;
+
+        this.filteredClients = this.clientCtrl.valueChanges.pipe(
+          startWith(null),
+          map((value: string | null) =>
+            this.clients.filter((client) => client.label.includes(value ?? ''))
+          )
+        );
 
         this.disableType();
 
@@ -143,9 +190,15 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
   }
 
   todayDateFilter(date: Date | null): boolean {
-    const today = new Date();
+    let today = new Date();
     today.setHours(0, 0, 0, 0);
-    return (date || new Date()).getTime() >= today.getTime();
+
+    let dateToCompare = date || new Date();
+
+    return (
+      dateToCompare.getTime() >= today.getTime() &&
+      dateToCompare.getFullYear() == today.getFullYear()
+    );
   }
 
   register(): void {
@@ -162,6 +215,10 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
       startDate: this.getDate('startDate', 'startHour'),
       endDate: this.getDate('startDate', 'endHour'),
     };
+
+    if (this.scheduleProgrammingForm.get('type')?.value.name == 'Reserva') {
+      request.clientId = this.clientId;
+    }
 
     this.schedulesProgrammingService
       .register(request)
@@ -203,5 +260,17 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
     );
 
     this.scheduleProgrammingForm.get('type')?.setValue(type);
+  }
+
+  get type(): ProgrammingTypeInfoResponse | null {
+    return this.scheduleProgrammingForm.get('type')?.value;
+  }
+
+  mapClient(client: ClientInfoResponse): string {
+    return client.label;
+  }
+
+  setClient(event: MatAutocompleteSelectedEvent): void {
+    this.clientId = event.option.value.id;
   }
 }

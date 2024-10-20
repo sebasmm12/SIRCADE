@@ -13,7 +13,7 @@ public interface IGetSchedulesProgrammingPersistence
     Task<ScheduleProgramming> ExecuteAsync(int scheduleProgrammingId, bool needsInclude = false,
         bool isTracked = false);
 
-    Task<ScheduleProgramming?> ExecuteAsync(ScheduleProgrammingFiltersDto scheduleProgrammingFiltersDto);
+    Task<IEnumerable<ScheduleProgramming>> ExecuteAsync(ScheduleProgrammingFiltersDto scheduleProgrammingFiltersDto);
 
     Task<IEnumerable<ScheduleProgramming>> ExecuteAsync(DashboardFiltersDto dashboardFilters);
     

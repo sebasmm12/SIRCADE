@@ -73,10 +73,10 @@ export class SchedulesProgrammingValidatorService {
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value as Date;
 
-      const hour = value?.getHours();
+      const hour = value?.getHours() == 0 ? 24 : value?.getHours();
       const minutes = value?.getMinutes();
 
-      if (hour < 6 || hour > 23) {
+      if (hour < 6 || hour > 24) {
         return { invalidHour: true };
       }
 
@@ -94,13 +94,16 @@ export class SchedulesProgrammingValidatorService {
       const endHour = formGroup.get('endHour')?.value as Date;
       const type = formGroup.get('type')?.value as ProgrammingTypeInfoResponse;
 
-      if (endHour <= startHour) {
+      const transformedEndHour =
+        endHour?.getHours() == 0 ? 24 : endHour?.getHours();
+
+      if (transformedEndHour <= startHour?.getHours()) {
         formGroup.get('endHour')?.setErrors({ invalidEndHour: true });
       }
 
       if (!type || type.name != 'Reserva') return null;
 
-      if (endHour?.getHours() - startHour?.getHours() > 1) {
+      if (transformedEndHour - startHour?.getHours() > 1) {
         formGroup.get('endHour')?.setErrors({ invalidReservationHour: true });
       }
 
