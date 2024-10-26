@@ -16,4 +16,15 @@ public class ExistUsersPersistence
 
         return exists;
     }
+
+    public async Task<bool> ExecuteAsync(string nsa)
+    {
+        var exists = await context
+                                .Users
+                                .Include(user => user.Detail)
+                                .IgnoreQueryFilters()
+                                .AnyAsync(user => user.NSA == nsa);
+
+        return exists;
+    }
 }

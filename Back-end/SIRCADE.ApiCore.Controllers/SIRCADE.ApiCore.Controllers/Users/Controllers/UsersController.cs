@@ -42,6 +42,21 @@ public class UsersController(IUsersService usersService) : ControllerBase
         }
     }
 
+    [HttpGet("{nsa:int}/validation")]
+    public async Task<IActionResult> ValidateAsync([FromRoute] int nsa)
+    {
+        try
+        {
+            var isNsaValid = await usersService.ValidateNsaAsync(nsa);
+
+            return Ok(isNsaValid);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateAsync([FromBody] UserCreationRequest user)
     {

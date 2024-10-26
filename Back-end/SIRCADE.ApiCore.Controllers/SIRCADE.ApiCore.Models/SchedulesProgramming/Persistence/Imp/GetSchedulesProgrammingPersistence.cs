@@ -20,6 +20,8 @@ public class GetSchedulesProgrammingPersistence(
                                             .SchedulesProgramming
                                             .Include(scheduleProgramming => scheduleProgramming.SportField)
                                             .Include(scheduleProgramming => scheduleProgramming.ProgrammingType)
+                                            .Include(scheduleProgramming => scheduleProgramming.Client)
+                                            .ThenInclude(client => client!.Detail)
                                             .Where(scheduleProgramming => scheduleProgramming.ProgrammingType.Name == ReservationType &&
                                                                           scheduleProgramming.StartDate.Date == reminderDate)
                                             .AsNoTracking()
@@ -108,11 +110,20 @@ public class GetSchedulesProgrammingPersistence(
         var schedulesProgramming = await applicationDbContext
                                             .SchedulesProgramming
                                             .Include(scheduleProgramming => scheduleProgramming.ProgrammingType)
+                                            .Include(scheduleProgramming => scheduleProgramming.SportField)
+                                            .Include(scheduleProgramming => scheduleProgramming.Client)
+                                            .ThenInclude(client => client.Detail)
                                             .Where(scheduleProgramming => scheduleProgramming.SportFieldId == scheduleProgrammingFiltersDto.SportFieldId
                                                                      && ((scheduleProgramming.StartDate < scheduleProgrammingFiltersDto.EndDate &&
                                                                           scheduleProgramming.EndDate > scheduleProgrammingFiltersDto.EndDate) ||
                                                                          (scheduleProgramming.StartDate < scheduleProgrammingFiltersDto.StartDate &&
-                                                                          scheduleProgramming.EndDate > scheduleProgrammingFiltersDto.StartDate)))
+                                                                          scheduleProgramming.EndDate > scheduleProgrammingFiltersDto.StartDate) ||
+                                                                         (scheduleProgrammingFiltersDto.StartDate < scheduleProgramming.EndDate &&
+                                                                          scheduleProgrammingFiltersDto.EndDate > scheduleProgramming.EndDate) ||
+                                                                         (scheduleProgrammingFiltersDto.StartDate < scheduleProgramming.StartDate &&
+                                                                          scheduleProgrammingFiltersDto.EndDate > scheduleProgramming.StartDate) ||
+                                                                         (scheduleProgramming.StartDate == scheduleProgrammingFiltersDto.StartDate &&
+                                                                          scheduleProgramming.EndDate == scheduleProgrammingFiltersDto.EndDate)))
                                             .ToListAsync();
 
         return schedulesProgramming;

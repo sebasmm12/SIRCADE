@@ -220,6 +220,10 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
       request.clientId = this.clientId;
     }
 
+    if (this.accountsService.User?.role == 'Socio') {
+      request.clientId = this.accountsService.User?.id;
+    }
+
     this.schedulesProgrammingService
       .register(request)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -272,5 +276,11 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
 
   setClient(event: MatAutocompleteSelectedEvent): void {
     this.clientId = event.option.value.id;
+  }
+
+  canShowClients(): boolean {
+    return (
+      this.type?.name == 'Reserva' && this.accountsService.User?.role != 'Socio'
+    );
   }
 }

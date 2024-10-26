@@ -70,6 +70,13 @@ public class UsersService(
         await updateUsersPersistence.ExecuteAsync(user);
     }
 
+    public async Task<bool> ValidateNsaAsync(int nsa)
+    {
+        var exists = await existUsersPersistence.ExecuteAsync(nsa.ToString());
+
+        return !exists;
+    }
+
     #region private methods
 
     private static void SetPasswordToUser(HashDto hashDto, User user)

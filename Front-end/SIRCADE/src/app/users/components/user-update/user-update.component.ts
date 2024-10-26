@@ -135,7 +135,7 @@ export class UserUpdateComponent implements OnInit {
     });
 
     this.armyDataFormGroup = this.formBuilder.group({
-      nsa: ['', Validators.required],
+      nsa: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       grade: [null, Validators.required],
       roleId: [null, Validators.required],
       names: ['', Validators.required],

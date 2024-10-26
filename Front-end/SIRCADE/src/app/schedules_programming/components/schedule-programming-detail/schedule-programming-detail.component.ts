@@ -200,6 +200,10 @@ export class ScheduleProgrammingDetailComponent implements OnInit {
 
   canShowActions(): boolean {
     const userRole = this.accountsService.getUser().role;
+    console.log(this.startDate >= this.currentDate);
+    console.log(this.currentDate);
+    console.log(this.accountsService.getUser().id);
+    console.log(this.scheduleProgrammingInfo.clientId);
     return (
       this.startDate >= this.currentDate &&
       (userRole != 'Socio' ||

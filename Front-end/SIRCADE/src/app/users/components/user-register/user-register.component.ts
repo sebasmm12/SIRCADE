@@ -137,7 +137,7 @@ export class UserRegisterComponent implements OnInit {
     });
 
     this.armyDataFormGroup = this.formBuilder.group({
-      nsa: ['', Validators.required],
+      nsa: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       grade: [null, Validators.required],
       roleId: [null, Validators.required],
       names: ['', Validators.required],
@@ -190,5 +190,24 @@ export class UserRegisterComponent implements OnInit {
     if (this.userType == UserTypes.client) return;
 
     this.roles = this.roles.filter((role) => role.name !== 'Socio');
+  }
+
+  validateNsa(): void {
+    const nsa = this.armyDataFormGroup.get('nsa')?.value;
+
+    if (!nsa || this.armyDataFormGroup.get('nsa')?.invalid) return;
+
+    this.usersService
+      .validateNsa(nsa)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((response) => {
+        if (!response) {
+          this.generalErrorMessage =
+            'El número de NSA ya se encuentra registrado';
+          this.armyDataFormGroup.get('nsa')?.setErrors({ invalid: true });
+        } else {
+          this.generalErrorMessage = '';
+        }
+      });
   }
 }

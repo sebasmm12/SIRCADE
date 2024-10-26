@@ -14,5 +14,8 @@ public interface IUsersService
     Task UpdateActiveAsync(int userId);
 
     Task<UserInfoResponse> GetAsync(int userId);
+    
     Task UpdateAsync(UserUpdateRequest userUpdateRequest);
+
+    Task<bool> ValidateNsaAsync(int nsa);
 }

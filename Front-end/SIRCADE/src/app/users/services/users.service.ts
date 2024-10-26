@@ -60,4 +60,10 @@ export class UsersService {
       userUpdateRequest
     );
   }
+
+  validateNsa(nsa: number): Observable<boolean> {
+    return this.httpClient.get<boolean>(
+      `${this.baseUrl}/users/${nsa}/validation`
+    );
+  }
 }

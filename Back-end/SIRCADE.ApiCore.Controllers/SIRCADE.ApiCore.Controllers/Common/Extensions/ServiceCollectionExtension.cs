@@ -47,6 +47,7 @@ public static class ServiceCollectionExtension
     public static IServiceCollection AddCommonServices(this IServiceCollection services)
     {
         services.AddScoped<IHashService, HashService>();
+        services.AddTransient<IEmailService, EmailService>();
 
         return services;
     }
@@ -99,6 +100,8 @@ public static class ServiceCollectionExtension
         services.AddScoped<ICountSchedulesProgrammingPersistence, CountSchedulesProgrammingPersistence>();
 
         services.AddScoped<IGetUnitiesPersistence, GetUnitiesPersistence>();
+
+        services.AddScoped<IGetNotificationsPersistence, GetNotificationsPersistence>();
 
         services.AddScoped<IGetUserNotificationsPersistence, GetUserNotificationsPersistence>();
 

@@ -1,4 +1,6 @@
-﻿using SIRCADE.ApiCore.Models.Notifications.Entities;
+﻿using System.Net;
+using System.Net.Mail;
+using SIRCADE.ApiCore.Models.Notifications.Entities;
 using SIRCADE.ApiCore.Models.Notifications.Enums;
 using SIRCADE.ApiCore.Models.Notifications.Persistence;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Entities;
@@ -10,7 +12,8 @@ public class NotificationsService
     (IGetNotificationsPersistence getNotificationsPersistence,
      IGetUserNotificationsPersistence getUserNotificationsPersistence,
      ICreateUserNotificationsPersistence createUserNotificationsPersistence,
-     IGetSchedulesProgrammingPersistence getSchedulesProgrammingPersistence): INotificationsService
+     IGetSchedulesProgrammingPersistence getSchedulesProgrammingPersistence,
+     IConfiguration configuration): INotificationsService
 {
 
     public async Task SendReservationRemindersAsync(string notificationType)
@@ -52,7 +55,23 @@ public class NotificationsService
 
         var notifications = reservations.SelectMany(reservation => BuildReservations(reservation, notificationTemplates));
 
-        await createUserNotificationsPersistence.ExecuteAsync(notifications);
+        var pushNotifications = notifications
+                                .Where(notification => notification.Notification.DeliveringType == DeliveringType.PushNotification)
+                                .Select(notification =>
+                                {
+                                    notification.Notification = null;
+                                    notification.ReceiverUser = null;
+                                    return notification;
+                                })
+                                .ToList();
+
+        var emailNotifications = notifications
+                                .Where(notification => notification.Notification.DeliveringType == DeliveringType.Email)
+                                .ToList();
+
+        await createUserNotificationsPersistence.ExecuteAsync(pushNotifications);
+
+        await SendEmailsAsync(emailNotifications);
     }
 
     private static IEnumerable<UserNotification> BuildReservations(ScheduleProgramming reservation, IEnumerable<Notification> notificationTemplates)
@@ -76,9 +95,47 @@ public class NotificationsService
             DeliveringDate = DateTime.UtcNow.AddHours(-5),
             Message = message,
             Status = NotificationStatus.Unread,
-            Subject = notificationTemplate.Subject
+            Subject = notificationTemplate.Subject,
+            Notification = notificationTemplate,
+            ReceiverUser = reservation.Client!
         };
 
         return userNotification;
+    }
+
+    private async Task SendEmailsAsync(IEnumerable<UserNotification> userNotifications)
+    {
+        var client = GetClient();
+
+        var mailMessage = new MailMessage();
+
+        mailMessage.From = new(configuration["EmailConfiguration:SenderEmail"]!);
+
+        foreach (var user in userNotifications)
+        {
+            mailMessage.To.Add(user.ReceiverUser.Detail.Email!);
+        }
+
+        mailMessage.Subject = userNotifications.First().Subject;
+        mailMessage.Body = userNotifications.First().Message;
+
+        await client.SendMailAsync(mailMessage);
+    }
+
+    private SmtpClient GetClient()
+    {
+        var smtp = configuration["EmailConfiguration:SmtpClient"];
+        var port = int.Parse(configuration["EmailConfiguration:Port"]!);
+        var email = configuration["EmailConfiguration:SenderEmail"];
+        var password = configuration["EmailConfiguration:SenderPassword"];
+
+        var client = new SmtpClient(smtp, port)
+        {
+            EnableSsl = true,
+            UseDefaultCredentials = false,
+            Credentials = new NetworkCredential(email, password)
+        };
+
+        return client;
     }
 }

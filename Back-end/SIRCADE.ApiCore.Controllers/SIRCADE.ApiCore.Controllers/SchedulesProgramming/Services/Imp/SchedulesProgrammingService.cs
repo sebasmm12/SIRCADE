@@ -1,8 +1,13 @@
 ﻿using System.Security.Claims;
+using SIRCADE.ApiCore.Controllers.Common.Services.Interfaces;
 using SIRCADE.ApiCore.Controllers.SchedulesProgramming.Mappers;
 using SIRCADE.ApiCore.Controllers.SchedulesProgramming.Requests;
 using SIRCADE.ApiCore.Controllers.SchedulesProgramming.Responses;
 using SIRCADE.ApiCore.Models.Common.DTOs;
+using SIRCADE.ApiCore.Models.Notifications.Entities;
+using SIRCADE.ApiCore.Models.Notifications.Enums;
+using SIRCADE.ApiCore.Models.Notifications.Extensions;
+using SIRCADE.ApiCore.Models.Notifications.Persistence;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Dtos;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Entities;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Enums;
@@ -17,6 +22,8 @@ public class SchedulesProgrammingService
      IUpdateScheduleProgrammingPersistence updateScheduleProgrammingPersistence,
      IGetProgrammingTypesPersistence getProgrammingTypesPersistence,
      ICountSchedulesProgrammingPersistence countSchedulesProgrammingPersistence,
+     IGetNotificationsPersistence getNotificationsPersistence,
+     IEmailService emailService,
      IHttpContextAccessor httpContextAccessor): ISchedulesProgrammingService
 {
     private const string RestrictedType = "Reserva";
@@ -86,7 +93,9 @@ public class SchedulesProgrammingService
         {
             var cancellationTasks = validationMessage.Entities.Select(CancelAsync);
 
-           await Task.WhenAll(cancellationTasks);
+            await Task.WhenAll(cancellationTasks);
+
+            await SendCancellationEmailsAsync(validationMessage.Entities);
         }
     }
 
@@ -96,7 +105,8 @@ public class SchedulesProgrammingService
         var programmingType = await getProgrammingTypesPersistence.ExecuteAsync(programmingFiltersDto.Type);
 
         if (!ValidateAllowedReservations(programmingType.Name, programmingFiltersDto.StartDate))
-            return new(false, "No se pueden realizar reservas con menos de 3 días de anticipación");
+            //return new(false, "No se pueden realizar reservas con menos de 3 días de anticipación");
+            return new(false, "No se pueden realizar reservas menores a la fecha actual");
 
         // Validation for total reservations per day
         var isTotalByUserValid = await ValidateTotalByUserAsync(RestrictedType, programmingFiltersDto.StartDate, programmingFiltersDto.ScheduleProgrammingId);
@@ -136,10 +146,56 @@ public class SchedulesProgrammingService
         if(type != RestrictedType)
             return true;
 
-        const int totalAllowedDays = 3;
+        //const int totalAllowedDays = 3;
 
-        return startDate.Date >= DateTime.Now.Date.AddDays(totalAllowedDays);
+        //return startDate.Date >= DateTime.Now.Date.AddDays(totalAllowedDays);
+        return startDate >= DateTime.Now;
     }
+
+    private async Task SendCancellationEmailsAsync(IEnumerable<ScheduleProgramming> reservations)
+    {
+        var notificationTemplates = await getNotificationsPersistence.ExecuteAsync(NotificationsExtensions.ReservationCancellationNotification);
+
+        var notifications = reservations
+                            .SelectMany(reservation => BuildReservations(reservation, notificationTemplates))
+                            .ToList();
+
+        foreach (var notification in notifications)
+        {
+            await emailService.SendAsync(notification);
+        }
+        
+    }
+
+    private static IEnumerable<UserNotification> BuildReservations(ScheduleProgramming reservation, IEnumerable<Notification> notificationTemplates)
+    {
+        var userNotifications = notificationTemplates.Select(notificationTemplate => ProcessTemplate(reservation, notificationTemplate));
+
+        return userNotifications;
+    }
+
+    private static UserNotification ProcessTemplate(ScheduleProgramming reservation, Notification notificationTemplate)
+    {
+        var message = notificationTemplate
+            .Template
+            .Replace("{{CanchaDeportiva}}", reservation.SportField.Name)
+            .Replace("{{FechaInicio}}", reservation.StartDate.ToString("dd/MM/yyyy h:mm:ss tt"));
+
+        var userNotification = new UserNotification
+        {
+            ReceiverUserId = reservation.ClientId!.Value,
+            NotificationId = notificationTemplate.Id,
+            DeliveringDate = DateTime.UtcNow.AddHours(-5),
+            Message = message,
+            Status = NotificationStatus.Unread,
+            Subject = notificationTemplate.Subject,
+            Notification = notificationTemplate,
+            ReceiverUser = reservation.Client!
+        };
+
+        return userNotification;
+    }
+
     #endregion
 
 }

@@ -193,7 +193,6 @@
                   name="birthDate"
                   formControlName="birthDate"
                   [matDatepicker]="picker"
-                  readonly
                 />
                 <mat-datepicker #picker></mat-datepicker>
                 @if(usersValidatorService.isFieldInvalid(personalDataFormGroup,
@@ -212,7 +211,7 @@
                 DNI</mat-label
               >
               <mat-form-field appearance="outline" class="w-100">
-                <input matInput formControlName="documentNumber" readonly />
+                <input matInput formControlName="documentNumber" />
                 @if(usersValidatorService.isFieldInvalid(personalDataFormGroup,
                 'documentNumber')) {
                 <mat-error>{{
