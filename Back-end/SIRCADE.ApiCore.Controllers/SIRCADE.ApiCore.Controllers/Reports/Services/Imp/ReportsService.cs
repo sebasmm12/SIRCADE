@@ -73,12 +73,10 @@ public class ReportsService(
     {
         var reservations = await getSchedulesProgrammingPersistence.ExecuteAsync(DashboardTimeType.Monthly);
 
-        var reservationsByState = reservations.GroupBy(reservation => reservation.State);
-
         var months = MonthsExtensions.GetMonths();
 
-        var reservationsMonthly = reservationsByState
-                                    .Select(reservationByState => GetReservationMonthly(reservationByState, months))
+        var reservationsMonthly = scheduleProgrammingStates
+                                    .Select(scheduleProgrammingState => GetReservationMonthly(reservations, scheduleProgrammingState, months))
                                     .ToList();
 
         var allAvailableReservations = GetAllAvailableReservations(reservationsMonthly);
@@ -97,12 +95,10 @@ public class ReportsService(
     {
         var reservations = await getSchedulesProgrammingPersistence.ExecuteAsync(DashboardTimeType.Yearly);
 
-        var reservationsByState = reservations.GroupBy(reservation => reservation.State);
-
         var years = YearsExtensions.GetYears(5);
 
-        var reservationsYearly = reservationsByState
-                                    .Select(reservationByState => GetReservationYearly(reservationByState, years))
+        var reservationsYearly = scheduleProgrammingStates
+                                    .Select(scheduleProgrammingState => GetReservationYearly(reservations, scheduleProgrammingState, years))
                                     .ToList();
 
         var allAvailableReservations = GetAllAvailableReservations(reservationsYearly);
@@ -120,12 +116,10 @@ public class ReportsService(
     {
         var reservations = await getSchedulesProgrammingPersistence.ExecuteAsync(DashboardTimeType.Daily);
 
-        var reservationsByState = reservations.GroupBy(reservation => reservation.State);
-
         var days = DaysExtensions.GetDays();
 
-        var reservationsYearly = reservationsByState
-                                        .Select(reservationByState => GetReservationDaily(reservationByState, days))
+        var reservationsYearly = scheduleProgrammingStates
+                                        .Select(scheduleProgrammingState => GetReservationDaily(reservations, scheduleProgrammingState, days))
                                         .ToList();
 
         var allAvailableReservations = GetAllAvailableReservations(reservationsYearly);
@@ -143,12 +137,10 @@ public class ReportsService(
     {
         var reservations = await getSchedulesProgrammingPersistence.ExecuteAsync(DashboardTimeType.Weekly);
 
-        var reservationsByState = reservations.GroupBy(reservation => reservation.State);
-
         var weeks = WeeksExtensions.GetWeeks();
 
-        var reservationsYearly = reservationsByState
-                                    .Select(reservationByState => GetReservationWeekly(reservationByState, weeks))
+        var reservationsYearly = scheduleProgrammingStates
+                                    .Select(scheduleProgrammingState => GetReservationWeekly(reservations, scheduleProgrammingState, weeks))
                                     .ToList();
 
         var allAvailableReservations = GetAllAvailableReservations(reservationsYearly);
@@ -193,42 +185,42 @@ public class ReportsService(
         return new(turnDatesDto.Label, sportFieldsByTurn);
     }
 
-    private ReportInfoResponse GetReservationMonthly(IGrouping<ScheduleProgrammingState, ScheduleProgramming> reservationsByState, IEnumerable<OptionDto<int>> months)
+    private ReportInfoResponse GetReservationMonthly(IEnumerable<ScheduleProgramming> reservations, OptionDto<ScheduleProgrammingState> state, IEnumerable<OptionDto<int>> months)
     {
+        var reservationsByState = reservations.Where(reservation => reservation.State == state.Id);
+
         var reservationsByMonth = months.Select(month => new TypeQuantity(month.Label, reservationsByState.Count(reservation => reservation.StartDate.Month == month.Id)));
 
-        var reservationState = scheduleProgrammingStates.First(x => x.Id == reservationsByState.Key);
-
-        return new(reservationState.Label, reservationsByMonth);
+        return new(state.Label, reservationsByMonth);
     }
 
-    private ReportInfoResponse GetReservationYearly(IGrouping<ScheduleProgrammingState, ScheduleProgramming> reservationsByState, IEnumerable<OptionDto<int>> years)
+    private static ReportInfoResponse GetReservationYearly(IEnumerable<ScheduleProgramming> reservations, OptionDto<ScheduleProgrammingState> state, IEnumerable<OptionDto<int>> years)
     {
+        var reservationsByState = reservations.Where(reservation => reservation.State == state.Id);
+
         var reservationsByYear = years.Select(year => new TypeQuantity(year.Label, reservationsByState.Count(reservation => reservation.StartDate.Year == year.Id)));
 
-        var reservationState = scheduleProgrammingStates.First(x => x.Id == reservationsByState.Key);
-
-        return new(reservationState.Label, reservationsByYear);
+        return new(state.Label, reservationsByYear);
     }
 
-    private ReportInfoResponse GetReservationDaily(IGrouping<ScheduleProgrammingState, ScheduleProgramming> reservationsByState, IEnumerable<OptionDto<DayOfWeek>> days)
+    private static ReportInfoResponse GetReservationDaily(IEnumerable<ScheduleProgramming> reservations, OptionDto<ScheduleProgrammingState> state, IEnumerable<OptionDto<DayOfWeek>> days)
     {
+        var reservationsByState = reservations.Where(reservation => reservation.State == state.Id);
+
         var reservationsByDay = days.Select(day => new TypeQuantity(day.Label, reservationsByState.Count(reservation => reservation.StartDate.DayOfWeek == day.Id)));
 
-        var reservationState = scheduleProgrammingStates.First(x => x.Id == reservationsByState.Key);
-
-        return new(reservationState.Label, reservationsByDay);
+        return new(state.Label, reservationsByDay);
     }
 
-    private ReportInfoResponse GetReservationWeekly(
-        IGrouping<ScheduleProgrammingState, ScheduleProgramming> reservationsByState,
+    private static ReportInfoResponse GetReservationWeekly(
+        IEnumerable<ScheduleProgramming> reservations, OptionDto<ScheduleProgrammingState> state,
         IEnumerable<OptionDto<WeeksDto>> weeks)
-    { 
+    {
+        var reservationsByState = reservations.Where(reservation => reservation.State == state.Id);
+
         var reservationsByWeek = weeks.Select(week => new TypeQuantity(week.Label, reservationsByState.Count(reservation => reservation.StartDate.DayOfYear >= week.Id.StartDay && reservation.StartDate.DayOfYear <= week.Id.EndDay)));
 
-        var reservationState = scheduleProgrammingStates.First(x => x.Id == reservationsByState.Key);
-
-        return new(reservationState.Label, reservationsByWeek);
+        return new(state.Label, reservationsByWeek);
     }
 
     private ReportInfoResponse GetAllAvailableReservations(IList<ReportInfoResponse> reservations)

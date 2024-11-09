@@ -108,7 +108,7 @@ export class AppHorizontalHeaderComponent {
   notifications: notifications[] = [
     {
       id: 1,
-      img: '/assets/images/profile/user-1.jpg',
+      img: '/assets/images/profile/user-1.png',
       title: 'Roman Joined thes Team!',
       subtitle: 'Congratulate him',
     },

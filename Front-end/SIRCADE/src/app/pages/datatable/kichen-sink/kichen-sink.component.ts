@@ -272,7 +272,7 @@ export class AppKichenSinkDialogContentComponent {
       );
     }
     if (this.local_data.imagePath === undefined) {
-      this.local_data.imagePath = 'assets/images/profile/user-1.jpg';
+      this.local_data.imagePath = 'assets/images/profile/user-1.png';
     }
   }
 

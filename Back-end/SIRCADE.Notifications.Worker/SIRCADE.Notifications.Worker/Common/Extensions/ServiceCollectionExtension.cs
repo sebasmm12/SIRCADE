@@ -16,11 +16,20 @@ using SIRCADE.ApiCore.Models.SportFields.Persistence.Imp;
 using SIRCADE.ApiCore.Models.SportFields.Persistence;
 using SIRCADE.ApiCore.Models.Users.Persistence.Imp;
 using SIRCADE.ApiCore.Models.Users.Persistence;
+using SIRCADE.Notifications.Worker.Common.Services;
+using SIRCADE.Notifications.Worker.Common.Services.Imp;
 
 namespace SIRCADE.Notifications.Worker.Common.Extensions;
 
 public static class ServiceCollectionExtension
 {
+    public static IServiceCollection AddCommonServices(this IServiceCollection services)
+    {
+        services.AddTransient<IEmailService, EmailService>();
+
+        return services;
+    }
+
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
         services.AddTransient<INotificationsService, NotificationsService>();

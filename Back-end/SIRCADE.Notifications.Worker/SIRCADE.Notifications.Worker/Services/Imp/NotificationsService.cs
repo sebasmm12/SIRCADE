@@ -1,10 +1,9 @@
-﻿using System.Net;
-using System.Net.Mail;
-using SIRCADE.ApiCore.Models.Notifications.Entities;
+﻿using SIRCADE.ApiCore.Models.Notifications.Entities;
 using SIRCADE.ApiCore.Models.Notifications.Enums;
 using SIRCADE.ApiCore.Models.Notifications.Persistence;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Entities;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Persistence;
+using SIRCADE.Notifications.Worker.Common.Services;
 
 namespace SIRCADE.Notifications.Worker.Services.Imp;
 
@@ -13,6 +12,7 @@ public class NotificationsService
      IGetUserNotificationsPersistence getUserNotificationsPersistence,
      ICreateUserNotificationsPersistence createUserNotificationsPersistence,
      IGetSchedulesProgrammingPersistence getSchedulesProgrammingPersistence,
+     IEmailService emailService,
      IConfiguration configuration): INotificationsService
 {
 
@@ -105,37 +105,9 @@ public class NotificationsService
 
     private async Task SendEmailsAsync(IEnumerable<UserNotification> userNotifications)
     {
-        var client = GetClient();
-
-        var mailMessage = new MailMessage();
-
-        mailMessage.From = new(configuration["EmailConfiguration:SenderEmail"]!);
-
         foreach (var user in userNotifications)
         {
-            mailMessage.To.Add(user.ReceiverUser.Detail.Email!);
+            await emailService.SendAsync(user);
         }
-
-        mailMessage.Subject = userNotifications.First().Subject;
-        mailMessage.Body = userNotifications.First().Message;
-
-        await client.SendMailAsync(mailMessage);
-    }
-
-    private SmtpClient GetClient()
-    {
-        var smtp = configuration["EmailConfiguration:SmtpClient"];
-        var port = int.Parse(configuration["EmailConfiguration:Port"]!);
-        var email = configuration["EmailConfiguration:SenderEmail"];
-        var password = configuration["EmailConfiguration:SenderPassword"];
-
-        var client = new SmtpClient(smtp, port)
-        {
-            EnableSsl = true,
-            UseDefaultCredentials = false,
-            Credentials = new NetworkCredential(email, password)
-        };
-
-        return client;
     }
 }

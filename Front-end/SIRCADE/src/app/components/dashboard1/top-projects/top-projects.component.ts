@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { MaterialModule } from '../../../material.module';
 import { CommonModule } from '@angular/common';
 
-
 export interface productsData {
   id: number;
   imagePath: string;
@@ -16,12 +15,12 @@ export interface productsData {
 const ELEMENT_DATA: productsData[] = [
   {
     id: 1,
-    imagePath: 'assets/images/profile/user-1.jpg',
+    imagePath: 'assets/images/profile/user-1.png',
     uname: 'Sunil Joshi',
     position: 'Web Designer',
     productName: 'Elite Admin',
     budget: 3.9,
-    priority: 'low'
+    priority: 'low',
   },
   {
     id: 2,
@@ -30,7 +29,7 @@ const ELEMENT_DATA: productsData[] = [
     position: 'Project Manager',
     productName: 'Real Homes Theme',
     budget: 24.5,
-    priority: 'medium'
+    priority: 'medium',
   },
   {
     id: 3,
@@ -39,7 +38,7 @@ const ELEMENT_DATA: productsData[] = [
     position: 'Project Manager',
     productName: 'MedicalPro Theme',
     budget: 12.8,
-    priority: 'high'
+    priority: 'high',
   },
   {
     id: 4,
@@ -48,7 +47,7 @@ const ELEMENT_DATA: productsData[] = [
     position: 'Frontend Engineer',
     productName: 'Hosting Press HTML',
     budget: 2.4,
-    priority: 'critical'
+    priority: 'critical',
   },
 ];
 
@@ -64,7 +63,6 @@ interface month {
   templateUrl: './top-projects.component.html',
 })
 export class AppTopProjectsComponent {
-
   displayedColumns: string[] = ['assigned', 'name', 'priority', 'budget'];
   dataSource = ELEMENT_DATA;
 

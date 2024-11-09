@@ -328,4 +328,8 @@ export class FullComponent implements OnInit {
       this.htmlElement.classList.add('light-theme');
     }
   }
+
+  logout(): void {
+    this.accountsService.logOut();
+  }
 }

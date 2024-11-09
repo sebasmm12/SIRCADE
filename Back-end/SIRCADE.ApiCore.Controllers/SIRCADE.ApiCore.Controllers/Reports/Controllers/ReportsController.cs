@@ -144,7 +144,7 @@ public class ReportsController(IReportsService reportsService) : ControllerBase
     {
         try
         {
-            var response = await reportsService.GetReservationsDailyAsync();
+            var response = await reportsService.GetReservationsWeeklyAsync();
 
             return Ok(response);
         }

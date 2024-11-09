@@ -163,7 +163,7 @@ export class AppCardsComponent {
       id: 1,
       time: '2 mins Read',
       imgSrc: '/assets/images/blog/blog-img1.jpg',
-      user: '/assets/images/profile/user-1.jpg',
+      user: '/assets/images/profile/user-1.png',
       title: 'As yen tumbles, gadget-loving Japan goes for secondhand iPhones',
       views: '9,125',
       category: 'Social',
@@ -253,7 +253,7 @@ export class AppCardsComponent {
   followercards: followercards[] = [
     {
       id: 1,
-      imgSrc: '/assets/images/profile/user-1.jpg',
+      imgSrc: '/assets/images/profile/user-1.png',
       title: 'Andrew Grant',
       subtext: 'El Salvador',
     },
@@ -275,7 +275,7 @@ export class AppCardsComponent {
   friendcards: friendcards[] = [
     {
       id: 1,
-      imgSrc: '/assets/images/profile/user-1.jpg',
+      imgSrc: '/assets/images/profile/user-1.png',
       title: 'Andrew Grant',
     },
     {
@@ -299,7 +299,7 @@ export class AppCardsComponent {
   socialcards: socialcards[] = [
     {
       id: 1,
-      imgSrc: '/assets/images/profile/user-1.jpg',
+      imgSrc: '/assets/images/profile/user-1.png',
       username: 'Andrew Grant',
       post: 'Technology Director',
     },

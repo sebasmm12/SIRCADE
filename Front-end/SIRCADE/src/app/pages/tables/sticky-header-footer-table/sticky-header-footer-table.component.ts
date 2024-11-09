@@ -22,7 +22,7 @@ export interface PeriodicElement {
 const ELEMENT_DATA: PeriodicElement[] = [
   {
     id: 1,
-    imagePath: 'assets/images/profile/user-1.jpg',
+    imagePath: 'assets/images/profile/user-1.png',
     uname: 'Sunil Joshi',
     position: 'Web Designer',
     productName: 'Elite Admin',
@@ -58,7 +58,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
   },
   {
     id: 1,
-    imagePath: 'assets/images/profile/user-1.jpg',
+    imagePath: 'assets/images/profile/user-1.png',
     uname: 'Sunil Joshi',
     position: 'Web Designer',
     productName: 'Elite Admin',

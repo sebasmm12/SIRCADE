@@ -8,7 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 const ELEMENT_DATA: Element[] = [
   {
     id: 1,
-    imagePath: 'assets/images/profile/user-1.jpg',
+    imagePath: 'assets/images/profile/user-1.png',
     uname: 'Sunil Joshi',
     position: 'Web Designer',
     name: 'Elite Admin',
@@ -44,7 +44,7 @@ const ELEMENT_DATA: Element[] = [
   },
   {
     id: 5,
-    imagePath: 'assets/images/profile/user-1.jpg',
+    imagePath: 'assets/images/profile/user-1.png',
     uname: 'Sunil Joshi',
     position: 'Web Designer',
     name: 'Elite Admin',

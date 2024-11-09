@@ -27,7 +27,7 @@ const tickets: TicketElement[] = [
     title: 'Sed ut perspiciatis unde omnis iste',
     subtext:
       'ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos',
-    imgSrc: '/assets/images/profile/user-1.jpg',
+    imgSrc: '/assets/images/profile/user-1.png',
     assignee: 'Alice',
     status: 'inprogress',
     date: '2023-05-01',
@@ -198,7 +198,7 @@ export class AppTicketlistComponent implements OnInit {
       title: row_obj.title,
       subtext: row_obj.subtext,
       assignee: row_obj.assignee,
-      imgSrc: '/assets/images/profile/user-1.jpg',
+      imgSrc: '/assets/images/profile/user-1.png',
       status: row_obj.status,
       date: row_obj.date,
     });

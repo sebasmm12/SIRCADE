@@ -8,7 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 const PRODUCT_DATA: Element[] = [
   {
     id: 1,
-    imagePath: 'assets/images/profile/user-1.jpg',
+    imagePath: 'assets/images/profile/user-1.png',
     uname: 'Sunil Joshi',
     position: 'Web Designer',
     productName: 'Elite Admin',
@@ -44,7 +44,7 @@ const PRODUCT_DATA: Element[] = [
   },
   {
     id: 1,
-    imagePath: 'assets/images/profile/user-1.jpg',
+    imagePath: 'assets/images/profile/user-1.png',
     uname: 'Sunil Joshi',
     position: 'Web Designer',
     productName: 'Elite Admin',
@@ -80,7 +80,7 @@ const PRODUCT_DATA: Element[] = [
   },
   {
     id: 1,
-    imagePath: 'assets/images/profile/user-1.jpg',
+    imagePath: 'assets/images/profile/user-1.png',
     uname: 'Sunil Joshi',
     position: 'Web Designer',
     productName: 'Elite Admin',
@@ -116,7 +116,7 @@ const PRODUCT_DATA: Element[] = [
   },
   {
     id: 1,
-    imagePath: 'assets/images/profile/user-1.jpg',
+    imagePath: 'assets/images/profile/user-1.png',
     uname: 'Sunil Joshi',
     position: 'Web Designer',
     productName: 'Elite Admin',
@@ -152,7 +152,7 @@ const PRODUCT_DATA: Element[] = [
   },
   {
     id: 1,
-    imagePath: 'assets/images/profile/user-1.jpg',
+    imagePath: 'assets/images/profile/user-1.png',
     uname: 'Sunil Joshi',
     position: 'Web Designer',
     productName: 'Elite Admin',

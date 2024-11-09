@@ -88,7 +88,7 @@ export class AppContactComponent implements OnInit {
   // tslint:disable-next-line - Disables all
   addContact(row_obj: ContactData): void {
     this.contacts.unshift({
-      contactimg: 'assets/images/profile/user-1.jpg',
+      contactimg: 'assets/images/profile/user-1.png',
       contactname: row_obj.txtContactname,
       contactpost: row_obj.txtContactPost,
       contactadd: row_obj.txtContactadd,

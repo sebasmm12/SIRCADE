@@ -240,7 +240,7 @@ export class AppLandingpageComponent {
   testimonials: testimonials[] = [
     {
       id: 1,
-      imgSrc: '/assets/images/profile/user-1.jpg',
+      imgSrc: '/assets/images/profile/user-1.png',
       name: 'Jenny Wilson',
       subtext: 'Features avaibility',
     },

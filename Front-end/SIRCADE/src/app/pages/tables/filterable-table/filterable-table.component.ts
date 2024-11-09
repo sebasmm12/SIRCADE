@@ -18,7 +18,7 @@ export interface productsData {
 const ELEMENT_DATA: productsData[] = [
   {
     id: 1,
-    imagePath: 'assets/images/profile/user-1.jpg',
+    imagePath: 'assets/images/profile/user-1.png',
     uname: 'Sunil Joshi',
     position: 'Web Designer',
     productName: 'Elite Admin',
@@ -57,7 +57,13 @@ const ELEMENT_DATA: productsData[] = [
 @Component({
   selector: 'app-filterable-table',
   standalone: true,
-  imports: [MatTableModule, MatCardModule, MatFormFieldModule, CommonModule, MatInputModule],
+  imports: [
+    MatTableModule,
+    MatCardModule,
+    MatFormFieldModule,
+    CommonModule,
+    MatInputModule,
+  ],
   templateUrl: './filterable-table.component.html',
 })
 export class AppFilterableTableComponent implements OnInit {

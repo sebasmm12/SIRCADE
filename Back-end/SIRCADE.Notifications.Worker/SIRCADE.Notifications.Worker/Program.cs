@@ -17,6 +17,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+// Add common services to the container
+builder.Services.AddCommonServices();
+
 // Add persistence services to the container.
 builder.Services.AddPersistence();
 
