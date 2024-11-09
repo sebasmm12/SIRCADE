@@ -194,6 +194,10 @@
                   formControlName="birthDate"
                   [matDatepicker]="picker"
                 />
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="picker"
+                ></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
                 @if(usersValidatorService.isFieldInvalid(personalDataFormGroup,
                 'birthDate')) {
@@ -211,7 +215,11 @@
                 DNI</mat-label
               >
               <mat-form-field appearance="outline" class="w-100">
-                <input matInput formControlName="documentNumber" />
+                <input
+                  matInput
+                  formControlName="documentNumber"
+                  [maxlength]="8"
+                />
                 @if(usersValidatorService.isFieldInvalid(personalDataFormGroup,
                 'documentNumber')) {
                 <mat-error>{{
@@ -289,7 +297,7 @@
                 Teléfono
               </mat-label>
               <mat-form-field appearance="outline" class="w-100">
-                <input matInput formControlName="phone" readonly />
+                <input matInput formControlName="phone" [maxlength]="7" />
                 @if(usersValidatorService.isFieldInvalid(personalDataFormGroup,
                 'phone')) {
                 <mat-error>{{
@@ -306,7 +314,7 @@
                 Celular
               </mat-label>
               <mat-form-field appearance="outline" class="w-100">
-                <input matInput formControlName="cellPhone" readonly />
+                <input matInput formControlName="cellPhone" [maxLength]="9" />
                 @if(usersValidatorService.isFieldInvalid(personalDataFormGroup,
                 'cellPhone')) {
                 <mat-error>{{

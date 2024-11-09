@@ -7,6 +7,7 @@ import { ScheduleProgrammingInfoResponse } from '../interfaces/responses/schedul
 import { SchedulesProgrammingWeeklyQueries } from '../interfaces/queries/schedules-programming-weekly.queries';
 import queryString from 'query-string';
 import { ScheduleProgrammingUpdateRequest } from '../interfaces/requests/schedule-programming-update.request';
+import { OverlappedSchedulesProgrammingQueries } from '../interfaces/queries/overlapped-schedules-programming.queries';
 
 @Injectable({
   providedIn: 'root',
@@ -47,6 +48,16 @@ export class SchedulesProgrammingService {
     return this.httpClient.put<void>(
       `${this.baseUrl}/schedules-programming`,
       scheduleProgrammingUpdateRequest
+    );
+  }
+
+  getTotalOverlapped(
+    overlappedSchedulesProgrammingQueries: OverlappedSchedulesProgrammingQueries
+  ): Observable<number> {
+    const params = queryString.stringify(overlappedSchedulesProgrammingQueries);
+
+    return this.httpClient.get<number>(
+      `${this.baseUrl}/schedules-programming/total-overlapped?${params}`
     );
   }
 }

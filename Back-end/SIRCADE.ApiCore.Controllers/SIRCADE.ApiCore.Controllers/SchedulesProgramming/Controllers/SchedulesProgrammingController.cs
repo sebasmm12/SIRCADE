@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SIRCADE.ApiCore.Controllers.SchedulesProgramming.Requests;
 using SIRCADE.ApiCore.Controllers.SchedulesProgramming.Services;
+using SIRCADE.ApiCore.Models.SchedulesProgramming.Dtos;
 using SIRCADE.ApiCore.Models.SchedulesProgramming.Queries;
 
 namespace SIRCADE.ApiCore.Controllers.SchedulesProgramming.Controllers;
@@ -43,6 +44,23 @@ public class SchedulesProgrammingController(ISchedulesProgrammingService schedul
             return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
         }
     }
+
+    [HttpGet("total-overlapped")]
+    public async Task<IActionResult> GetTotalOverlapped(
+        [FromQuery] OverlappedScheduleProgrammingFiltersDto overlappedScheduleProgrammingFiltersDto)
+    {
+        try
+        {
+            var totalSchedulesProgramming = await schedulesProgrammingService.GetOverlappedAsync(overlappedScheduleProgrammingFiltersDto);
+
+            return Ok(totalSchedulesProgramming);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+        }
+    }
+    
 
     [HttpPost]
     public async Task<IActionResult> CreateAsync([FromBody] ScheduleProgrammingRegisterRequest scheduleProgrammingCreationRequest)

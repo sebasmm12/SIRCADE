@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>Confirmación del mantenimiento</h2>
+<mat-dialog-content>
+  <p>
+    ¿Estás seguro de que deseas registrar el mantenimiento? Se procederá a
+    cancelar {{ totalOverlapped }} reservaciones.
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions [align]="'end'">
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-raised-button color="warn" cdkFocusInitial (click)="save()">
+    Guardar
+  </button>
+</mat-dialog-actions>

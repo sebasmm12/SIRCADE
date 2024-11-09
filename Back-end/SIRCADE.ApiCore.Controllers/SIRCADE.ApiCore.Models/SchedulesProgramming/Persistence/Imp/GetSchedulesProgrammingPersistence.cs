@@ -129,6 +129,7 @@ public class GetSchedulesProgrammingPersistence(
         return schedulesProgramming;
     }
 
+
     #region private methods
 
     private IQueryable<ScheduleProgramming> ResolverFiltersForDashboards(IQueryable<ScheduleProgramming> schedulesProgrammingContext, DashboardFiltersDto dashboardFilters)

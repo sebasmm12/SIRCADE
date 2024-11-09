@@ -27,6 +27,7 @@ import {
 } from '@angular/material/datepicker';
 import {
   MAT_DIALOG_DATA,
+  MatDialog,
   MatDialogModule,
   MatDialogRef,
 } from '@angular/material/dialog';
@@ -62,6 +63,8 @@ import {
 } from '@angular/material/autocomplete';
 import { ClientsService } from '../../services/clients.service';
 import { ClientInfoResponse } from '../../interfaces/responses/client-info.response';
+import { OverlappedSchedulesProgrammingQueries } from '../../interfaces/queries/overlapped-schedules-programming.queries';
+import { ScheduleProgrammingConfirmationComponent } from '../schedule-programming-confirmation/schedule-programming-confirmation.component';
 
 @Component({
   selector: 'app-schedule-programming-register',
@@ -91,6 +94,7 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
   clientsService = inject(ClientsService);
   schedulesProgrammingService = inject(SchedulesProgrammingService);
   accountsService = inject(AccountsService);
+  dialogService = inject(MatDialog);
 
   scheduleProgrammingValidator = inject(SchedulesProgrammingValidatorService);
 
@@ -108,6 +112,7 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
   clientCtrl = new FormControl('');
   clientId: number | null = null;
   filteredClients!: Observable<ClientInfoResponse[]>;
+  totalOverlapped: number = 0;
 
   @ViewChild('picker')
   datePicker: MatDatepicker<Date>;
@@ -201,7 +206,7 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
     );
   }
 
-  register(): void {
+  confirmRegister(): void {
     this.scheduleProgrammingForm.markAllAsTouched();
     this.scheduleProgrammingForm.updateValueAndValidity();
 
@@ -224,6 +229,46 @@ export class ScheduleProgrammingRegisterComponent implements OnInit {
       request.clientId = this.accountsService.User?.id;
     }
 
+    let overlappedScheduleProgrammingQueries: OverlappedSchedulesProgrammingQueries =
+      {
+        sportFieldId: request.sportFieldId,
+        startDate: request.startDate.toISOString(),
+        endDate: request.endDate.toISOString(),
+      };
+
+    if (this.scheduleProgrammingForm.get('type')?.value.name == 'Reserva') {
+      this.register(request);
+      return;
+    }
+
+    this.schedulesProgrammingService
+      .getTotalOverlapped(overlappedScheduleProgrammingQueries)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((total) => {
+        this.totalOverlapped = total;
+        if (this.totalOverlapped > 0) {
+          this.showConfirmation(request);
+          return;
+        }
+
+        this.register(request);
+      });
+  }
+
+  showConfirmation(request: ScheduleProgrammingRequest): void {
+    this.dialogService
+      .open(ScheduleProgrammingConfirmationComponent, {
+        width: '600px',
+        data: this.totalOverlapped,
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (!result) return;
+        this.register(request);
+      });
+  }
+
+  register(request: ScheduleProgrammingRequest): void {
     this.schedulesProgrammingService
       .register(request)
       .pipe(takeUntilDestroyed(this.destroyRef))

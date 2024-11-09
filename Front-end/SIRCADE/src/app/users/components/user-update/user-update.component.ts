@@ -125,11 +125,14 @@ export class UserUpdateComponent implements OnInit {
   buildForm() {
     this.personalDataFormGroup = this.formBuilder.group({
       birthDate: [null, Validators.required],
-      phone: ['', Validators.required],
+      phone: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       email: ['', [Validators.required, Validators.email]],
-      cellPhone: ['', Validators.required],
+      cellPhone: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       address: [''],
-      documentNumber: ['', Validators.required],
+      documentNumber: [
+        '',
+        [Validators.required, Validators.pattern('^[0-9]*$')],
+      ],
       maritalStatus: ['', Validators.required],
       observation: [''],
     });

@@ -6,4 +6,5 @@ public record ScheduleProgrammingFiltersDto(
     DateTime EndDate,
     int Type,
     string RestrictedType,
+    int? ClientId = null,
     int? ScheduleProgrammingId = null);

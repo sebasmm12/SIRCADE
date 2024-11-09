@@ -60,7 +60,8 @@ public static class SchedulesProgrammingMapper
                    scheduleProgrammingRegisterRequest.StartDate,
                    scheduleProgrammingRegisterRequest.EndDate,
                    scheduleProgrammingRegisterRequest.Type,
-                   restrictedType);
+                   restrictedType,
+                   scheduleProgrammingRegisterRequest.ClientId);
     }
 
     public static ScheduleProgrammingFiltersDto MapToScheduleFiltersDto(
@@ -72,6 +73,7 @@ public static class SchedulesProgrammingMapper
                    scheduleProgramming.EndDate,
                    scheduleProgramming.Type,
                    restrictedType,
+                   scheduleProgramming.ClientId,
                    scheduleProgramming.Id);
     }
 }

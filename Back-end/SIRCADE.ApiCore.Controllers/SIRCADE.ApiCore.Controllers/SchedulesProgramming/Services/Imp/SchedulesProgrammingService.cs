@@ -27,6 +27,7 @@ public class SchedulesProgrammingService
      IHttpContextAccessor httpContextAccessor): ISchedulesProgrammingService
 {
     private const string RestrictedType = "Reserva";
+    private const string ClientRole = "Socio";
 
     public async Task<int> CreateAsync(ScheduleProgrammingRegisterRequest scheduleProgrammingRegisterRequest)
     {
@@ -53,6 +54,13 @@ public class SchedulesProgrammingService
         var scheduleProgramming = await getSchedulesProgrammingPersistence.ExecuteAsync(scheduleProgrammingId, isTracked: false, needsInclude: true);
 
         return scheduleProgramming.MapToScheduleProgrammingInfoResponse();
+    }
+
+    public async Task<int> GetOverlappedAsync(OverlappedScheduleProgrammingFiltersDto overlappedScheduleProgrammingFiltersDto)
+    {
+        var totalSchedulesProgramming = await countSchedulesProgrammingPersistence.ExecuteAsync(overlappedScheduleProgrammingFiltersDto);
+
+        return totalSchedulesProgramming;
     }
 
     public async Task UpdateAsync(ScheduleProgrammingUpdateRequest scheduleProgrammingUpdateRequest)
@@ -109,7 +117,7 @@ public class SchedulesProgrammingService
             return new(false, "No se pueden realizar reservas menores a la fecha actual");
 
         // Validation for total reservations per day
-        var isTotalByUserValid = await ValidateTotalByUserAsync(RestrictedType, programmingFiltersDto.StartDate, programmingFiltersDto.ScheduleProgrammingId);
+        var isTotalByUserValid = await ValidateTotalByUserAsync(programmingType.Name, programmingFiltersDto.StartDate, programmingFiltersDto.ScheduleProgrammingId, programmingFiltersDto.ClientId);
 
         if(!isTotalByUserValid)
             return new(false, "El socio ya tiene una programación registrada para el día seleccionado");
@@ -129,12 +137,13 @@ public class SchedulesProgrammingService
         return new(false, $"{programmingType.Name} no disponible");
     }
 
-    private async Task<bool> ValidateTotalByUserAsync(string type, DateTime startDate, int? scheduleProgrammingId)
+    private async Task<bool> ValidateTotalByUserAsync(string type, DateTime startDate, int? scheduleProgrammingId, int? clientId)
     {
         if(type != RestrictedType)
             return true;
 
-        var userId = Convert.ToInt32(httpContextAccessor.HttpContext!.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value);
+        var userRole = httpContextAccessor.HttpContext!.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role)?.Value;
+        var userId = userRole == ClientRole ? Convert.ToInt32(httpContextAccessor.HttpContext!.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value): clientId!.Value;
 
         var totalUserScheduleProgramming = await countSchedulesProgrammingPersistence.ExecuteAsync(userId, startDate, scheduleProgrammingId);
 
