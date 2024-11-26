@@ -6,7 +6,7 @@ namespace SIRCADE.Notifications.Worker.Processes;
 public class UserNotificationsTask(
     IServiceScopeFactory serviceScopeFactory) : BackgroundService
 {
-    private readonly TimeSpan _period = TimeSpan.FromSeconds(10);
+    private readonly TimeSpan _period = TimeSpan.FromSeconds(30);
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {

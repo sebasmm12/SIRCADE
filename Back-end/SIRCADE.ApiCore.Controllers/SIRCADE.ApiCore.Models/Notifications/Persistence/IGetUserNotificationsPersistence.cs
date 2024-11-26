@@ -4,6 +4,6 @@ namespace SIRCADE.ApiCore.Models.Notifications.Persistence;
 
 public interface IGetUserNotificationsPersistence
 {
-    Task<IEnumerable<UserNotification>> ExecuteAsync(IEnumerable<int> userIds, DateTime deliveringDate);
+    Task<IEnumerable<UserNotification>> ExecuteAsync(IEnumerable<int> reservationIds, DateTime deliveringDate);
     Task<IEnumerable<UserNotification>> ExecuteAsync(int userId);
 }

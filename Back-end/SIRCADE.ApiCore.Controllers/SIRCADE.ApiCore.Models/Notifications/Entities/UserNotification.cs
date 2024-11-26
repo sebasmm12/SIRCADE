@@ -30,6 +30,9 @@ public class UserNotification
     [Column("Estado")]
     public NotificationStatus Status { get; set; }
 
+    [Column("IdProgramacionHorario")]
+    public int? ScheduleProgrammingId { get; set; }
+
     public Notification Notification { get; set; } = default!;
 
     public User? SenderUser { get; set; } = default!;

@@ -30,17 +30,16 @@ public class NotificationsService
         if (!reservations.Any())
             return;
 
-        var reservationClientIds = reservations
-                                    .Select(reservation => reservation.ClientId!.Value)
-                                    .Distinct()
+        var reservationIds = reservations
+                                    .Select(reservation => reservation.Id)
                                     .ToList();
 
-        var receiverNotifications = await getUserNotificationsPersistence.ExecuteAsync(reservationClientIds, currentDate);
+        var receiverNotifications = await getUserNotificationsPersistence.ExecuteAsync(reservationIds, currentDate);
 
         var newReservations = reservations
                                 .ExceptBy(receiverNotifications
-                                    .Select(receiverNotification => receiverNotification.ReceiverUserId),
-                                    reservation => reservation.ClientId!.Value)
+                                    .Select(receiverNotification => receiverNotification.ScheduleProgrammingId),
+                                    reservation => reservation.Id)
                                 .ToList();
 
         if (!newReservations.Any())
@@ -97,7 +96,8 @@ public class NotificationsService
             Status = NotificationStatus.Unread,
             Subject = notificationTemplate.Subject,
             Notification = notificationTemplate,
-            ReceiverUser = reservation.Client!
+            ReceiverUser = reservation.Client!,
+            ScheduleProgrammingId = reservation.Id
         };
 
         return userNotification;
