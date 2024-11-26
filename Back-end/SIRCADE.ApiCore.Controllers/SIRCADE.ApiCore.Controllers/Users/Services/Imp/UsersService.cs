@@ -23,7 +23,7 @@ public class UsersService(
 
         var user = userCreationRequest.MapToUser();
 
-        var password = configuration.GetValue<string>("DefaultPassword")!;
+        var password = userCreationRequest.DocumentNumber;
 
         var generatedHash = hashService.Generate(password);
 

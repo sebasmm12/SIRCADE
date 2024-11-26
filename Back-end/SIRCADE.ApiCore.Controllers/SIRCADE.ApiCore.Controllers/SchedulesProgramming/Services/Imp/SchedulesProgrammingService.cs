@@ -78,16 +78,16 @@ public class SchedulesProgrammingService
     {
         var scheduleProgramming = await getSchedulesProgrammingPersistence.ExecuteAsync(scheduleProgrammingId, isTracked: true);
 
-        await CancelAsync(scheduleProgramming);
+        await CancelAsync([scheduleProgramming]);
     }
 
     #region private methods
 
-    private async Task CancelAsync(ScheduleProgramming scheduleProgramming)
+    private async Task CancelAsync(IEnumerable<ScheduleProgramming> schedulesProgramming)
     {
-        scheduleProgramming.State = ScheduleProgrammingState.Cancelled;
+        var scheduleProgrammingIds = schedulesProgramming.Select(scheduleProgramming => scheduleProgramming.Id);
 
-        await updateScheduleProgrammingPersistence.ExecuteAsync();
+        await updateScheduleProgrammingPersistence.ExecuteAsync(scheduleProgrammingIds, ScheduleProgrammingState.Cancelled);
     }
 
     private async Task ProcessValidationAsync(ScheduleProgrammingFiltersDto programmingFiltersDto, ScheduleProgrammingAction scheduleProgrammingAction)
@@ -99,9 +99,7 @@ public class SchedulesProgrammingService
 
         if (validationMessage.Entities is not null)
         {
-            var cancellationTasks = validationMessage.Entities.Select(CancelAsync);
-
-            await Task.WhenAll(cancellationTasks);
+            await CancelAsync(validationMessage.Entities);
 
             await SendCancellationEmailsAsync(validationMessage.Entities);
         }
