@@ -106,6 +106,11 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./reports/reports.routes').then((m) => m.routes),
       },
+      {
+        path: 'seguridad',
+        loadChildren: () =>
+          import('./auth/auth.routes').then((m) => m.internalAuthRoutes),
+      }
     ],
   },
   {

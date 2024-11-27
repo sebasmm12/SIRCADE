@@ -6,4 +6,6 @@ namespace SIRCADE.ApiCore.Controllers.Accounts.Services;
 public interface IAccountsService
 {
     Task<AccountInfoResponse> GenerateTokenAsync(AccountCredentialsRequest accountCredentialsRequest);
+
+    Task UpdatePasswordAsync(PasswordUpdateRequest passwordUpdateRequest);
 }

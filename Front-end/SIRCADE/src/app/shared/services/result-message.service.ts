@@ -16,7 +16,7 @@ export class ResultMessageService {
     [ResultActionType.Deletion]: 'snackbar-error',
   };
 
-  constructor() {}
+  constructor() { }
 
   showMessage(
     message: string,

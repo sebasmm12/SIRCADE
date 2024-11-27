@@ -7,6 +7,7 @@ import { AccountInfoResponse } from '../interfaces/responses/account-info.respon
 import { AccountDto } from '../interfaces/dtos/account.dto';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Router } from '@angular/router';
+import { PasswordUpdateRequest } from '../interfaces/requests/password-update.request';
 
 @Injectable({
   providedIn: 'root',
@@ -53,7 +54,7 @@ export class AccountsService {
       ],
       email:
         decodedUser[
-          'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
+        'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
         ],
       role: decodedUser[
         'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
@@ -84,5 +85,12 @@ export class AccountsService {
     this.user = {} as AccountDto;
 
     this.router.navigate(['/inicio-sesion']);
+  }
+
+  updatePassword(passwordUpdateRequest: PasswordUpdateRequest): Observable<void> {
+    return this.httpClient.put<void>(
+      `${this.baseUrl}/accounts/passwords`,
+      passwordUpdateRequest
+    );
   }
 }

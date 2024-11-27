@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup, ValidationErrors } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccountsValidatorService {
-  constructor() {}
+  constructor() { }
 
   isFieldInvalid(
     formControl: FormGroup,
@@ -51,5 +51,18 @@ export class AccountsValidatorService {
     }
 
     return message;
+  }
+
+  validateNewPasswordConfirmation() {
+    return (formGroup: AbstractControl): ValidationErrors | null => {
+      const password = formGroup.get('newPassword')?.value;
+      const passwordConfirmation = formGroup.get('newPasswordConfirmation')?.value;
+
+      if (password != passwordConfirmation) {
+        formGroup.get('newPasswordConfirmation')?.setErrors({ validationError: ['Las contraseñas no coinciden'] });
+      }
+
+      return null;
+    };
   }
 }

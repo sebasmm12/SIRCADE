@@ -12,7 +12,7 @@ import { ProgrammingTypeInfoResponse } from '../interfaces/responses/programming
   providedIn: 'root',
 })
 export class SchedulesProgrammingValidatorService {
-  constructor() {}
+  constructor() { }
 
   isFieldInvalid(
     formControl: FormGroup,

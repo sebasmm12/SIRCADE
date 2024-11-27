@@ -1,8 +1,6 @@
 <mat-card class="cardWithShadow theme-card">
   <mat-card-header>
-    <mat-card-title class="m-b-0"
-      >Registro de un nuevo {{ userTypeText }}</mat-card-title
-    >
+    <mat-card-title class="m-b-0">Registro de un nuevo {{ userTypeText }}</mat-card-title>
   </mat-card-header>
   <mat-card-content class="b-t-1">
     @if(loading) {
@@ -28,10 +26,10 @@
                 'nsa')) {
                 <mat-error>{{
                   usersValidatorService.showErrorMessage(
-                    armyDataFormGroup,
-                    "nsa"
+                  armyDataFormGroup,
+                  "nsa"
                   )
-                }}</mat-error>
+                  }}</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -49,10 +47,10 @@
                 'roleId')) {
                 <mat-error>{{
                   usersValidatorService.showErrorMessage(
-                    armyDataFormGroup,
-                    "roleId"
+                  armyDataFormGroup,
+                  "roleId"
                   )
-                }}</mat-error>
+                  }}</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -70,10 +68,10 @@
                 'grade')) {
                 <mat-error>{{
                   usersValidatorService.showErrorMessage(
-                    armyDataFormGroup,
-                    "grade"
+                  armyDataFormGroup,
+                  "grade"
                   )
-                }}</mat-error>
+                  }}</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -81,61 +79,56 @@
           <div class="row">
             <div class="col-sm-4">
               <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">
-                Nombres</mat-label
-              >
+                Nombres</mat-label>
               <mat-form-field appearance="outline" class="w-100">
                 <input matInput formControlName="names" />
                 @if(usersValidatorService.isFieldInvalid(armyDataFormGroup,
                 'names')) {
                 <mat-error>{{
                   usersValidatorService.showErrorMessage(
-                    armyDataFormGroup,
-                    "names"
+                  armyDataFormGroup,
+                  "names"
                   )
-                }}</mat-error>
+                  }}</mat-error>
                 }
               </mat-form-field>
             </div>
             <div class="col-sm-4">
               <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">
-                Apellido Paterno</mat-label
-              >
+                Apellido Paterno</mat-label>
               <mat-form-field appearance="outline" class="w-100">
                 <input matInput formControlName="paternalLastName" />
                 @if(usersValidatorService.isFieldInvalid(armyDataFormGroup,
                 'paternalLastName')) {
                 <mat-error>{{
                   usersValidatorService.showErrorMessage(
-                    armyDataFormGroup,
-                    "paternalLastName"
+                  armyDataFormGroup,
+                  "paternalLastName"
                   )
-                }}</mat-error>
+                  }}</mat-error>
                 }
               </mat-form-field>
             </div>
             <div class="col-sm-4">
               <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">
-                Apellido Materno</mat-label
-              >
+                Apellido Materno</mat-label>
               <mat-form-field appearance="outline" class="w-100">
                 <input matInput formControlName="maternalLastName" />
                 @if(usersValidatorService.isFieldInvalid(armyDataFormGroup,
                 'maternalLastName')) {
                 <mat-error>{{
                   usersValidatorService.showErrorMessage(
-                    armyDataFormGroup,
-                    "maternalLastName"
+                  armyDataFormGroup,
+                  "maternalLastName"
                   )
-                }}</mat-error>
+                  }}</mat-error>
                 }
               </mat-form-field>
             </div>
           </div>
           <div class="row">
             <div class="col-sm-6">
-              <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16"
-                >Unidad</mat-label
-              >
+              <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">Unidad</mat-label>
               <mat-form-field appearance="outline" class="w-100">
                 <mat-select formControlName="unityId">
                   @for(unity of unities; track unity) {
@@ -146,10 +139,10 @@
                 'unityId')) {
                 <mat-error>{{
                   usersValidatorService.showErrorMessage(
-                    armyDataFormGroup,
-                    "unityId"
+                  armyDataFormGroup,
+                  "unityId"
                   )
-                }}</mat-error>
+                  }}</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -162,17 +155,17 @@
                   @for(situation of situations; track situation) {
                   <mat-option [value]="situation.id">{{
                     situation.name
-                  }}</mat-option>
+                    }}</mat-option>
                   }
                 </mat-select>
                 @if(usersValidatorService.isFieldInvalid(armyDataFormGroup,
                 'situation')) {
                 <mat-error>{{
                   usersValidatorService.showErrorMessage(
-                    armyDataFormGroup,
-                    "situation"
+                  armyDataFormGroup,
+                  "situation"
                   )
-                }}</mat-error>
+                  }}</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -190,49 +183,35 @@
           <div class="row">
             <div class="col-sm-6">
               <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">
-                Fecha de nacimiento</mat-label
-              >
+                Fecha de nacimiento</mat-label>
               <mat-form-field appearance="outline" class="w-100">
-                <input
-                  matInput
-                  name="birthDate"
-                  formControlName="birthDate"
-                  [matDatepicker]="picker"
-                />
-                <mat-datepicker-toggle
-                  matIconSuffix
-                  [for]="picker"
-                ></mat-datepicker-toggle>
+                <input matInput name="birthDate" formControlName="birthDate" [matDatepicker]="picker" />
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
                 @if(usersValidatorService.isFieldInvalid(personalDataFormGroup,
                 'birthDate')) {
                 <mat-error>{{
                   usersValidatorService.showErrorMessage(
-                    personalDataFormGroup,
-                    "birthDate"
+                  personalDataFormGroup,
+                  "birthDate"
                   )
-                }}</mat-error>
+                  }}</mat-error>
                 }
               </mat-form-field>
             </div>
             <div class="col-sm-6">
               <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">
-                DNI</mat-label
-              >
+                DNI</mat-label>
               <mat-form-field appearance="outline" class="w-100">
-                <input
-                  matInput
-                  formControlName="documentNumber"
-                  [maxlength]="8"
-                />
+                <input matInput formControlName="documentNumber" [maxlength]="8" />
                 @if(usersValidatorService.isFieldInvalid(personalDataFormGroup,
                 'documentNumber')) {
                 <mat-error>{{
                   usersValidatorService.showErrorMessage(
-                    personalDataFormGroup,
-                    "documentNumber"
+                  personalDataFormGroup,
+                  "documentNumber"
                   )
-                }}</mat-error>
+                  }}</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -240,41 +219,39 @@
           <div class="row">
             <div class="col-sm-6">
               <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">
-                Correo electrónico</mat-label
-              >
+                Correo electrónico</mat-label>
               <mat-form-field appearance="outline" class="w-100">
                 <input matInput formControlName="email" />
                 @if(usersValidatorService.isFieldInvalid(personalDataFormGroup,
                 'email')) {
                 <mat-error>{{
                   usersValidatorService.showErrorMessage(
-                    personalDataFormGroup,
-                    "email"
+                  personalDataFormGroup,
+                  "email"
                   )
-                }}</mat-error>
+                  }}</mat-error>
                 }
               </mat-form-field>
             </div>
             <div class="col-sm-6">
               <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">
-                Estado civil</mat-label
-              >
+                Estado civil</mat-label>
               <mat-form-field appearance="outline" class="w-100">
                 <mat-select formControlName="maritalStatus">
                   @for(maritalStatus of maritalStatuses; track maritalStatus) {
                   <mat-option [value]="maritalStatus.id">{{
                     maritalStatus.name
-                  }}</mat-option>
+                    }}</mat-option>
                   }
                 </mat-select>
                 @if(usersValidatorService.isFieldInvalid(personalDataFormGroup,
                 'maritalStatus')) {
                 <mat-error>{{
                   usersValidatorService.showErrorMessage(
-                    personalDataFormGroup,
-                    "maritalStatus"
+                  personalDataFormGroup,
+                  "maritalStatus"
                   )
-                }}</mat-error>
+                  }}</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -290,10 +267,10 @@
                 'address')) {
                 <mat-error>{{
                   usersValidatorService.showErrorMessage(
-                    personalDataFormGroup,
-                    "address"
+                  personalDataFormGroup,
+                  "address"
                   )
-                }}</mat-error>
+                  }}</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -307,10 +284,10 @@
                 'phone')) {
                 <mat-error>{{
                   usersValidatorService.showErrorMessage(
-                    personalDataFormGroup,
-                    "phone"
+                  personalDataFormGroup,
+                  "phone"
                   )
-                }}</mat-error>
+                  }}</mat-error>
                 }
               </mat-form-field>
             </div>
@@ -324,33 +301,27 @@
                 'cellPhone')) {
                 <mat-error>{{
                   usersValidatorService.showErrorMessage(
-                    personalDataFormGroup,
-                    "cellPhone"
+                  personalDataFormGroup,
+                  "cellPhone"
                   )
-                }}</mat-error>
+                  }}</mat-error>
                 }
               </mat-form-field>
             </div>
           </div>
           <div class="row">
             <div class="col-sm-12">
-              <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16"
-                >Observación</mat-label
-              >
+              <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-16">Observación</mat-label>
               <mat-form-field appearance="outline" class="w-100">
-                <textarea
-                  matInput
-                  formControlName="observation"
-                  rows="4"
-                ></textarea>
+                <textarea matInput formControlName="observation" rows="4"></textarea>
                 @if(usersValidatorService.isFieldInvalid(personalDataFormGroup,
                 'observation')) {
                 <mat-error>{{
                   usersValidatorService.showErrorMessage(
-                    personalDataFormGroup,
-                    "observation"
+                  personalDataFormGroup,
+                  "observation"
                   )
-                }}</mat-error>
+                  }}</mat-error>
                 }
               </mat-form-field>
             </div>

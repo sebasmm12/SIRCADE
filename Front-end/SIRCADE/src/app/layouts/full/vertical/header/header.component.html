@@ -2,22 +2,14 @@
   <!-- --------------------------------------------------------------- -->
   <!-- Desktop Menu -->
   @if(showToggle) {
-  <button
-    mat-icon-button
-    (click)="toggleCollapsed.emit()"
-    class="d-flex justify-content-center"
-  >
+  <button mat-icon-button (click)="toggleCollapsed.emit()" class="d-flex justify-content-center">
     <i-tabler name="menu-2" class="icon-20 d-flex"></i-tabler>
   </button>
   }
 
   <!-- Mobile Menu -->
   @if(!showToggle) {
-  <button
-    mat-icon-button
-    (click)="toggleMobileNav.emit()"
-    class="d-flex justify-content-center"
-  >
+  <button mat-icon-button (click)="toggleMobileNav.emit()" class="d-flex justify-content-center">
     <i-tabler name="menu-2" class="icon-20 d-flex"></i-tabler>
   </button>
   }
@@ -25,29 +17,16 @@
   <span class="flex-1-auto"></span>
 
   <!-- Mobile Menu -->
-  <button
-    mat-icon-button
-    (click)="toggleMobileFilterNav.emit()"
-    class="d-flex d-lg-none justify-content-center"
-  >
+  <button mat-icon-button (click)="toggleMobileFilterNav.emit()" class="d-flex d-lg-none justify-content-center">
     <i-tabler name="grid-dots" class="icon-20 d-flex"></i-tabler>
   </button>
 
   <!-- --------------------------------------------------------------- -->
   <!-- Notification Dropdown -->
   <!-- --------------------------------------------------------------- -->
-  <button
-    mat-icon-button
-    [matMenuTriggerFor]="notificationmenu"
-    aria-label="Notifications"
-  >
+  <button mat-icon-button [matMenuTriggerFor]="notificationmenu" aria-label="Notifications">
     @if(totalNotifications > 0) {
-    <i-tabler
-      class="d-flex"
-      name="bell"
-      [matBadge]="totalNotifications"
-      matBadgeColor="primary"
-    ></i-tabler>
+    <i-tabler class="d-flex" name="bell" [matBadge]="totalNotifications" matBadgeColor="primary"></i-tabler>
     } @else {
     <i-tabler class="d-flex" name="bell"></i-tabler>
     }
@@ -60,11 +39,7 @@
     @for(notification of notifications; track notification.id) {
     <button mat-menu-item class="p-x-32 p-y-16">
       <div class="d-flex align-items-center">
-        <img
-          [src]="'/assets/images/profile/user-1.png'"
-          class="rounded-circle"
-          width="48"
-        />
+        <img [src]="'/assets/images/profile/user-1.png'" class="rounded-circle" width="48" />
         <div class="m-l-16">
           <h5 class="f-s-14 f-w-600 m-0 mat-subtitle-1">
             {{ notification.subject }}
@@ -85,46 +60,47 @@
   <!-- --------------------------------------------------------------- -->
   <!-- profile Dropdown -->
   <!-- --------------------------------------------------------------- -->
-  <button
-    mat-icon-button
-    [matMenuTriggerFor]="profilemenu"
-    aria-label="Notifications"
-  >
-    <img
-      src="/assets/images/profile/user-1.png"
-      class="rounded-circle object-cover icon-35 profile-dd"
-      width="35"
-    />
+  <button mat-icon-button [matMenuTriggerFor]="profilemenu" aria-label="Notifications">
+    <img src="/assets/images/profile/user-1.png" class="rounded-circle object-cover icon-35 profile-dd" width="35" />
   </button>
   <mat-menu #profilemenu="matMenu" class="topbar-dd cardWithShadow">
-    <ng-scrollbar class="position-relative" style="height: 250px">
+    <ng-scrollbar class="position-relative" style="height: 350px">
       <div class="p-x-32 p-y-16">
         <h6 class="f-s-16 f-w-600 m-0 mat-subtitle-1">Perfil del Usuario</h6>
 
         <div class="d-flex align-items-center p-b-24 b-b-1 m-t-16">
-          <img
-            src="/assets/images/profile/user-1.png"
-            class="rounded-circle"
-            width="95"
-          />
+          <img src="/assets/images/profile/user-1.png" class="rounded-circle" width="95" />
           <div class="m-l-16">
             <h6 class="f-s-14 f-w-600 m-0 mat-subtitle-1">
               {{ accountsService.getUser().name }}
             </h6>
             <span class="f-s-14 d-block m-b-4">{{
               accountsService.getUser().role
-            }}</span>
+              }}</span>
             <span class="d-flex align-items-center">
               {{ accountsService.getUser().email }}
             </span>
           </div>
         </div>
       </div>
-
+      <div class="p-x-32">
+        <a class="p-y-16 text-decoration-none d-block text-hover-primary"
+          [routerLink]="['seguridad', 'cambio-contrasena']">
+          <div class="d-flex align-items-center">
+            <button mat-mini-fab class="text-primary bg-light-primary shadow-none rounded">
+              <img src="/assets/images/svgs/icon-account.svg/" width="20" alt="Seguridad" />
+            </button>
+            <div class="m-l-16">
+              <h5 class="f-s-14 f-w-600 m-0 textprimary mat-subtitle-1 hover-text">
+                Seguridad
+              </h5>
+              <span class="mat-body-1">Configuración de la cuenta</span>
+            </div>
+          </div>
+        </a>
+      </div>
       <div class="p-y-12 p-x-32">
-        <a (click)="logOut()" mat-stroked-button color="primary" class="w-100"
-          >Cerrar Sesión</a
-        >
+        <a (click)="logOut()" mat-stroked-button color="primary" class="w-100">Cerrar Sesión</a>
       </div>
     </ng-scrollbar>
   </mat-menu>
